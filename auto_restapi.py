@@ -57,14 +57,15 @@ def load_more_schema(new_schema):
 
 
 def reload_db_schema():
-    """ REload database schema """
+    """ Reload database schema """
     new_schema = get_schema()
     load_more_schema(new_schema)
     return new_schema
 
 
 def test_plain_int(this_type, this_places):
-    """ return True if {this_type} with {this_places} # of decimal places is in INT"""
+    """ return True if {this_type} with {this_places}
+        # of decimal places is in INT """
     if this_type in INTS:
         return True
     if this_type == "decimal" and this_places == 0:
@@ -94,6 +95,49 @@ def sort_by_field(i):
     return i["Field"]
 
 
+def schema_of_col(col):
+    this_field = {}
+    this_type = col["Type"].decode("utf8")
+    this_places = 0
+    if this_type.find(" unsigned") >= 0:
+        this_type = this_type.split()[0]
+        this_field["unsigned"] = True
+
+    pos = this_type.find("(")
+    if pos >= 0:
+        this_size = this_type[pos + 1:-1]
+        this_type = this_type[:pos]
+        if this_size.find(",") >= 0:
+            tmp = this_size.split(",")
+            this_field["size"] = int(tmp[0])
+            this_field["places"] = int(tmp[1])
+            this_places = int(tmp[1])
+        else:
+            if int(this_size) == 1 and this_type == "tinyint":
+                this_type = "boolean"
+            else:
+                this_field["size"] = int(this_size)
+
+    this_field["type"] = this_type
+    if col["Extra"] == "auto_increment":
+        this_field["serial"] = True
+
+    this_field["null"] = (col["Null"] == "YES")
+    plain_int = test_plain_int(this_type, this_places)
+    this_field["is_plain_int"] = plain_int
+    if col["Default"] is not None:
+        defval = col["Default"]
+        if plain_int:
+            defval = int(defval)
+        elif this_type == "boolean":
+            defval = (int(defval) == 1)
+        else:
+            defval = defval.decode("utf8")
+        this_field["default"] = defval
+
+    return this_field
+
+
 def get_schema():
     """ Read schema from database """
     cnx.query("show tables")
@@ -103,7 +147,6 @@ def get_schema():
     new_schema = {}
 
     tbl_title = "Tables_in_" + os.environ["MYSQL_DATABASE"]
-
     new_schema = {table[tbl_title]: {} for table in ret}
 
     for table in new_schema:
@@ -114,53 +157,12 @@ def get_schema():
         cols = [r for r in ret]
         cols.sort(key=sort_by_field)
         for col in cols:
-
-            field = col["Field"]
-            new_schema[table]["columns"][field] = {}
-            this_type = col["Type"].decode("utf8")
-            this_places = 0
-            if this_type.find(" unsigned") >= 0:
-                this_type = this_type.split()[0]
-                new_schema[table]["columns"][field]["unsigned"] = True
-
-            pos = this_type.find("(")
-            if pos >= 0:
-                this_size = this_type[pos + 1:-1]
-                this_type = this_type[:pos]
-                if this_size.find(",") >= 0:
-                    tmp = this_size.split(",")
-                    new_schema[table]["columns"][field]["size"] = int(tmp[0])
-                    new_schema[table]["columns"][field]["places"] = int(tmp[1])
-                    this_places = int(tmp[1])
-                else:
-                    if int(this_size) == 1 and this_type == "tinyint":
-                        this_type = "boolean"
-                    else:
-                        new_schema[table]["columns"][field]["size"] = int(
-                            this_size)
-
-            new_schema[table]["columns"][field]["type"] = this_type
-            if col["Extra"] == "auto_increment":
-                new_schema[table]["columns"][field]["serial"] = True
-
-            new_schema[table]["columns"][field]["null"] = (
-                col["Null"] == "YES")
-            plain_int = test_plain_int(this_type, this_places)
-            new_schema[table]["columns"][field]["is_plain_int"] = plain_int
-            if col["Default"] is not None:
-                defval = col["Default"]
-                if plain_int:
-                    defval = int(defval)
-                elif this_type == "boolean":
-                    defval = (int(defval) == 1)
-                else:
-                    defval = defval.decode("utf8")
-                new_schema[table]["columns"][field]["default"] = defval
-        add_schema_indexes(new_schema, table)
+            new_schema[table]["columns"][col["Field"]] = schema_of_col(col)
+        add_indexes_to_schema(new_schema, table)
     return new_schema
 
 
-def add_schema_indexes(new_schema, table):
+def add_indexes_to_schema(new_schema, table):
     """ Add index info for {table} to {new_schema} """
     cnx.query("show index from " + table)
     res = cnx.store_result()
@@ -207,7 +209,8 @@ def clean_list_string(data):
     return [data]
 
 
-def clean_row(rows, table):
+def prepare_row_data(rows, table):
+    """ format {rows} from {table} for JSON output """
     for row in rows:
         for col in [r for r in row]:
             if row[col] is None:
@@ -224,6 +227,7 @@ def clean_row(rows, table):
 
 
 def clean_col_data(data, table, column):
+    """ JSON format {data} from {table}.{column} """
     if data is None:
         return None
 
@@ -243,44 +247,51 @@ def clean_col_data(data, table, column):
     return data
 
 
-def where_clause(this_cols, where_data):
+def where_clause(table, where_data):
+    """ convert the {where_data} JSON into SQL """
     if where_data is None:
         return ""
 
+    this_cols = schema[table]["columns"]
     where = []
     for ask_item in ASKS:
         if ask_item not in where_data:
             continue
+        for col in where_data[ask_item]:
+            if col not in this_cols:
+                flask.abort(
+                    400, {
+                        "error":
+                        "Column `{col}` is not in table `{tbl}`".format(
+                            col=col, tbl=table)
+                    })
+
         for col in this_cols:
-            if col not in where_data[ask_item]:
-                continue
+            if col in where_data[ask_item]:
+                clause = []
+                for itm in clean_list_string(where_data[ask_item][col]):
+                    clause.append(
+                        col + ASKS[ask_item] +
+                        add_data(itm, this_cols[col]["is_plain_int"]))
 
-            data = clean_list_string(where_data[ask_item][col])
-            clause = []
-            for itm in data:
-                clause.append(col + ASKS[ask_item] +
-                              add_data(itm, this_cols[col]["is_plain_int"]))
+                where.append("(" + " or ".join(clause) + ")")
 
-            where.append("(" + " or ".join(clause) + ")")
-
-    if len(where) == 0:
-        return ""
-
-    return " where " + " and ".join(where)
+    return " where " + " and ".join(where) if len(where) > 0 else ""
 
 
 def plain_value(data):
+    """ extract data item from {data} """
     if not isinstance(data, dict):
         return str(data)
     if ":value:" in data:
         return data[":value:"]
     if ":join:" in data:
-        tmp = data[":join:"].split(".")
-        return data[tmp[1]]
+        return data[data[":join:"].split(".")[1]]
     return str(data)
 
 
 def unique_id(best_idx, row):
+    """ format the index item for {row} """
     ret = []
     for idx in best_idx:
         ret.append(plain_value(row[idx]))
@@ -296,6 +307,7 @@ def include_for_join(data):
 
 
 def load_all_joins(need):
+    """ Load all db data for joins {need}ed """
     join_data = {}
     for item in need:
         src = item.split(".")
@@ -315,7 +327,7 @@ def load_all_joins(need):
         cnx.query(sql)
         res = cnx.store_result()
         ret = res.fetch_row(maxrows=0, how=1)
-        clean_row(ret, src[0])
+        prepare_row_data(ret, src[0])
 
         join_data[item] = {
             clean_col_data(cols[src[1]], src[0], src[1]): cols
@@ -408,20 +420,19 @@ def hello():
 def reload_schema():
     global schema
     schema = reload_db_schema()
-    return flask.jsonify(schema), 200
+    return json.dumps(schema), 200
 
 
 @application.route("/meta/v1/schema")
 def give_schema():
-    return flask.jsonify(schema), 200
+    return json.dumps(schema), 200
 
 
 @application.route("/meta/v1/schema/<table_name>")
 def give_table_schema(table_name):
     if table_name not in schema:
         flask.abort(404, {"error": "Table not found"})
-
-    return flask.jsonify(schema[table_name]), 200
+    return json.dumps(schema[table_name]), 200
 
 
 @application.route("/data/v1/<table_name>", methods=['GET'])
@@ -429,11 +440,9 @@ def get_table_row(table_name):
     if table_name not in schema:
         flask.abort(404, {"error": "Table not found"})
 
-    this_cols = schema[table_name]["columns"]
-
     sent = flask.request.json if flask.request.json is not None else {}
     sql = "select * from " + table_name
-    sql = sql + where_clause(this_cols, sent)
+    sql = sql + where_clause(table_name, sent)
 
     cnx.query(sql)
     res = cnx.store_result()
@@ -441,7 +450,7 @@ def get_table_row(table_name):
     if len(ret) <= 0:
         flask.abort(404, {"error": "No Rows returned"})
 
-    clean_row(ret, table_name)
+    prepare_row_data(ret, table_name)
 
     this_idxs = schema[table_name]["indexes"]
     idx_cols = None
@@ -466,7 +475,7 @@ def get_table_row(table_name):
         handle_joins(ret, clean_list_string(sent["join"]),
                      ("join-basic" in sent and sent["join-basic"]))
 
-    return flask.jsonify(ret), 200
+    return json.dumps(ret), 200
 
 
 if __name__ == "__main__":
