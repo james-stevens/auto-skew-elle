@@ -1,8 +1,8 @@
 #! /usr/bin/python3
 
-import yaml
 import json
 import os
+import yaml
 from MySQLdb import _mysql
 from MySQLdb.constants import FIELD_TYPE
 import MySQLdb.converters
@@ -38,23 +38,26 @@ my_conv[FIELD_TYPE.CHAR] = convert_string
 my_conv[FIELD_TYPE.STRING] = convert_string
 my_conv[FIELD_TYPE.VAR_STRING] = convert_string
 
-more_schema = {}
-filename = os.environ["MYSQL_DATABASE"] + ".yml"
-if os.path.isfile(filename):
-    with open(filename) as fd:
-        data = fd.read()
-        more_schema = yaml.load(data, Loader=yaml.FullLoader)
-else:
+def load_more_schema():
+    schema[":more:"] = {}
+    filename = os.environ["MYSQL_DATABASE"] + ".yml"
+    if os.path.isfile(filename):
+        with open(filename) as fd:
+            data = fd.read()
+            schema[":more:"] = yaml.load(data, Loader=yaml.FullLoader)
+            return
+
     filename = os.environ["MYSQL_DATABASE"] + ".js"
     if os.path.isfile(filename):
         with open(filename) as fd:
             data = fd.read()
-            more_schema = json.loads(data)
+            schema[":more:"] = json.loads(data)
 
 
 def reload_db_schema():
     global schema
     schema = get_schema()
+    load_more_schema()
 
 
 scheduler = BackgroundScheduler(timezone=utc)
@@ -63,6 +66,23 @@ job = scheduler.add_job(reload_db_schema,
                         minutes=60,
                         id="ReloadSchema")
 scheduler.start()
+
+
+def test_plain_int(this_type,this_places):
+    if this_type in INTS:
+        return True
+    if this_type == "decimal" and this_places == 0:
+        return True
+    return False
+
+
+
+def is_plain_int(table,column):
+    if table not in schema or column not in schema[table]["columns"]:
+        return False
+    this_col = schema[table]["columns"][column]
+    this_places = this_col["places"] if "places" in this_col else 0
+    return test_plain_int(this_col["type"],this_places)
 
 
 def mysql_connect():
@@ -108,6 +128,7 @@ def get_schema():
             field = r["Field"]
             schema[t]["columns"][field] = {}
             tp = r["Type"].decode("utf8")
+            this_places = 0
             if tp.find(" unsigned") >= 0:
                 tp = tp.split()[0]
                 schema[t]["columns"][field]["unsigned"] = True
@@ -120,6 +141,7 @@ def get_schema():
                     x = sz.split(",")
                     schema[t]["columns"][field]["size"] = int(x[0])
                     schema[t]["columns"][field]["places"] = int(x[1])
+                    this_places = int(x[1])
                 else:
                     if int(sz) == 1 and tp == "tinyint":
                         tp = "boolean"
@@ -133,7 +155,7 @@ def get_schema():
             schema[t]["columns"][field]["null"] = (r["Null"] == "YES")
             if r["Default"] is not None:
                 defval = r["Default"]
-                if tp in INTS:
+                if test_plain_int(tp,this_places):
                     defval = int(defval)
                 elif tp == "boolean":
                     defval = (int(defval) == 1)
@@ -186,28 +208,31 @@ def clean_list_string(data):
     return [ data ]
 
 
-def clean_row(rows,this_cols):
+def clean_row(rows,table):
     for row in rows:
         for col in [r for r in row]:
             if row[col] is None:
                 del row[col]
             else:
-                row[col] = clean_col_data(row[col],this_cols[col]["type"])
-                if "enums" in more_schema and col in more_schema["enums"] and row[col] in more_schema["enums"][col]:
-                    row[col + ".text"] = more_schema["enums"][col][row[col]]
+                row[col] = clean_col_data(row[col],table,col)
+                if "enums" in schema[":more:"] and col in schema[":more:"]["enums"] and row[col] in schema[":more:"]["enums"][col]:
+                    row[col] = {
+                        ":value:":row[col],
+                        ":text:":schema[":more:"]["enums"][col][row[col]]
+                        }
 
 
-def clean_col_data(data,this_type):
+def clean_col_data(data,table,column):
     if data is None:
         return None
 
-    if this_type == "boolean":
+    if schema[table]["columns"][column]["type"] == "boolean":
         return (int(data) != 0)
 
-    if this_type in INTS:
+    if is_plain_int(table,column):
         return int(data)
 
-    if not isinstance(str, str):
+    if not isinstance(data, str):
         return str(data)
 
     return data
@@ -240,13 +265,21 @@ def where_clause(this_cols, js):
     return " where " + " and ".join(where)
 
 
+def plain_value(data):
+    if not isinstance(data,dict):
+        return str(data)
+    if ":value:" in data:
+        return data[":value:"]
+    if ":join:" in data:
+        tmp = data[":join:"].split(".")
+        return data[tmp[1]]
+    return str(data)
+
+
 def unique_id(table_name, best_idx, row):
     ret = []
     for idx in best_idx:
-        tmp = row[idx]
-        if not isinstance(tmp, str):
-            tmp = str(tmp)
-        ret.append(tmp)
+        ret.append(plain_value(row[idx]))
     return "|".join(ret)
 
 
@@ -264,8 +297,8 @@ def load_all_joins(need):
         src = item.split(".")
         sql = "select * from " + src[0] + " where " + item + " in ("
 
-        is_int = (schema[src[0]]["columns"][src[1]]["type"] in INTS)
-        clauses = [ add_data(d,is_int) for d in need[item] if include_for_join(d) ]
+        this_type = schema[src[0]]["columns"][src[1]]["type"]
+        clauses = [ add_data(d,(this_type in INTS)) for d in need[item] if include_for_join(d) ]
         if len(clauses) <= 0:
             continue
 
@@ -274,44 +307,45 @@ def load_all_joins(need):
         cnx.query(sql)
         res = cnx.store_result()
         ret = res.fetch_row(maxrows=0, how=1)
-        clean_row(ret,schema[src[0]]["columns"])
-        join_data[item] = ret
+        clean_row(ret,src[0])
+
+        join_data[item] = { clean_col_data(r[src[1]],src[0],src[1]):r for r in ret if src[1] in r }
 
     return join_data
 
 
 def find_join_dest(table,col,jns):
     long = table + "." + col
-    if long in jns:
+    if long in jns and jns[long] != long:
         return True, jns[long]
-    if col in jns:
+    if col in jns and jns[col] != long:
         return True, jns[col]
     return False, None
 
 
 def join_this_column(table,col,jns,which):
-    if which is None:
+    if which is None or len(which) == 0:
         return False, None
 
     want, target = find_join_dest(table,col,jns)
     if not want:
         return False, None
 
-    if ":ALL:" in which or col in which:
+    if ":all:" in which or col in which:
         return want, target
 
     return False, None
 
 
-def handle_joins(data,which):
-    if "joins" not in more_schema:
+def handle_joins(data,which,basic_format):
+    if "joins" not in schema[":more:"]:
         return
 
     need = {}
     for table in data:
         for row in data[table]:
             for col in data[table][row]:
-                want, target = join_this_column(table,col,more_schema["joins"],which)
+                want, target = join_this_column(table,col,schema[":more:"]["joins"],which)
                 if not want or target is None:
                     continue
 
@@ -327,37 +361,46 @@ def handle_joins(data,which):
         return
 
     join_data = load_all_joins(need)
+    if basic_format:
+        data.update(join_data)
+        return
 
     for table in data:
         for row in [ r for r in data[table]]:
             for col in [ c for c in data[table][row]]:
-                want, target = join_this_column(table,col,more_schema["joins"],which)
+                want, target = join_this_column(table,col,schema[":more:"]["joins"],which)
                 if want and target is not None and target in join_data:
                     dst = target.split(".")
-                    for join_row in join_data[target]:
-                        if join_row[dst[1]] == data[table][row][col]:
-                            data[table][row][col + "->" + target] = join_row
+                    if data[table][row][col] in join_data[target]:
+                        data[table][row][col] = join_data[target][data[table][row][col]]
+                        data[table][row][col][":join:"] = target
 
 
 
 
 
 cnx = mysql_connect()
-schema = get_schema()
+reload_db_schema()
 application = flask.Flask("MySQL-Rest/API")
 
 
 @application.route("/")
 def hello():
-    return "Hello World!\n\n"
+    return "MySql-Auto-Rest/API\n\n"
 
 
-@application.route("/sql/v1/schema")
+@application.route("/meta/v1/reload")
+def reload_schema():
+    reload_db_schema()
+    return flask.jsonify(schema), 200
+
+
+@application.route("/meta/v1/schema")
 def give_schema():
     return flask.jsonify(schema), 200
 
 
-@application.route("/sql/v1/schema/<table_name>")
+@application.route("/meta/v1/schema/<table_name>")
 def give_table_schema(table_name):
     if table_name not in schema:
         flask.abort(404, {"error": "Table not found"})
@@ -365,7 +408,7 @@ def give_table_schema(table_name):
     return flask.jsonify(schema[table_name]), 200
 
 
-@application.route("/sql/v1/<table_name>", methods=['GET'])
+@application.route("/data/v1/<table_name>", methods=['GET'])
 def get_table_row(table_name):
     if table_name not in schema:
         flask.abort(404, {"error": "Table not found"})
@@ -382,7 +425,7 @@ def get_table_row(table_name):
     if len(ret) <= 0:
         flask.abort(404, {"error": "No Rows returned"})
 
-    clean_row(ret,this_cols)
+    clean_row(ret,table_name)
 
     this_idxs = schema[table_name]["indexes"]
     idx_cols = None
@@ -400,7 +443,7 @@ def get_table_row(table_name):
     ret = { table_name: { unique_id(table_name, idx_cols, tmp): tmp for tmp in ret} }
 
     if "join" in sent:
-        handle_joins(ret,clean_list_string(sent["join"]))
+        handle_joins(ret,clean_list_string(sent["join"]),("join-basic" in sent and sent["join-basic"]))
 
     return flask.jsonify(ret), 200
 
