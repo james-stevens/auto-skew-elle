@@ -7,6 +7,7 @@ from MySQLdb import _mysql
 from MySQLdb.constants import FIELD_TYPE
 import MySQLdb.converters
 import flask
+from datetime import datetime
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from pytz import utc
@@ -77,14 +78,6 @@ def test_plain_int(this_type,this_places):
 
 
 
-def is_plain_int(table,column):
-    if table not in schema or column not in schema[table]["columns"]:
-        return False
-    this_col = schema[table]["columns"][column]
-    this_places = this_col["places"] if "places" in this_col else 0
-    return test_plain_int(this_col["type"],this_places)
-
-
 def mysql_connect():
     for m in MYSQL_ENV:
         if m not in os.environ:
@@ -153,9 +146,11 @@ def get_schema():
                 schema[t]["columns"][field]["serial"] = True
 
             schema[t]["columns"][field]["null"] = (r["Null"] == "YES")
+            plain_int = test_plain_int(tp,this_places)
+            schema[t]["columns"][field]["is_plain_int"] = plain_int
             if r["Default"] is not None:
                 defval = r["Default"]
-                if test_plain_int(tp,this_places):
+                if plain_int:
                     defval = int(defval)
                 elif tp == "boolean":
                     defval = (int(defval) == 1)
@@ -226,11 +221,15 @@ def clean_col_data(data,table,column):
     if data is None:
         return None
 
-    if schema[table]["columns"][column]["type"] == "boolean":
+    this_col = schema[table]["columns"][column]
+    if this_col["type"] == "boolean":
         return (int(data) != 0)
 
-    if is_plain_int(table,column):
+    if this_col["is_plain_int"]:
         return int(data)
+
+    if isinstance(data,datetime):
+        return data.strftime('%Y-%m-%d %H:%M:%S')
 
     if not isinstance(data, str):
         return str(data)
@@ -250,12 +249,10 @@ def where_clause(this_cols, js):
             if col not in js[a]:
                 continue
 
-            is_int = (this_cols[col]["type"] in INTS)
-
             data = clean_list_string(js[a][col])
             clause = []
             for d in data:
-                clause.append(col + ASKS[a] + add_data(d,is_int))
+                clause.append(col + ASKS[a] + add_data(d,this_cols[col]["is_plain_int"]))
 
             where.append("(" + " or ".join(clause) + ")")
 
@@ -297,8 +294,9 @@ def load_all_joins(need):
         src = item.split(".")
         sql = "select * from " + src[0] + " where " + item + " in ("
 
-        this_type = schema[src[0]]["columns"][src[1]]["type"]
-        clauses = [ add_data(d,(this_type in INTS)) for d in need[item] if include_for_join(d) ]
+        this_col = schema[src[0]]["columns"][src[1]]
+        this_type = this_col["type"]
+        clauses = [ add_data(d,this_col["is_plain_int"]) for d in need[item] if include_for_join(d) ]
         if len(clauses) <= 0:
             continue
 
@@ -436,6 +434,9 @@ def get_table_row(table_name):
                 idx_cols = this_idxs[snt_by]["columns"]
         else:
             idx_cols = clean_list_string(snt_by)
+            for idx in idx_cols:
+                if idx not in schema[table_name]["columns"]:
+                    flask.abort(400,{"error":"Bad column name in `by` clause"})
 
     if idx_cols is None:
         idx_cols = this_idxs[find_best_index(this_idxs)]["columns"]
