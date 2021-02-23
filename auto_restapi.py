@@ -32,15 +32,8 @@ def convert_string(data):
     return data
 
 
-my_conv = MySQLdb.converters.conversions.copy()
-my_conv[FIELD_TYPE.VARCHAR] = convert_string
-my_conv[FIELD_TYPE.CHAR] = convert_string
-my_conv[FIELD_TYPE.STRING] = convert_string
-my_conv[FIELD_TYPE.VAR_STRING] = convert_string
-
-
 def load_more_schema(new_schema):
-    """ load additional schema information """
+    """ load users file of additional schema information """
     new_schema[":more:"] = {}
     filename = os.environ["MYSQL_DATABASE"] + ".yml"
     if os.path.isfile(filename):
@@ -56,10 +49,11 @@ def load_more_schema(new_schema):
             new_schema[":more:"] = json.loads(data)
 
 
-def reload_db_schema():
-    """ Reload database schema """
-    new_schema = get_schema()
+def load_db_schema():
+    """ Load/Reload database schema """
+    new_schema = {}
     load_more_schema(new_schema)
+    get_db_schema(new_schema)
     return new_schema
 
 
@@ -79,6 +73,12 @@ def mysql_connect():
         if var not in os.environ:
             return None
 
+    my_conv = MySQLdb.converters.conversions.copy()
+    my_conv[FIELD_TYPE.VARCHAR] = convert_string
+    my_conv[FIELD_TYPE.CHAR] = convert_string
+    my_conv[FIELD_TYPE.STRING] = convert_string
+    my_conv[FIELD_TYPE.VAR_STRING] = convert_string
+
     return _mysql.connect(
         user=os.environ["MYSQL_USERNAME"],
         passwd=os.environ["MYSQL_PASSWORD"],
@@ -95,7 +95,7 @@ def sort_by_field(i):
     return i["Field"]
 
 
-def schema_of_col(col):
+def schema_of_col(new_schema,col):
     this_field = {}
     this_type = col["Type"].decode("utf8")
     this_places = 0
@@ -113,8 +113,11 @@ def schema_of_col(col):
             this_field["places"] = int(tmp[1])
             this_places = int(tmp[1])
         else:
-            if int(this_size) == 1 and this_type == "tinyint":
+            if ((int(this_size) == 1 and this_type == "tinyint")
+                    or (":more:" in new_schema and "also_boolean" in new_schema[":more:"]
+                        and col["Field"] in new_schema[":more:"]["also_boolean"])):
                 this_type = "boolean"
+                del this_field["unsigned"]
             else:
                 this_field["size"] = int(this_size)
 
@@ -138,18 +141,20 @@ def schema_of_col(col):
     return this_field
 
 
-def get_schema():
+def get_db_schema(new_schema):
     """ Read schema from database """
     cnx.query("show tables")
     res = cnx.store_result()
     ret = res.fetch_row(maxrows=0, how=1)
 
-    new_schema = {}
-
     tbl_title = "Tables_in_" + os.environ["MYSQL_DATABASE"]
-    new_schema = {table[tbl_title]: {} for table in ret}
+    for table in ret:
+        new_schema[table[tbl_title]] = {}
 
     for table in new_schema:
+        if table[0] == ":":
+            continue
+
         cnx.query("describe " + table)
         res = cnx.store_result()
         ret = res.fetch_row(maxrows=0, how=1)
@@ -157,7 +162,7 @@ def get_schema():
         cols = [r for r in ret]
         cols.sort(key=sort_by_field)
         for col in cols:
-            new_schema[table]["columns"][col["Field"]] = schema_of_col(col)
+            new_schema[table]["columns"][col["Field"]] = schema_of_col(new_schema,col)
         add_indexes_to_schema(new_schema, table)
     return new_schema
 
@@ -407,7 +412,7 @@ def add_join_data(data, join_data, which):
 
 
 cnx = mysql_connect()
-schema = reload_db_schema()
+schema = load_db_schema()
 application = flask.Flask("MySQL-Rest/API")
 
 
@@ -419,7 +424,7 @@ def hello():
 @application.route("/meta/v1/reload")
 def reload_schema():
     global schema
-    schema = reload_db_schema()
+    schema = load_db_schema()
     return json.dumps(schema), 200
 
 

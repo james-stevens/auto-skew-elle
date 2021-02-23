@@ -44,28 +44,32 @@ joins:
   dns_8: hosts.hostname
   dns_9: hosts.hostname
 
+also_boolean:
+  - account_pay_only
+  - allow_backorder
+  - allow_delete
+  - allow_renew
+  - allow_trans
+  - allow_update
+  - been_refunded
+  - create_contacts
+  - create_domains
+  - create_hosts
+  - delete_contacts
+  - delete_domains
+  - delete_hosts
+  - enabled
+  - in_retail_list
+  - in_zone
+  - need_renew
+  - newsletter
+  - on_hold
+  - payments_on_hold
+  - price_in_default_only
+  - send_statement
+  - transfer_domains
+
 enums:
-  YesNo:
-    0: "No"
-    1: "Yes"
-  account_pay_only:
-    0: "No"
-    1: "Yes"
-  allow_backorder:
-    0: "No"
-    1: "Yes"
-  allow_delete:
-    0: "No"
-    1: "Yes"
-  allow_renew:
-    0: "No"
-    1: "Yes"
-  allow_trans:
-    0: "No"
-    1: "Yes"
-  allow_update:
-    0: "No"
-    1: "Yes"
   allow_web_edit:
     0: "No web edits (EPP or Registrar interface Only)"
     1: "Only Registrar password can web-edit (+EPP & Regs)"
@@ -121,9 +125,6 @@ enums:
     4500: "45%"
     5000: "50%"
     5500: "55%"
-  been_refunded:
-    0: "No"
-    1: "Yes"
   billing_language:
     UK: "I am inside the UK"
     RST: "I am outside the EU"
@@ -427,15 +428,6 @@ enums:
     ZW: "Zimbabwe"
     AX: "Åland Islands"
     -: "Other"
-  create_contacts:
-    0: "No"
-    1: "Yes"
-  create_domains:
-    0: "No"
-    1: "Yes"
-  create_hosts:
-    0: "No"
-    1: "Yes"
   currency:
     USD: "USD"
     GBP: "GBP"
@@ -446,15 +438,6 @@ enums:
   deferred_settlement:
     0: "Account debits settled live"
     1: "Account debits settled in background"
-  delete_contacts:
-    0: "No"
-    1: "Yes"
-  delete_domains:
-    0: "No"
-    1: "Yes"
-  delete_hosts:
-    0: "No"
-    1: "Yes"
   disclose_flags:
     0: "All information can be disclosed"
     1: "Name"
@@ -541,12 +524,6 @@ enums:
     300: "Platinum Rated"
     500: "Palladium Rated"
     99999999: "Unrestricted"
-  empty_refuse:
-    1: "Refuse transactions with error"
-    0: "Queue transactions"
-  enabled:
-    0: "No"
-    1: "Yes"
   expire_delete:
     0: "Domain does not Expire"
     1: "1 Day"
@@ -564,12 +541,6 @@ enums:
     RW: "Rest of World"
   hosts_fake_add:
     0: "Depends on Policy"
-    1: "Yes"
-  in_retail_list:
-    0: "No"
-    1: "Yes"
-  in_zone:
-    0: "No"
     1: "Yes"
   invoice_type_id:
     1: "Invoice"
@@ -731,17 +702,11 @@ enums:
     http_proxy: "HTTP(S) Proxy for sending out WebHooks"
     epp_premium_fees: "Fees must be submitted when buying premium domains over EPP, at or above this rating (default=0, 0=Never Required)"
     dns_update_server: "IP Address to send DNS updates (nsupdate) to"
-  need_renew:
-    0: "No"
-    1: "Yes"
   new_renew:
     N: "New/Dom"
     R: "Renew/Dom"
     B: "New/Back"
     K: "Renew/Back"
-  newsletter:
-    0: "No"
-    1: "Yes"
   num_years:
     1: "1 Year"
     2: "2 Years"
@@ -777,15 +742,6 @@ enums:
     20067: "67 Days"
     20090: "90 Days"
     20097: "97 Days"
-  on_hold:
-    0: "No"
-    1: "Yes"
-  one_or_zero:
-    0: "No"
-    1: "Yes"
-  payments_on_hold:
-    0: "No"
-    1: "Yes"
   paytype_id:
     710: "EPP_New"
     720: "EPP_Renew"
@@ -864,9 +820,6 @@ enums:
     65: "65"
     70: "70"
     75: "75"
-  price_in_default_only:
-    0: "No"
-    1: "Yes"
   priority:
     0: "Normal"
     1: "High"
@@ -992,9 +945,6 @@ enums:
     TXT: "Text Record"
     NS: "Subdomain NS"
     DS: "Subdomain DS"
-  send_statement:
-    0: "No"
-    1: "Yes"
   simultaneous_sessions:
     1: "1"
     2: "2"
@@ -1044,9 +994,6 @@ enums:
     SE: "Native tax payer in Sweden"
     SI: "Native tax payer in Slovenia"
     SK: "Native tax payer in Slovakia"
-  transfer_domains:
-    0: "No"
-    1: "Yes"
   ttl:
     86400: "1 Day"
     172800: "2 Days"
