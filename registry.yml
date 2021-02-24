@@ -59,6 +59,7 @@ also_boolean:
   - delete_domains
   - delete_hosts
   - enabled
+  - is_credit
   - in_retail_list
   - in_zone
   - need_renew

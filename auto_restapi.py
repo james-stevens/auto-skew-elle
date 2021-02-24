@@ -1,4 +1,5 @@
 #! /usr/bin/python3
+""" provide a rest/api to a MySQL Database using Flask """
 
 import json
 import os
@@ -27,6 +28,7 @@ schema = {}
 
 
 def convert_string(data):
+    """ Convery MySQL string to JSON """
     if isinstance(data, bytes):
         return data.decode("utf8")
     return data
@@ -49,11 +51,28 @@ def load_more_schema(new_schema):
             new_schema[":more:"] = json.loads(data)
 
 
+def add_join_items(new_schema):
+    """ add `join` items to columns that join """
+    jns = new_schema[":more:"]["joins"]
+    for table in [t for t in new_schema]:
+        if table[0] != ":":
+            for col in [c for c in new_schema[table]["columns"]]:
+                dst = find_join_dest(table, col, jns)
+                if dst is not None:
+                    tblcol = dst.split(".")
+                    new_schema[table]["columns"][col]["join"] = {
+                        "table": tblcol[0],
+                        "column": tblcol[1]
+                    }
+
+
 def load_db_schema():
     """ Load/Reload database schema """
     new_schema = {}
     load_more_schema(new_schema)
     get_db_schema(new_schema)
+    if ":more:" in new_schema and "joins" in new_schema[":more:"]:
+        add_join_items(new_schema)
     return new_schema
 
 
@@ -95,7 +114,8 @@ def sort_by_field(i):
     return i["Field"]
 
 
-def schema_of_col(new_schema,col):
+def schema_of_col(new_schema, col):
+    """ convert MySQL column description into JSON schema """
     this_field = {}
     this_type = col["Type"].decode("utf8")
     this_places = 0
@@ -113,9 +133,10 @@ def schema_of_col(new_schema,col):
             this_field["places"] = int(tmp[1])
             this_places = int(tmp[1])
         else:
-            if ((int(this_size) == 1 and this_type == "tinyint")
-                    or (":more:" in new_schema and "also_boolean" in new_schema[":more:"]
-                        and col["Field"] in new_schema[":more:"]["also_boolean"])):
+            if ((int(this_size) == 1 and this_type == "tinyint") or
+                (":more:" in new_schema
+                 and "also_boolean" in new_schema[":more:"]
+                 and col["Field"] in new_schema[":more:"]["also_boolean"])):
                 this_type = "boolean"
                 del this_field["unsigned"]
             else:
@@ -162,7 +183,8 @@ def get_db_schema(new_schema):
         cols = [r for r in ret]
         cols.sort(key=sort_by_field)
         for col in cols:
-            new_schema[table]["columns"][col["Field"]] = schema_of_col(new_schema,col)
+            new_schema[table]["columns"][col["Field"]] = schema_of_col(
+                new_schema, col)
         add_indexes_to_schema(new_schema, table)
     return new_schema
 
@@ -297,13 +319,11 @@ def plain_value(data):
 
 def unique_id(best_idx, row):
     """ format the index item for {row} """
-    ret = []
-    for idx in best_idx:
-        ret.append(plain_value(row[idx]))
-    return "|".join(ret)
+    return ".".join([plain_value(row[idx]) for idx in best_idx])
 
 
 def include_for_join(data):
+    """ shall we retrieve this foreign record """
     if data is None:
         return False
     if isinstance(data, str) and data == "":
@@ -321,7 +341,7 @@ def load_all_joins(need):
         is_int = schema[src[0]]["columns"][src[1]]["is_plain_int"]
 
         clauses = [
-            add_data(d, is_int) for d in need[item] if include_for_join(d)
+            add_data(d, is_int) for d in need[item]
         ]
 
         if len(clauses) <= 0:
@@ -343,47 +363,49 @@ def load_all_joins(need):
 
 
 def find_join_dest(table, col, jns):
+    """ does this {rable.col} have join dest in {jns} """
     long = table + "." + col
     if long in jns and jns[long] != long:
-        return True, jns[long]
+        return jns[long]
     if col in jns and jns[col] != long:
-        return True, jns[col]
-    return False, None
+        return jns[col]
+    return None
 
 
-def join_this_column(table, col, jns, which):
+def join_this_column(table, col, which):
+    """ do we want join data for this {table.col} """
+    jns = schema[":more:"]["joins"]
     if which is None or len(which) == 0:
-        return False, None
+        return None
 
-    want, target = find_join_dest(table, col, jns)
-    if not want:
-        return False, None
+    target = find_join_dest(table, col, jns)
+    if target is None:
+        return None
 
     if ":all:" in which or col in which:
-        return want, target
+        return target
 
-    return False, None
+    return None
 
 
 def handle_joins(data, which, basic_format):
-    if "joins" not in schema[":more:"]:
+    """ retrive foreign rows & merge into return {data} """
+    if ":more:" not in schema or "joins" not in schema[":more:"]:
         return
 
     need = {}
     for table in data:
         for row in data[table]:
             for col in data[table][row]:
-                want, target = join_this_column(table, col,
-                                                schema[":more:"]["joins"],
-                                                which)
-                if not want or target is None:
+                if not include_for_join(data[table][row][col]):
+                    continue
+                target = join_this_column(table, col, which)
+                if target is None:
                     continue
 
-                dst = target.split(".")
-                if dst[0] == table and dst[1] == col:
-                    continue
                 if target not in need:
                     need[target] = []
+
                 if data[table][row][col] not in need[target]:
                     need[target].append(data[table][row][col])
 
@@ -398,13 +420,12 @@ def handle_joins(data, which, basic_format):
 
 
 def add_join_data(data, join_data, which):
+    """ replace a columns data with retrived foreign record """
     for table in data:
         for row in [r for r in data[table]]:
             for col in [c for c in data[table][row]]:
-                want, target = join_this_column(table, col,
-                                                schema[":more:"]["joins"],
-                                                which)
-                if want and target is not None and target in join_data:
+                target = join_this_column(table, col, which)
+                if target is not None and target in join_data:
                     if data[table][row][col] in join_data[target]:
                         data[table][row][col] = join_data[target][data[table]
                                                                   [row][col]]
@@ -418,11 +439,13 @@ application = flask.Flask("MySQL-Rest/API")
 
 @application.route("/")
 def hello():
+    """ respond with a `hello` to confirm working """
     return "MySql-Auto-Rest/API\n\n"
 
 
 @application.route("/meta/v1/reload")
 def reload_schema():
+    """ reload the schema """
     global schema
     schema = load_db_schema()
     return json.dumps(schema), 200
@@ -430,11 +453,13 @@ def reload_schema():
 
 @application.route("/meta/v1/schema")
 def give_schema():
+    """ respond with full schema """
     return json.dumps(schema), 200
 
 
 @application.route("/meta/v1/schema/<table_name>")
 def give_table_schema(table_name):
+    """ respond with schema for one <table> """
     if table_name not in schema:
         flask.abort(404, {"error": "Table not found"})
     return json.dumps(schema[table_name]), 200
@@ -442,6 +467,7 @@ def give_table_schema(table_name):
 
 @application.route("/data/v1/<table_name>", methods=['GET'])
 def get_table_row(table_name):
+    """ run select queries """
     if table_name not in schema:
         flask.abort(404, {"error": "Table not found"})
 
