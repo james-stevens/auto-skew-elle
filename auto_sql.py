@@ -16,14 +16,7 @@ NUMBERS = INTS + ["decimal"]
 MYSQL_ENV = [
     "MYSQL_USERNAME", "MYSQL_PASSWORD", "MYSQL_CONNECT", "MYSQL_DATABASE"
 ]
-ASKS = {
-    "equal": "=",
-    "greater": ">",
-    "less": "<",
-    "greq": ">=",
-    "lseq": "<=",
-    "like": "like"
-}
+ASKS = ["=", "!=", "<>", "<", ">", ">=", "<=", "like"]
 
 schema = {}
 
@@ -111,8 +104,8 @@ def prepare_row_data(rows, table):
 
 def clean_col_data(data, table, column):
     """ JSON format {data} from {table}.{column} """
-    if data is None:
-        return None
+    if data is None or column[0] == ":":
+        return data
 
     this_col = schema[table]["columns"][column]
     if this_col["type"] == "boolean":
@@ -130,7 +123,8 @@ def clean_col_data(data, table, column):
     return data
 
 
-def find_join_column(src_table,dst_table):
+def find_join_column(src_table, dst_table):
+    """ return column in {src_table} used to join to {dst_table} """
     for col in schema[src_table]["columns"]:
         this_col = schema[src_table]["columns"][col]
         if "join" in this_col and this_col["join"]["table"] == dst_table:
@@ -138,76 +132,106 @@ def find_join_column(src_table,dst_table):
     return None
 
 
-def find_foreign_column(sql_joins, src_table, col):
-    dst = col.split(".")
+def find_foreign_column(sql_joins, src_table, dstcol):
+    """ add the {sql_joins} needed to join to destination {dstcol} """
+    dst = dstcol.split(".")
+    fmt = "join {dsttbl} {alias} on({srctbl}.{srccol}={alias}.{dstcol})"
 
     if len(dst) != 2:
-        flask.abort(400,{"error":"Invalid column name `{col}`".format(col=col)})
+        flask.abort(
+            400, {"error": "Invalid column name `{col}`".format(col=dstcol)})
 
-    if dst[0] in schema[src_table]["columns"] and "join" in schema[src_table]["columns"][dst[0]]:
+    if dst[0] in schema[src_table]["columns"] and "join" in schema[src_table][
+            "columns"][dst[0]]:
         src_col = schema[src_table]["columns"][dst[0]]
         alias = "__zz__" + dst[0]
-        col = alias + "." + dst[1]
+        dstcol = alias + "." + dst[1]
         if alias in sql_joins:
-            return col, src_col["join"]["table"]
+            return dstcol, src_col["join"]["table"]
 
-        sql_joins[alias] = "join {dsttbl} {alias} on({srctbl}.{srccol}={alias}.{dstcol})".format(
-            dsttbl = src_col["join"]["table"],
-            dstcol = src_col["join"]["column"],
-            alias=alias, srctbl = src_table, srccol = dst[0])
-        return col, src_col["join"]["table"]
+        sql_joins[alias] = fmt.format(dsttbl=src_col["join"]["table"],
+                                      dstcol=src_col["join"]["column"],
+                                      alias=alias,
+                                      srctbl=src_table,
+                                      srccol=dst[0])
+        return dstcol, src_col["join"]["table"]
 
-    col_name = find_join_column(src_table,dst[0])
+    col_name = find_join_column(src_table, dst[0])
     if col_name is None:
-        flask.abort(400,{"error":"Could not find a join for `{col}` to `{tbl}`".format(col=col,tbl=src_table)})
+        flask.abort(
+            400, {
+                "error":
+                "Could not find a join for `{col}` to `{tbl}`".format(
+                    col=dstcol, tbl=src_table)
+            })
 
     alias = "__zz__" + col_name
-    col = alias + "." + dst[1]
+    dstcol = alias + "." + dst[1]
 
     if alias in sql_joins:
-        return col, dst[0]
+        return dstcol, dst[0]
 
     this_col = schema[src_table]["columns"][col_name]
-    sql_joins[alias] = "join {dsttbl} {alias} on({srctbl}.{srccol}={alias}.{dstcol})".format(
-        alias=alias,srctbl=src_table,srccol=col_name,dsttbl=dst[0],dstcol=this_col["join"]["column"])
+    sql_joins[alias] = fmt.format(alias=alias,
+                                  srctbl=src_table,
+                                  srccol=col_name,
+                                  dsttbl=dst[0],
+                                  dstcol=this_col["join"]["column"])
 
-    return col, dst[0]
+    return dstcol, dst[0]
 
 
+def each_where_obj(sql_joins, table, ask_item, where_obj):
+    """ return `where` clauses for {where_obj} & comparison {ask_item} """
+    where = []
+    for where_itm in where_obj:
+        tbl = table
+        col = where_itm
+        if where_itm.find(".") >= 0:
+            col, tbl = find_foreign_column(sql_joins, table, col)
+        elif col not in schema[table]["columns"]:
+            flask.abort(
+                400, {
+                    "error":
+                    "Column `{col}` is not in table `{tbl}`".format(col=col,
+                                                                    tbl=table)
+                })
 
-def where_clause(table, where_data):
+        clause = []
+        for itm in clean_list_string(where_obj[where_itm]):
+            clause.append(
+                col + ask_item +
+                add_data(itm, schema[tbl]["columns"][col.split(".")[1]]))
+
+        where.append("(" + " or ".join(clause) + ")")
+
+    return " and ".join(where) if len(where) > 0 else ""
+
+
+def where_clause(table, sent):
     """ convert the {where_data} JSON into SQL """
-    if where_data is None:
+    if "where" not in sent:
         return ""
 
-    this_cols = schema[table]["columns"]
     sql_joins = {}
-    where = []
-    for ask_item in ASKS:
-        if ask_item not in where_data:
-            continue
 
-        for where_itm in where_data[ask_item]:
-            alias = table
-            tbl = table
-            col = where_itm
-            if where_itm.find(".") >= 0:
-                col, tbl = find_foreign_column(sql_joins, table, col)
-            elif col not in this_cols:
+    if isinstance(sent["where"], str):
+        return sent["where"]
+
+    if isinstance(sent["where"], object):
+        for ask_item in sent["where"]:
+            if ask_item not in ASKS:
                 flask.abort(
                     400, {
                         "error":
-                        "Column `{col}` is not in table `{tbl}`".format(
-                            col=col, tbl=table)
+                        "Comparison `{syb}` not supported".format(syb=ask_item)
                     })
+            where = each_where_obj(sql_joins, table, ask_item,
+                                   sent["where"][ask_item])
 
-            clause = []
-            for itm in clean_list_string(where_data[ask_item][where_itm]):
-                clause.append(col + ASKS[ask_item] + add_data(itm, schema[tbl]["columns"][col.split(".")[1]]))
-
-            where.append("(" + " or ".join(clause) + ")")
-
-    return " ".join([ sql_joins[x] for x in sql_joins]) + (" where " + " and ".join(where)) if len(where) > 0 else ""
+    return " ".join([sql_joins[x]
+                     for x in sql_joins]) + (" where " +
+                                             where) if len(where) > 0 else ""
 
 
 def plain_value(data):
@@ -349,35 +373,56 @@ def give_schema():
     return json.dumps(schema), 200
 
 
-@application.route("/meta/v1/schema/<table_name>")
-def give_table_schema(table_name):
+@application.route("/meta/v1/schema/<table>")
+def give_table_schema(table):
     """ respond with schema for one <table> """
-    if table_name not in schema:
+    if table not in schema:
         flask.abort(404, {"error": "Table not found"})
-    return json.dumps(schema[table_name]), 200
+    return json.dumps(schema[table]), 200
 
 
-@application.route("/data/v1/<table_name>", methods=['GET'])
-def get_table_row(table_name):
-    """ run select queries """
-    if table_name not in schema:
-        flask.abort(404, {"error": "Table not found"})
+def build_sql(table, sent):
+    """ build the SQL needed to run the users query on {table} """
+    sql = "select {tbl}.* from {tbl} ".format(tbl=table)
+    sql = sql + where_clause(table, sent)
+    if "order" in sent:
+        sql = sql + " order by " + ",".join(clean_list_string(sent["order"]))
 
-    sent = flask.request.json if flask.request.json is not None else {}
-    sql = "select {tbl}.* from {tbl} ".format(tbl=table_name)
-    sql = sql + where_clause(table_name, sent)
-    print(">>>>",sql)
+    start = 0
+    if "limit" in sent:
+        sql = sql + " limit " + str(int(sent["limit"]))
+        if "skip" in sent:
+            start = int(sent["skip"])
+            sql = sql + " offset " + str(start)
+    else:
+        if "skip" in sent:
+            flask.abort(406,
+                        {"error": "`skip` without `limit` is not allowed"})
 
+    print(">>>>", sql)
+    return start, sql
+
+
+def get_sql_rows(sql, start):
+    """ run the {sql} and return the rows """
     cnx.query(sql)
     res = cnx.store_result()
-    ret = res.fetch_row(maxrows=0, how=1)
-    if len(ret) <= 0:
-        flask.abort(404, {"error": "No Rows returned"})
+    rows = [r for r in res.fetch_row(maxrows=0, how=1)]
+    if len(rows) <= 0:
+        return {}, 200
 
-    prepare_row_data(ret, table_name)
+    rowid = start + 1
+    for row in rows:
+        row[":rowid:"] = rowid
+        rowid = rowid + 1
 
-    this_idxs = schema[table_name]["indexes"]
+    return rows
+
+
+def get_idx_cols(table, sent):
+    """ get suitable list of index columns for {table} """
     idx_cols = None
+    this_idxs = schema[table]["indexes"]
     if "by" in sent:
         snt_by = sent["by"]
         if isinstance(snt_by, str) and snt_by in this_idxs:
@@ -386,24 +431,45 @@ def get_table_row(table_name):
         else:
             idx_cols = clean_list_string(snt_by)
             for idx in idx_cols:
-                if idx not in schema[table_name]["columns"]:
+                if not (idx == ":rowid:" or idx in schema[table]["columns"]):
                     flask.abort(400,
                                 {"error": "Bad column name in `by` clause"})
-
     if idx_cols is None:
         idx_cols = this_idxs[find_best_index(this_idxs)]["columns"]
 
-    ret = {table_name: {unique_id(idx_cols, tmp): tmp for tmp in ret}}
+    if idx_cols is None:
+        idx_cols = [":rowid:"]
+
+    return idx_cols
+
+
+@application.route("/data/v1/<table>", methods=['GET'])
+def get_table_row(table):
+    """ run select queries """
+    if table not in schema:
+        flask.abort(404, {"error": "Table not found"})
+
+    sent = flask.request.json if flask.request.json is not None else {}
+
+    start, sql = build_sql(table, sent)
+    rows = get_sql_rows(sql, start)
+    prepare_row_data(rows, table)
+
+    rows = {
+        table:
+        {unique_id(get_idx_cols(table, sent), tmp): tmp
+         for tmp in rows}
+    }
 
     if "join" in sent:
         join = sent["join"]
-        if isinstance(join,bool):
+        if isinstance(join, bool):
             join = [":all:"] if join else None
         if join is not None:
-            handle_joins(ret, clean_list_string(join),
+            handle_joins(rows, clean_list_string(join),
                          ("join-basic" in sent and sent["join-basic"]))
 
-    return json.dumps(ret), 200
+    return json.dumps(rows), 200
 
 
 if __name__ == "__main__":
