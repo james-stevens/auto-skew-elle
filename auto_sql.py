@@ -3,6 +3,7 @@
 
 import json
 import os
+import sys
 from datetime import datetime
 from MySQLdb import _mysql
 from MySQLdb.constants import FIELD_TYPE
@@ -28,10 +29,11 @@ def convert_string(data):
     return data
 
 
-def mysql_connect():
+def connect_to_mysql():
     """ Connect to the database """
     for var in MYSQL_ENV:
-        if var not in os.environ:
+        if var not in os.environ or os.environ[var] == "":
+            print(f"ERROR: Environment variable '{var}' is missing")
             return None
 
     my_conv = MySQLdb.converters.conversions.copy()
@@ -39,16 +41,31 @@ def mysql_connect():
     my_conv[FIELD_TYPE.CHAR] = convert_string
     my_conv[FIELD_TYPE.STRING] = convert_string
     my_conv[FIELD_TYPE.VAR_STRING] = convert_string
+    sock="/tmp/mysql.sock"
+    host = None
+    port = None
+    if "MYSQL_CONNECT" in os.environ:
+        conn = os.environ["MYSQL_CONNECT"]
+        if conn[0] == "/":
+            sock = conn
+        else:
+            host = conn
+            port = 3306
+            if conn.find(":") >= 0:
+                svr = conn.split(":")
+                host = svr[0]
+                port = int(svr[1])
+
 
     return _mysql.connect(
         user=os.environ["MYSQL_USERNAME"],
         passwd=os.environ["MYSQL_PASSWORD"],
-        unix_socket=os.environ["MYSQL_CONNECT"],
+        unix_socket=sock,
+        host = host, port = port,
         db=os.environ["MYSQL_DATABASE"],
         conv=my_conv,
-        charset='utf8mb4',
-        init_command='SET NAMES UTF8',
-    )
+        charset='utf8mb4', init_command='SET NAMES UTF8',
+        )
 
 
 def find_best_index(idxes):
@@ -111,6 +128,9 @@ def clean_col_data(data, table, column):
     if this_col["type"] == "boolean":
         return int(data) != 0
 
+    if this_col["type"] == "decimal":
+        return float(data)
+
     if this_col["is_plain_int"]:
         return int(data)
 
@@ -139,7 +159,7 @@ def find_foreign_column(sql_joins, src_table, dstcol):
 
     if len(dst) != 2:
         flask.abort(
-            400, {"error": "Invalid column name `{col}`".format(col=dstcol)})
+            400, {"error": f"Invalid column name `{dstcol}`"})
 
     if dst[0] in schema[src_table]["columns"] and "join" in schema[src_table][
             "columns"][dst[0]]:
@@ -161,8 +181,7 @@ def find_foreign_column(sql_joins, src_table, dstcol):
         flask.abort(
             400, {
                 "error":
-                "Could not find a join for `{col}` to `{tbl}`".format(
-                    col=dstcol, tbl=src_table)
+                f"Could not find a join for `{dstcol}` to `{src_table}`"
             })
 
     alias = "__zz__" + col_name
@@ -193,8 +212,7 @@ def each_where_obj(sql_joins, table, ask_item, where_obj):
             flask.abort(
                 400, {
                     "error":
-                    "Column `{col}` is not in table `{tbl}`".format(col=col,
-                                                                    tbl=table)
+                    f"Column `{col}` is not in table `{table}`"
                 })
 
         clause = []
@@ -224,7 +242,7 @@ def where_clause(table, sent):
                 flask.abort(
                     400, {
                         "error":
-                        "Comparison `{syb}` not supported".format(syb=ask_item)
+                        f"Comparison `{ask_item}` not supported"
                     })
             where = each_where_obj(sql_joins, table, ask_item,
                                    sent["where"][ask_item])
@@ -286,7 +304,7 @@ def load_all_joins(need):
 def join_this_column(table, col, which):
     """ do we want join data for this {table.col} """
 
-    if which is None or len(which) == 0:
+    if which is None or len(which) == 0 or col[0] == ":":
         return None
 
     this_col = schema[table]["columns"][col]
@@ -348,7 +366,11 @@ def unique_id(best_idx, row):
     return "|".join([plain_value(row[idx]) for idx in best_idx])
 
 
-cnx = mysql_connect()
+cnx = connect_to_mysql()
+if cnx is None:
+    print("ERROR: Failed to connect to MySQL")
+    sys.exit(1)
+
 schema = mysql_schema.load_db_schema(cnx)
 application = flask.Flask("MySQL-Rest/API")
 
@@ -383,7 +405,7 @@ def give_table_schema(table):
 
 def build_sql(table, sent):
     """ build the SQL needed to run the users query on {table} """
-    sql = "select {tbl}.* from {tbl} ".format(tbl=table)
+    sql = f"select {table}.* from {table} "
     sql = sql + where_clause(table, sent)
     if "order" in sent:
         sql = sql + " order by " + ",".join(clean_list_string(sent["order"]))

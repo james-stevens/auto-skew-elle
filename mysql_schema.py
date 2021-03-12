@@ -99,7 +99,8 @@ def schema_of_col(new_schema, col):
                  and "also_boolean" in new_schema[":more:"]
                  and col["Field"] in new_schema[":more:"]["also_boolean"])):
                 this_type = "boolean"
-                del this_field["unsigned"]
+                if "unsigned" in this_field:
+                    del this_field["unsigned"]
             else:
                 this_field["size"] = int(this_size)
 

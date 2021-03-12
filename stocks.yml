@@ -1,0 +1,6 @@
+joins:
+  spot_price_id: spot_prices.spot_price_id
+  spot_rate_id: spot_rates.spot_rate_id
+  spot_value_id: spot_values.spot_value_id
+  ticker: tickers.ticker
+  eod_spot_value_id: spot_values.spot_value_id
