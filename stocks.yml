@@ -4,3 +4,4 @@ joins:
   spot_value_id: spot_values.spot_value_id
   ticker: tickers.ticker
   eod_spot_value_id: spot_values.spot_value_id
+  eow_spot_value_id: spot_values.spot_value_id
