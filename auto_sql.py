@@ -217,9 +217,10 @@ def each_where_obj(sql_joins, table, ask_item, where_obj):
 
         clause = []
         for itm in clean_list_string(where_obj[where_itm]):
+            c = col if col.find(".") < 0 else col.split(".")[1]
             clause.append(
                 col + ask_item +
-                add_data(itm, schema[tbl]["columns"][col.split(".")[1]]))
+                add_data(itm, schema[tbl]["columns"][c]))
 
         where.append("(" + " or ".join(clause) + ")")
 
