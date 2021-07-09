@@ -23,7 +23,7 @@ which it will complain about, if you don't have!
 
 I built it & run it on Alpine v3.13 and use the `apk py3-` modules than come with Alpine.
 
-Running this way runs it in test mode in a single thread on 127.0.0.1:8000
+Running this way runs it in test mode in a single thread on `127.0.0.1:5000`
 
 To run it in production, you really need to run it through something like `nginx` & `gunicorn`. This has all been set up for you
 in the form of a container.
@@ -39,7 +39,7 @@ In both cases it will read its connection to MySQL from the environment variable
 
 `MYSQL_CONNECT` can be a unix socket name, of IP Address & port, in the format `[address]:[port]`.
 
-The `dkrun` script expects you you have these environment variables in a file at `/usr/local/etc/autosql.env`
+The `dkrun` script uses `--env-file /usr/local/etc/autosql.env`, so expects you you have these environment variables in a file at `/usr/local/etc/autosql.env`
 
 The container will, by default start five threads, but if you want more (or less) you can specify a number in the
 environment variable `AUTO_SQL_SESSIONS`
@@ -47,6 +47,10 @@ environment variable `AUTO_SQL_SESSIONS`
 To check the API is working, simply ask for the ROOT page and you should get something like this
 
 	MySql-Auto-Rest/API: <database>
+
+e.g.
+
+	curl http://127.0.0.1:5000/
 
 where `<database>` is the name of the database you have asked it to connect to
 
