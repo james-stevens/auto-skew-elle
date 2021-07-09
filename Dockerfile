@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:3.13
 
 RUN rmdir /tmp
 RUN ln -s /dev/shm /tmp
