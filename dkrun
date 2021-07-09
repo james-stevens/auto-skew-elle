@@ -2,4 +2,4 @@
 
 docker run --read-only -it \
 	-v /opt/github/auto-skew-elle/etc:/usr/local/etc \
-	--env-file /usr/local/etc/autosql.env -p 800:443 auto_sql
+	--env-file /usr/local/etc/autosql.env -p 800:443 auto-skew-elle
