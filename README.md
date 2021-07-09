@@ -21,7 +21,7 @@ which it will complain about, if you don't have!
 - yaml
 - flask
 
-I built it & run it on Alpine v3.13 and use the `apk py3-` modules than come with alpine.
+I built it & run it on Alpine v3.13 and use the `apk py3-` modules than come with Alpine.
 
 Running this way runs it in test mode in a single thread on 127.0.0.1:8000
 
