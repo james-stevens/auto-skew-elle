@@ -13,10 +13,17 @@ Currently this is still in development
 
 # Running this API
 
-You can run it in test mode by simply running `./auto_sql.py`. You python installation will need a few modules
+You can run it in test mode by simply running `./auto_sql.py`. Your python installation will need a few modules
 which it will complain about, if you don't have!
 
-This runs it in test mode in a single thread on 127.0.0.1:8000
+- request
+- mysqlclient
+- yaml
+- flask
+
+I built it & run it on Alpine v3.13 and use the `apk py3-` modules than come with alpine.
+
+Running this way runs it in test mode in a single thread on 127.0.0.1:8000
 
 To run it in production, you really need to run it through something like `nginx` & `gunicorn`. This has all been set up for you
 in the form of a container.
