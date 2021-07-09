@@ -12,8 +12,6 @@ import flask
 
 import mysql_schema
 
-INTS = ["tinyint", "int", "bigint"]
-NUMBERS = INTS + ["decimal"]
 MYSQL_ENV = [
     "MYSQL_USERNAME", "MYSQL_PASSWORD", "MYSQL_CONNECT", "MYSQL_DATABASE"
 ]
@@ -259,8 +257,8 @@ def plain_value(data):
         return str(data)
     if ":value:" in data:
         return data[":value:"]
-    if ":join:" in data:
-        return data[data[":join:"].split(".")[1]]
+    if "join" in data:
+        return data[data["join"].split(".")[1]]
     return str(data)
 
 
@@ -379,10 +377,11 @@ application = flask.Flask("MySQL-Rest/API")
 @application.route("/")
 def hello():
     """ respond with a `hello` to confirm working """
-    return "MySql-Auto-Rest/API\n\n"
+    db = os.environ["MYSQL_DATABASE"]
+    return f"MySql-Auto-Rest/API: {db}\n\n"
 
 
-@application.route("/meta/v1/reload")
+@application.route("/v1/meta/reload")
 def reload_schema():
     """ reload the schema """
     global schema
@@ -390,13 +389,13 @@ def reload_schema():
     return json.dumps(schema), 200
 
 
-@application.route("/meta/v1/schema")
+@application.route("/v1/meta/schema")
 def give_schema():
     """ respond with full schema """
     return json.dumps(schema), 200
 
 
-@application.route("/meta/v1/schema/<table>")
+@application.route("/v1/meta/schema/<table>")
 def give_table_schema(table):
     """ respond with schema for one <table> """
     if table not in schema:
@@ -466,7 +465,7 @@ def get_idx_cols(table, sent):
     return idx_cols
 
 
-@application.route("/data/v1/<table>", methods=['GET'])
+@application.route("/v1/data/<table>", methods=['GET'])
 def get_table_row(table):
     """ run select queries """
     if table not in schema:

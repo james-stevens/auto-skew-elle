@@ -11,7 +11,7 @@ INTS = ["tinyint", "int", "bigint"]
 def load_more_schema(new_schema):
     """ load users file of additional schema information """
     new_schema[":more:"] = {}
-    filename = os.environ["MYSQL_DATABASE"] + ".yml"
+    filename = "/usr/local/etc/" + os.environ["MYSQL_DATABASE"] + ".yml"
     if os.path.isfile(filename):
         with open(filename) as file:
             data = file.read()
@@ -96,8 +96,8 @@ def schema_of_col(new_schema, col):
         else:
             if ((int(this_size) == 1 and this_type == "tinyint") or
                 (":more:" in new_schema
-                 and "also_boolean" in new_schema[":more:"]
-                 and col["Field"] in new_schema[":more:"]["also_boolean"])):
+                 and "is_boolean" in new_schema[":more:"]
+                 and col["Field"] in new_schema[":more:"]["is_boolean"])):
                 this_type = "boolean"
                 if "unsigned" in this_field:
                     del this_field["unsigned"]

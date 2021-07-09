@@ -44,7 +44,7 @@ joins:
   dns_8: hosts.hostname
   dns_9: hosts.hostname
 
-also_boolean:
+is_boolean:
   - account_pay_only
   - allow_backorder
   - allow_delete

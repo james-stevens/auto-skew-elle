@@ -1,0 +1,6847 @@
+{
+  ":more:": {
+    "joins": {
+      "event_type_id": "event_types.event_type_id",
+      "contact_id": "contacts.contact_id",
+      "finance_id": "contacts.contact_id",
+      "admin_id": "contacts.contact_id",
+      "tech_id": "contacts.contact_id",
+      "billing_id": "contacts.contact_id",
+      "owner_id": "contacts.contact_id",
+      "affiliate_id": "contacts.contact_id",
+      "epp_owner_id": "contacts.contact_id",
+      "epp_last_update_id": "contacts.contact_id",
+      "referred_by_id": "contacts.contact_id",
+      "default_finance_id": "contacts.contact_id",
+      "invoice_id": "invoices.invoice_id",
+      "credit_against_id": "invoices.invoice_id",
+      "commission_on_invoice_id": "invoices.invoice_id",
+      "status_id": "status.status_id",
+      "new_status_id": "status.status_id",
+      "renew_id": "renew.renew_id",
+      "new_renew_id": "renew.renew_id",
+      "forwarding_id": "forwarding.forwarding_id",
+      "card_log_id": "card_log.card_log_id",
+      "epp_login_id": "epp_logins.epp_login_id",
+      "staff": "staff.staff_id",
+      "price_list_id": "price_lists.price_list_id",
+      "referred_price_list_id": "price_lists.price_list_id",
+      "product": "products.product",
+      "domain_id": "domains.domain_id",
+      "account_id": "accounts.account_id",
+      "default_account_id": "accounts.account_id",
+      "default_zone": "zoneadmins.zone",
+      "zone": "zones.zone",
+      "dns_1": "hosts.hostname",
+      "dns_10": "hosts.hostname",
+      "dns_11": "hosts.hostname",
+      "dns_12": "hosts.hostname",
+      "dns_13": "hosts.hostname",
+      "dns_2": "hosts.hostname",
+      "dns_3": "hosts.hostname",
+      "dns_4": "hosts.hostname",
+      "dns_5": "hosts.hostname",
+      "dns_6": "hosts.hostname",
+      "dns_7": "hosts.hostname",
+      "dns_8": "hosts.hostname",
+      "dns_9": "hosts.hostname"
+    },
+    "is_boolean": [
+      "account_pay_only",
+      "allow_backorder",
+      "allow_delete",
+      "allow_renew",
+      "allow_trans",
+      "allow_update",
+      "been_refunded",
+      "create_contacts",
+      "create_domains",
+      "create_hosts",
+      "delete_contacts",
+      "delete_domains",
+      "delete_hosts",
+      "enabled",
+      "is_credit",
+      "in_retail_list",
+      "in_zone",
+      "need_renew",
+      "newsletter",
+      "on_hold",
+      "payments_on_hold",
+      "price_in_default_only",
+      "send_statement",
+      "transfer_domains"
+    ],
+    "enums": {
+      "allow_web_edit": {
+        "0": "No web edits (EPP or Registrar interface Only)",
+        "1": "Only Registrar password can web-edit (+EPP & Regs)",
+        "2": "Registrar or retail user (+EPP & Regs)"
+      },
+      "attempts": {
+        "0": "Never Tried",
+        "1": "Failed Once",
+        "2": "Failed Twice",
+        "3": "Failed 3 times",
+        "4": "Failed 4 times",
+        "5": "Failed 5 times",
+        "6": "Failed 6 times",
+        "7": "Failed 7 times",
+        "8": "Failed 8 times",
+        "9": "Failed 9 times",
+        "10000": "Card Rejected Once",
+        "10001": "Tried once, Rejected Once",
+        "10002": "Tried Twice, Rejected Once",
+        "10003": "Tried three times, Rejected Once",
+        "10099": "Card rejected by processing",
+        "20000": "Card Rejected Twice"
+      },
+      "auto_delete": {
+        "0": "It is queued to be deleted",
+        "1": "It is deleted immediatly"
+      },
+      "auto_enable_new": {
+        "1": "Processed Automatically",
+        "2": "Registrar Deferred Processing",
+        "0": "Require manual authorisation"
+      },
+      "auto_enable_renew": {
+        "1": "Processed Automatically",
+        "0": "Require manual authorisation"
+      },
+      "auto_enable_transfer": {
+        "1": "Processed Automatically",
+        "0": "Require manual authorisation"
+      },
+      "auto_process": {
+        "0": "Manual",
+        "1": "Auto",
+        "2": "Registrar",
+        "7": "By Account",
+        "8": "Clearing",
+        "9": "Failed",
+        "10": "Black-listed"
+      },
+      "auto_tax": {
+        "0": "0%",
+        "500": "5%",
+        "1000": "10%",
+        "1500": "15%",
+        "2000": "20%",
+        "2500": "25%",
+        "3000": "30%",
+        "3500": "35%",
+        "4000": "40%",
+        "4500": "45%",
+        "5000": "50%",
+        "5500": "55%"
+      },
+      "billing_language": {
+        "UK": "I am inside the UK",
+        "RST": "I am outside the EU",
+        "COM": "VAT registered business in the EU, outside the UK",
+        "AT": "Native tax payer in Austria",
+        "BE": "Native tax payer in Belgium",
+        "BG": "Native tax payer in Bulgaria",
+        "HR": "Native tax payer in Croatia",
+        "CY": "Native tax payer in Cyprus",
+        "CZ": "Native tax payer in Czech Republic",
+        "DK": "Native tax payer in Denmark",
+        "EE": "Native tax payer in Estonia",
+        "FI": "Native tax payer in Finland",
+        "FR": "Native tax payer in France",
+        "DE": "Native tax payer in Germany",
+        "EL": "Native tax payer in Greece",
+        "HU": "Native tax payer in Hungary",
+        "IE": "Native tax payer in Ireland",
+        "IT": "Native tax payer in Italy",
+        "LV": "Native tax payer in Latvia",
+        "LT": "Native tax payer in Lithuania",
+        "LU": "Native tax payer in Luxembourg",
+        "MT": "Native tax payer in Malta",
+        "NL": "Native tax payer in Netherlands",
+        "PL": "Native tax payer in Poland",
+        "PT": "Native tax payer in Portugal",
+        "RO": "Native tax payer in Romania",
+        "SK": "Native tax payer in Slovakia",
+        "SI": "Native tax payer in Slovenia",
+        "ES": "Native tax payer in Spain",
+        "SE": "Native tax payer in Sweden"
+      },
+      "card_type": {
+        "VISA": "Visa",
+        "M/C": "Master Card",
+        "WorldPay": "WorldPay",
+        "PayPal": "Pay-Pal",
+        "Bank": "Bank Transfer",
+        "VIS": "Visa (Old System)"
+      },
+      "category_id": {
+        "0": "For Domain",
+        "1": "For Back-Order"
+      },
+      "commission": {
+        "0": "Policy Default",
+        "500": "5%",
+        "1000": "10%",
+        "1250": "12.5%",
+        "1500": "15%",
+        "1750": "17.5%",
+        "2000": "20%"
+      },
+      "country": {
+        "XX": "-- select a country --",
+        "US": "United States of America",
+        "UK": "United Kingdom",
+        "AF": "Afghanistan",
+        "AL": "Albania",
+        "DZ": "Algeria",
+        "AS": "American Samoa",
+        "AD": "Andorra",
+        "AO": "Angola",
+        "AI": "Anguilla",
+        "AQ": "Antarctica",
+        "AG": "Antigua and Barbuda",
+        "AR": "Argentina",
+        "AM": "Armenia",
+        "AW": "Aruba",
+        "AU": "Australia",
+        "AT": "Austria",
+        "AZ": "Azerbaijan",
+        "BS": "Bahamas",
+        "BH": "Bahrain",
+        "BD": "Bangladesh",
+        "BB": "Barbados",
+        "BY": "Belarus",
+        "BE": "Belgium",
+        "BZ": "Belize",
+        "BJ": "Benin",
+        "BM": "Bermuda",
+        "BT": "Bhutan",
+        "BO": "Bolivia (Plurinational State of)",
+        "BQ": "Bonaire, Sint Eustatius and Saba",
+        "BA": "Bosnia and Herzegovina",
+        "BW": "Botswana",
+        "BV": "Bouvet Island",
+        "BR": "Brazil",
+        "IO": "British Indian Ocean Territory",
+        "BN": "Brunei Darussalam",
+        "BG": "Bulgaria",
+        "BF": "Burkina Faso",
+        "BI": "Burundi",
+        "CV": "Cabo Verde",
+        "KH": "Cambodia",
+        "CM": "Cameroon",
+        "CA": "Canada",
+        "KY": "Cayman Islands",
+        "CF": "Central African Republic",
+        "TD": "Chad",
+        "CL": "Chile",
+        "CN": "China",
+        "CX": "Christmas Island",
+        "CC": "Cocos (Keeling) Islands",
+        "CO": "Colombia",
+        "KM": "Comoros",
+        "CG": "Congo",
+        "CD": "Congo (Democratic Republic of the)",
+        "CK": "Cook Islands",
+        "CR": "Costa Rica",
+        "HR": "Croatia",
+        "CU": "Cuba",
+        "CW": "Curaçao",
+        "CY": "Cyprus",
+        "CZ": "Czech Republic",
+        "CI": "Côte d'Ivoire",
+        "DK": "Denmark",
+        "DJ": "Djibouti",
+        "DM": "Dominica",
+        "DO": "Dominican Republic",
+        "EC": "Ecuador",
+        "EG": "Egypt",
+        "SV": "El Salvador",
+        "GQ": "Equatorial Guinea",
+        "ER": "Eritrea",
+        "EE": "Estonia",
+        "ET": "Ethiopia",
+        "FK": "Falkland Islands (Malvinas)",
+        "FO": "Faroe Islands",
+        "FJ": "Fiji",
+        "FI": "Finland",
+        "FR": "France",
+        "GF": "French Guiana",
+        "PF": "French Polynesia",
+        "TF": "French Southern Territories",
+        "GA": "Gabon",
+        "GM": "Gambia",
+        "GE": "Georgia",
+        "DE": "Germany",
+        "GH": "Ghana",
+        "GI": "Gibraltar",
+        "GR": "Greece",
+        "GL": "Greenland",
+        "GD": "Grenada",
+        "GP": "Guadeloupe",
+        "GU": "Guam",
+        "GT": "Guatemala",
+        "GG": "Guernsey",
+        "GN": "Guinea",
+        "GW": "Guinea-Bissau",
+        "GY": "Guyana",
+        "HT": "Haiti",
+        "HM": "Heard Island and McDonald Islands",
+        "VA": "Holy See",
+        "HN": "Honduras",
+        "HK": "Hong Kong",
+        "HU": "Hungary",
+        "IS": "Iceland",
+        "IN": "India",
+        "ID": "Indonesia",
+        "IR": "Iran (Islamic Republic of)",
+        "IQ": "Iraq",
+        "IE": "Ireland",
+        "IM": "Isle of Man",
+        "IL": "Israel",
+        "IT": "Italy",
+        "JM": "Jamaica",
+        "JP": "Japan",
+        "JE": "Jersey",
+        "JO": "Jordan",
+        "KZ": "Kazakhstan",
+        "KE": "Kenya",
+        "KI": "Kiribati",
+        "KP": "Korea (Democratic People's Republic of)",
+        "KR": "Korea (Republic of)",
+        "KW": "Kuwait",
+        "KG": "Kyrgyzstan",
+        "LA": "Lao People's Democratic Republic",
+        "LV": "Latvia",
+        "LB": "Lebanon",
+        "LS": "Lesotho",
+        "LR": "Liberia",
+        "LY": "Libya",
+        "LI": "Liechtenstein",
+        "LT": "Lithuania",
+        "LU": "Luxembourg",
+        "MO": "Macao",
+        "MK": "Macedonia (the former Yugoslav Republic of)",
+        "MG": "Madagascar",
+        "MW": "Malawi",
+        "MY": "Malaysia",
+        "MV": "Maldives",
+        "ML": "Mali",
+        "MT": "Malta",
+        "MH": "Marshall Islands",
+        "MQ": "Martinique",
+        "MR": "Mauritania",
+        "MU": "Mauritius",
+        "YT": "Mayotte",
+        "MX": "Mexico",
+        "FM": "Micronesia (Federated States of)",
+        "MD": "Moldova (Republic of)",
+        "MC": "Monaco",
+        "MN": "Mongolia",
+        "ME": "Montenegro",
+        "MS": "Montserrat",
+        "MA": "Morocco",
+        "MZ": "Mozambique",
+        "MM": "Myanmar",
+        "NA": "Namibia",
+        "NR": "Nauru",
+        "NP": "Nepal",
+        "NL": "Netherlands",
+        "NC": "New Caledonia",
+        "NZ": "New Zealand",
+        "NI": "Nicaragua",
+        "NE": "Niger",
+        "NG": "Nigeria",
+        "NU": "Niue",
+        "NF": "Norfolk Island",
+        "MP": "Northern Mariana Islands",
+        "false": "Norway",
+        "OM": "Oman",
+        "PK": "Pakistan",
+        "PW": "Palau",
+        "PS": "Palestine, State of",
+        "PA": "Panama",
+        "PG": "Papua New Guinea",
+        "PY": "Paraguay",
+        "PE": "Peru",
+        "PH": "Philippines",
+        "PN": "Pitcairn",
+        "PL": "Poland",
+        "PT": "Portugal",
+        "PR": "Puerto Rico",
+        "QA": "Qatar",
+        "RO": "Romania",
+        "RU": "Russian Federation",
+        "RW": "Rwanda",
+        "RE": "Réunion",
+        "BL": "Saint Barthélemy",
+        "SH": "Saint Helena, Ascension and Tristan da Cunha",
+        "KN": "Saint Kitts and Nevis",
+        "LC": "Saint Lucia",
+        "MF": "Saint Martin (French part)",
+        "PM": "Saint Pierre and Miquelon",
+        "VC": "Saint Vincent and the Grenadines",
+        "WS": "Samoa",
+        "SM": "San Marino",
+        "ST": "Sao Tome and Principe",
+        "SA": "Saudi Arabia",
+        "SN": "Senegal",
+        "RS": "Serbia",
+        "SC": "Seychelles",
+        "SL": "Sierra Leone",
+        "SG": "Singapore",
+        "SX": "Sint Maarten (Dutch part)",
+        "SK": "Slovakia",
+        "SI": "Slovenia",
+        "SB": "Solomon Islands",
+        "SO": "Somalia",
+        "ZA": "South Africa",
+        "GS": "South Georgia and the South Sandwich Islands",
+        "SS": "South Sudan",
+        "ES": "Spain",
+        "LK": "Sri Lanka",
+        "SD": "Sudan",
+        "SR": "Suriname",
+        "SJ": "Svalbard and Jan Mayen",
+        "SZ": "Swaziland",
+        "SE": "Sweden",
+        "CH": "Switzerland",
+        "SY": "Syrian Arab Republic",
+        "TW": "Taiwan, Province of China",
+        "TJ": "Tajikistan",
+        "TZ": "Tanzania, United Republic of",
+        "TH": "Thailand",
+        "TL": "Timor-Leste",
+        "TG": "Togo",
+        "TK": "Tokelau",
+        "TO": "Tonga",
+        "TT": "Trinidad and Tobago",
+        "TN": "Tunisia",
+        "TR": "Turkey",
+        "TM": "Turkmenistan",
+        "TC": "Turks and Caicos Islands",
+        "TV": "Tuvalu",
+        "UG": "Uganda",
+        "UA": "Ukraine",
+        "AE": "United Arab Emirates",
+        "UM": "United States Minor Outlying Islands",
+        "UY": "Uruguay",
+        "UZ": "Uzbekistan",
+        "VU": "Vanuatu",
+        "VE": "Venezuela (Bolivarian Republic of)",
+        "VN": "Viet Nam",
+        "VG": "Virgin Islands (British)",
+        "VI": "Virgin Islands (U.S.)",
+        "WF": "Wallis and Futuna",
+        "EH": "Western Sahara",
+        "YE": "Yemen",
+        "ZM": "Zambia",
+        "ZW": "Zimbabwe",
+        "AX": "Åland Islands",
+        "-": "Other"
+      },
+      "currency": {
+        "USD": "USD",
+        "GBP": "GBP"
+      },
+      "def_private_whois": {
+        "0": "Addresses only",
+        "1": "No contact information",
+        "2": "ALL contact information"
+      },
+      "deferred_settlement": {
+        "0": "Account debits settled live",
+        "1": "Account debits settled in background"
+      },
+      "disclose_flags": {
+        "0": "All information can be disclosed",
+        "1": "Name",
+        "2": "Org/Name",
+        "3": "Name, Org/Name",
+        "4": "Address",
+        "5": "Name, Address",
+        "6": "Org/Name, Address",
+        "7": "Name, Org/Name, Address",
+        "8": "Phone",
+        "9": "Name, Phone",
+        "10": "Org/Name, Phone",
+        "11": "Name, Org/Name, Phone",
+        "12": "Address, Phone",
+        "13": "Name, Address, Phone",
+        "14": "Org/Name, Address, Phone",
+        "15": "Name, Org/Name, Address, Phone",
+        "16": "Fax",
+        "17": "Name, Fax",
+        "18": "Org/Name, Fax",
+        "19": "Name, Org/Name, Fax",
+        "20": "Address, Fax",
+        "21": "Name, Address, Fax",
+        "22": "Org/Name, Address, Fax",
+        "23": "Name, Org/Name, Address, Fax",
+        "24": "Phone, Fax",
+        "25": "Name, Phone, Fax",
+        "26": "Org/Name, Phone, Fax",
+        "27": "Name, Org/Name, Phone, Fax",
+        "28": "Address, Phone, Fax",
+        "29": "Name, Address, Phone, Fax",
+        "30": "Org/Name, Address, Phone, Fax",
+        "31": "Name, Org/Name, Address, Phone, Fax",
+        "32": "Email",
+        "33": "Name, Email",
+        "34": "Org/Name, Email",
+        "35": "Name, Org/Name, Email",
+        "36": "Address, Email",
+        "37": "Name, Address, Email",
+        "38": "Org/Name, Address, Email",
+        "39": "Name, Org/Name, Address, Email",
+        "40": "Phone, Email",
+        "41": "Name, Phone, Email",
+        "42": "Org/Name, Phone, Email",
+        "43": "Name, Org/Name, Phone, Email",
+        "44": "Address, Phone, Email",
+        "45": "Name, Address, Phone, Email",
+        "46": "Org/Name, Address, Phone, Email",
+        "47": "Name, Org/Name, Address, Phone, Email",
+        "48": "Fax, Email",
+        "49": "Name, Fax, Email",
+        "50": "Org/Name, Fax, Email",
+        "51": "Name, Org/Name, Fax, Email",
+        "52": "Address, Fax, Email",
+        "53": "Name, Address, Fax, Email",
+        "54": "Org/Name, Address, Fax, Email",
+        "55": "Name, Org/Name, Address, Fax, Email",
+        "56": "Phone, Fax, Email",
+        "57": "Name, Phone, Fax, Email",
+        "58": "Org/Name, Phone, Fax, Email",
+        "59": "Name, Org/Name, Phone, Fax, Email",
+        "60": "Address, Phone, Fax, Email",
+        "61": "Name, Address, Phone, Fax, Email",
+        "62": "Org/Name, Address, Phone, Fax, Email",
+        "63": "Name, Org/Name, Address, Phone, Fax, Email"
+      },
+      "discount": {
+        "0": "0%",
+        "500": "5%",
+        "1000": "10%",
+        "1500": "15%",
+        "2000": "20%",
+        "2500": "25%",
+        "3000": "30%",
+        "3500": "35%",
+        "4000": "40%",
+        "4500": "45%",
+        "5000": "50%",
+        "5500": "55%",
+        "6000": "60%"
+      },
+      "domain_rating": {
+        "0": "Standard Rated",
+        "100": "Silver Rated",
+        "200": "Gold Rated",
+        "300": "Platinum Rated",
+        "500": "Palladium Rated",
+        "99999999": "Unrestricted"
+      },
+      "expire_delete": {
+        "0": "Domain does not Expire",
+        "1": "1 Day",
+        "3": "3 Days",
+        "7": "One Week",
+        "14": "Two Weeks",
+        "30": "30 Days",
+        "60": "60 Days",
+        "90": "90 Days"
+      },
+      "geo_zone": {
+        "UK": "United Kingdom",
+        "EU": "Europe",
+        "EA": "Europe no VAT",
+        "EB": "Europe with VAT",
+        "RW": "Rest of World"
+      },
+      "hosts_fake_add": {
+        "0": "Depends on Policy",
+        "1": "Yes"
+      },
+      "invoice_type_id": {
+        "1": "Invoice",
+        "4": "Refund",
+        "5": "Account Credit",
+        "8": "Adhoc Admin",
+        "10": "Commission",
+        "11": "Network",
+        "110": "Refund Commission",
+        "111": "Refund Network"
+      },
+      "ir": {
+        "I": "Individual",
+        "R": "Role"
+      },
+      "is_credit": {
+        "0": "Debit",
+        "1": "Credit"
+      },
+      "is_deposit": {
+        "1": "Deposit / Drawn-Down Account",
+        "0": "Credit Card Payments"
+      },
+      "language": {
+        "UK": "I am inside the UK",
+        "RST": "I am outside the EU",
+        "COM": "VAT registered business in the EU, outside the UK",
+        "AT": "Native tax payer in Austria",
+        "BE": "Native tax payer in Belgium",
+        "BG": "Native tax payer in Bulgaria",
+        "HR": "Native tax payer in Croatia",
+        "CY": "Native tax payer in Cyprus",
+        "CZ": "Native tax payer in Czech Republic",
+        "DK": "Native tax payer in Denmark",
+        "EE": "Native tax payer in Estonia",
+        "FI": "Native tax payer in Finland",
+        "FR": "Native tax payer in France",
+        "DE": "Native tax payer in Germany",
+        "EL": "Native tax payer in Greece",
+        "HU": "Native tax payer in Hungary",
+        "IE": "Native tax payer in Ireland",
+        "IT": "Native tax payer in Italy",
+        "LV": "Native tax payer in Latvia",
+        "LT": "Native tax payer in Lithuania",
+        "LU": "Native tax payer in Luxembourg",
+        "MT": "Native tax payer in Malta",
+        "NL": "Native tax payer in Netherlands",
+        "PL": "Native tax payer in Poland",
+        "PT": "Native tax payer in Portugal",
+        "RO": "Native tax payer in Romania",
+        "SK": "Native tax payer in Slovakia",
+        "SI": "Native tax payer in Slovenia",
+        "ES": "Native tax payer in Spain",
+        "SE": "Native tax payer in Sweden"
+      },
+      "last_update_type": {
+        "1": "From Customer",
+        "2": "From Staff",
+        "3": "Staff Note",
+        "0": "Unknown"
+      },
+      "max_rating": {
+        "0": "Standard Rated",
+        "100": "Silver Rated",
+        "200": "Gold Rated",
+        "300": "Platinum Rated",
+        "500": "Palladium Rated",
+        "99999999": "Unrestricted"
+      },
+      "name": {
+        "web_idle_logout": "Registrar login session idle timeout (in seconds)",
+        "rate_limit_factor": "How many CGI calls in what time period before it counts as abuse (count:secs)",
+        "rate_limit_listen": "What IP and port does the rate limiter listen on",
+        "max_expire_delete": "Sanity check blocking expire-delete from deleting more than this number of names in one go",
+        "smtp_spooler": "SMTP Relay to spool all e-mail via",
+        "match_payment_source": "Match the source of a payment with what the user said they will do",
+        "zone_check_drift": "Percentage a zone counter can change by before failing sanity checks",
+        "zone_check_min": "Minimum number a zone counter must change by before is it sanity checked",
+        "auto_delete": "Domain automatic delete policy",
+        "auto_process_account_interval": "Time in mins between retries for deposit account transactions",
+        "auto_process_card_interval": "Time in mins between retries for credit card transactions",
+        "epp_any_login_ok": "IP Address list from which any login can be used (space sep)",
+        "low_account_warning_purchase": "Account balance low warning frequency during purchases",
+        "low_account_warning_regular": "Account balance low warning frequency during cron-job",
+        "live_update": "Use dynammic DNS to do all updates live (1/0)",
+        "domains_roid_prefix": "Domain ID Prefix",
+        "contacts_roid_prefix": "Contact ID Prefix",
+        "domains_info_notauth": "EPP, Asnwer DOMAIN/INFO requests to people without a correct password (1/0)",
+        "domains_info_notauth_ns": "EPP, Include NS list in DOMAIN/INFO requests to people without a correct password (1/0)",
+        "domains_info_notauth_dates": "EPP, Include Date information in DOMAIN/INFO requests to people without a correct password (1/0)",
+        "domains_info_notauth_contacts": "EPP, Include Contact information in DOMAIN/INFO requests to people without a correct password (1/0)",
+        "contacts_transfer": "EPP, Allow accounts to transfer contacts (1/0)",
+        "contacts_delete": "EPP, Allow accounts to delete contacts (1/0)",
+        "hosts_delete": "EPP, Allow accounts to delete hosts (1/0)",
+        "hosts_fake_add": "EPP, Fake a positive return code for all host/add (1/0)",
+        "domains_delete": "EPP, Allow accounts to delete domains (1/0)",
+        "account_empty_refuse": "Return an error if an account has no money (1/0)",
+        "forwarding_ns": "Name Servers used for Forwarding Domains (comma list)",
+        "password_reset_timeout": "Time (secs) a user is given to use a passowrd reset code",
+        "renew_notice_1": "Renewal Stage 1 - days left before expiry",
+        "renew_notice_2": "Renewal Stage 2 - days left before expiry",
+        "renew_notice_3": "Renewal Stage 3 - days left before expiry",
+        "renew_notice_4": "Renewal Stage 4 - days left before expiry",
+        "renew_notice_num": "Number of Automatic Renewal Stages",
+        "smtp_max_retry": "Number of times to re-try sending an e-mail before giving up",
+        "auto_process_tries": "Times to re-try a domain payment",
+        "card_processing_listen": "IP Address and port for kicking card processing daemon",
+        "manually_approve_new": "Should web non-account new domain registrations be manaully approved",
+        "manually_approve_renew": "Should web non-account domain renewals be manaully approved",
+        "manually_approve_new_tm": "Should non-account new domain registrations for TM be manaully approved",
+        "domains_renew_limit": "Number of years in the future domains can be renewed to",
+        "epp_idle_session_limit": "Amount of time in secs an EPP connection can be idle before being dropped",
+        "epp_time_session_limit": "Amount of time in secs an EPP connection can be open before being dropped",
+        "epp_xml_session_limit": "Number of XML transactions that can be executed in an EPP sessions before is it dropped",
+        "transfer_time_limit": "Number of days a pending transfer will wait to be approved",
+        "web_updates": "Allow changes to domains through the web interface",
+        "card_auto_blacklist": "Number of times in a row a credit card is declined before it is black listed",
+        "card_processing_max_fork": "Number of credit cards to try and process at the same time",
+        "policy_grace": "Number of days a previously live name remains in the zone file (default=30)",
+        "reserved_rr_data": "RR Data to put in the zone file against RESERVED names (blank = they do not appear in the zone file)",
+        "backorder_bonus_days": "Days of live service given to the new owner after a backorder is fulfilled",
+        "backorder_expire_delete": "Days after a back-order has expired before it is deleted",
+        "backorder_apply_delete": "Days after a back-order has been applied for before it is deleted",
+        "default_disclose_flags": "default_disclose_flags",
+        "expired_grace": "Days after a name has expired it is retained in the zone file",
+        "expiry_schedule_time": "Number of seconds into the day we run the delete for expired names (default=00:30=1800)",
+        "support_backorders": "Enable back-orders",
+        "payments_limit": "Limit on the number of outstanding payments a retail user can have (0=unlimited)",
+        "payments_limit.810": "Limit on the number of outstanding retail payments for Web_New (0=unlimited)",
+        "payments_limit.820": "Limit on the number of outstanding retail payments for Web_Renew (0=unlimited)",
+        "payments_limit.830": "Limit on the number of outstanding retail payments for Web_Transfer (0=unlimited)",
+        "payments_limit.9810": "Limit on the number of outstanding retail payments for Web_Back_New (0=unlimited)",
+        "payments_limit.9820": "Limit on the number of outstanding retail payments for Web_Back_Renew (0=unlimited)",
+        "payments_limit.9830": "Limit on the number of outstanding retail payments for Web_Back_Transfer (0=unlimited)",
+        "backorder_reserve_id": "NIC handle to hold failed back-order applications (0=delete immediatly)",
+        "backorder_reserve_time": "Number of days to add to expiry after the back-order is reserved (can be negative)",
+        "support_client_zone": "Support hosting Retail Client Zone Data (0=No, 1=Yes)",
+        "support_forwarding": "Support Retail Web and Mail Forwarding (0=No, 1=Yes)",
+        "client_zone_items": "Number of Cliet-Zone hosts allowed (default=20)",
+        "forwarding_items": "Number of Email Forwarding items allowed (default=10)",
+        "client_zone_ns": "DNS Name Servers that host the client zone data (comma separated)",
+        "ticket.our_domains": "Replies to tickets from these domains are considered to be from Staff (comma separated list)",
+        "ticket.process_addr": "Email Address that processes ticket updates",
+        "ticket.to_close": "Days since last update, or state change, when ticket goes PENDING to CLOSE",
+        "ticket.to_dead": "Days since last update, or state change, when ticket goes CLOSE to DEAD",
+        "ticket.to_pending": "Days since last update, or state change, when ticket goes OPEN to PENDING",
+        "drsadmin.backby": "For total earning by month, show how many months by default (default=3)",
+        "live_avail": "Maintain a live name availablility zone (0=No, 1=Yes)",
+        "max_avail_ttl": "Maximum TTL put on name availability records",
+        "transfer_create_block": "Block transfers within [N] days of initial domain registration (0=No Block)",
+        "block_duplicate_credentials": "Block Retail customers from being able to register contact records with credentials that already exist",
+        "create_mail_later": "Render PDF E-Mail attachments live, or in the mail spooler (1=spooler, 0=live) for live system always use 1",
+        "ban_email_within_domain": "Disallow contact email addresses within the domain being registered",
+        "manually_approve_new.tm": "manually_approve_new TM names (0=No, 1=Yes)",
+        "message_owner_days_left": "Messaging a domain owner is always allowed if it has X days left before expiry (default=30)",
+        "always_disclose_registrar": "Always disclose Registrars details in whois (0=Allow them to hide, 1=Always disclose them)",
+        "vat_registered": "Is this business VAT registered (Y/N)",
+        "affiliate_commission": "Affiliate Commission (Percent * 100, e.g. 1000=10.00%)",
+        "affiliate_idle_timeout": "Timeout in days a referral is remembered for (default=7 days)",
+        "affiliate_referred_price_list_id": "Default price list for end users referred by Affiliates (default=0 -> website default)",
+        "affiliate_price_list_id": "Default price list for Affiliates (default=0 -> website default)",
+        "max_free_trial": "Maximum number of free-trial domains allowed per admin_id",
+        "check_refer_skip": "Skip HTTP_REFERER check (default=0)",
+        "pdns_server": "PowerDNS Server & API-Key (IP:port key)",
+        "catalog_zone": "Catalog zone of [zones]",
+        "http_proxy": "HTTP(S) Proxy for sending out WebHooks",
+        "epp_premium_fees": "Fees must be submitted when buying premium domains over EPP, at or above this rating (default=0, 0=Never Required)",
+        "dns_update_server": "IP Address to send DNS updates (nsupdate) to"
+      },
+      "new_renew": {
+        "N": "New/Dom",
+        "R": "Renew/Dom",
+        "B": "New/Back",
+        "K": "Renew/Back"
+      },
+      "num_years": {
+        "1": "1 Year",
+        "2": "2 Years",
+        "3": "3 Years",
+        "4": "4 Years",
+        "5": "5 Years",
+        "6": "6 Years",
+        "7": "7 Years",
+        "8": "8 Years",
+        "9": "9 Years",
+        "10": "10 Years",
+        "11": "11 Years",
+        "12": "12 Years",
+        "13": "13 Years",
+        "14": "14 Years",
+        "15": "15 Years",
+        "10001": "1 Month",
+        "10002": "2 Months",
+        "10003": "3 Months",
+        "10006": "6 Months",
+        "10007": "7 Months",
+        "10009": "9 Months",
+        "10010": "10 Months",
+        "10012": "12 Months",
+        "10013": "13 Months",
+        "10014": "14 Months",
+        "10024": "24 Months",
+        "10025": "25 Months",
+        "10026": "26 Months",
+        "20030": "30 Days",
+        "20037": "37 Days",
+        "20060": "60 Days",
+        "20067": "67 Days",
+        "20090": "90 Days",
+        "20097": "97 Days"
+      },
+      "paytype_id": {
+        "710": "EPP_New",
+        "720": "EPP_Renew",
+        "730": "EPP_Transfer",
+        "810": "Web_New",
+        "820": "Web_Renew",
+        "830": "Web_Transfer",
+        "910": "Auto_New",
+        "920": "Auto_Renew",
+        "930": "Auto_Transfer",
+        "9710": "EPP_Back_New",
+        "9720": "EPP_Back_Renew",
+        "9730": "EPP_Back_Transfer",
+        "9810": "Web_Back_New",
+        "9820": "Web_Back_Renew",
+        "9830": "Web_Back_Transfer",
+        "9910": "Auto_Back_New",
+        "9920": "Auto_Back_Renew",
+        "9930": "Auto_Back_Transfer",
+        "10710": "Refund_EPP_New",
+        "10720": "Refund_EPP_Renew",
+        "10730": "Refund_EPP_Transfer",
+        "10810": "Refund_Web_New",
+        "10820": "Refund_Web_Renew",
+        "10830": "Refund_Web_Transfer",
+        "10910": "Refund_Auto_New",
+        "10920": "Refund_Auto_Renew",
+        "10930": "Refund_Auto_Transfer",
+        "19710": "Refund_EPP_Back_New",
+        "19720": "Refund_EPP_Back_Renew",
+        "19730": "Refund_EPP_Back_Transfer",
+        "19810": "Refund_Web_Back_New",
+        "19820": "Refund_Web_Back_Renew",
+        "19830": "Refund_Web_Back_Transfer",
+        "19910": "Refund_Auto_Back_New",
+        "19920": "Refund_Auto_Back_Renew",
+        "19930": "Refund_Auto_Back_Transfer"
+      },
+      "pending_limit": {
+        "0": "No Limit",
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6",
+        "7": "7",
+        "8": "8",
+        "9": "9",
+        "10": "10",
+        "11": "11",
+        "12": "12",
+        "13": "13",
+        "14": "14",
+        "15": "15",
+        "16": "16",
+        "17": "17",
+        "18": "18",
+        "19": "19",
+        "20": "20",
+        "21": "21",
+        "22": "22",
+        "23": "23",
+        "24": "24",
+        "25": "25",
+        "26": "26",
+        "27": "27",
+        "28": "28",
+        "29": "29",
+        "30": "30",
+        "35": "35",
+        "40": "40",
+        "45": "45",
+        "50": "50",
+        "55": "55",
+        "60": "60",
+        "65": "65",
+        "70": "70",
+        "75": "75"
+      },
+      "priority": {
+        "0": "Normal",
+        "1": "High",
+        "2": "Urgent",
+        "3": "Emergency"
+      },
+      "private_whois": {
+        "0": "Addresses only",
+        "1": "No contact information",
+        "2": "ALL contact information"
+      },
+      "queries_per_min": {
+        "50": "50",
+        "100": "100",
+        "150": "150",
+        "200": "200",
+        "250": "250",
+        "300": "300",
+        "350": "350",
+        "400": "400",
+        "450": "450",
+        "500": "500",
+        "550": "550",
+        "600": "600"
+      },
+      "rating": {
+        "0": "Standard Rated",
+        "100": "Silver Rated",
+        "200": "Gold Rated",
+        "300": "Platinum Rated",
+        "500": "Palladium Rated",
+        "99999999": "Unrestricted"
+      },
+      "reg_source": {
+        "10": "Web",
+        "20": "E-Mail",
+        "30": "EPP",
+        "101": "101: Austria",
+        "102": "102: Belgium",
+        "103": "103: Bulgaria",
+        "104": "104: Croatia",
+        "105": "105: Cyprus",
+        "106": "106: Czech Republic",
+        "107": "107: Denmark",
+        "108": "108: Estonia",
+        "109": "109: Finland",
+        "110": "110: France",
+        "111": "111: Germany",
+        "112": "112: Greece",
+        "113": "113: Hungary",
+        "114": "114: Ireland",
+        "115": "115: Italy",
+        "116": "116: Latvia",
+        "117": "117: Lithuania",
+        "118": "118: Luxembourg",
+        "119": "119: Malta",
+        "120": "120: Netherlands",
+        "121": "121: Poland",
+        "122": "122: Portugal",
+        "123": "123: Romania",
+        "124": "124: Slovakia",
+        "125": "125: Slovenia",
+        "126": "126: Spain",
+        "127": "127: Sweden",
+        "128": "128: United Kingdom"
+      },
+      "renew_limit": {
+        "0": "No Limit",
+        "1": "1 Year",
+        "2": "2 Years",
+        "3": "3 Years",
+        "4": "4 Years",
+        "5": "5 Years",
+        "6": "6 Years",
+        "7": "7 Years",
+        "8": "8 Years",
+        "9": "9 Years",
+        "10": "10 Years",
+        "11": "11 Years",
+        "12": "12 Years",
+        "13": "13 Years",
+        "14": "14 Years",
+        "15": "15 Years",
+        "10001": "1 Month",
+        "10002": "2 Months",
+        "10003": "3 Months",
+        "10006": "6 Months",
+        "10007": "7 Months",
+        "10009": "9 Months",
+        "10010": "10 Months",
+        "10012": "12 Months",
+        "10013": "13 Months",
+        "10014": "14 Months",
+        "10024": "24 Months",
+        "10025": "25 Months",
+        "10026": "26 Months",
+        "20030": "30 Days",
+        "20037": "37 Days",
+        "20060": "60 Days",
+        "20067": "67 Days",
+        "20090": "90 Days",
+        "20097": "97 Days"
+      },
+      "reporting": {
+        "0": "No Periodic Reports",
+        "1": "Weekly Reports",
+        "2": "Monthly Reports"
+      },
+      "reset_period": {
+        "0": "No automatic discounts",
+        "20007": "1 Week",
+        "20014": "2 Weeks",
+        "20028": "4 Weeks",
+        "10001": "1 Month",
+        "10002": "2 Months",
+        "10003": "3 Months",
+        "20030": "30 Days",
+        "20060": "60 Days",
+        "20090": "90 Days"
+      },
+      "retain_create_dt": {
+        "0": "Reset on transfer",
+        "1": "Kept the same on transfer"
+      },
+      "rr_type": {
+        "A": "IPv4 Address",
+        "AAAA": "IPv6 Address",
+        "CNAME": "CNAME Record",
+        "MX10": "Level-1 Mail Server",
+        "MX20": "Level-2 Mail Server",
+        "MX30": "Level-3 Mail Server",
+        "TXT": "Text Record",
+        "NS": "Subdomain NS",
+        "DS": "Subdomain DS"
+      },
+      "simultaneous_sessions": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6",
+        "7": "7",
+        "8": "8",
+        "9": "9",
+        "10": "10"
+      },
+      "status": {
+        "0": "Unknown",
+        "1": "Open",
+        "2": "Pending",
+        "9": "Closed",
+        "99": "Dead"
+      },
+      "tax_region": {
+        "XX": "--- select your tax status / region ---",
+        "UK": "I am inside the UK",
+        "RST": "I am outside the EU",
+        "COM": "VAT registered business in the EU",
+        "AT": "Native tax payer in Austria",
+        "BE": "Native tax payer in Belgium",
+        "BG": "Native tax payer in Bulgaria",
+        "CY": "Native tax payer in Cyprus",
+        "CZ": "Native tax payer in Czech Republic",
+        "DE": "Native tax payer in Germany",
+        "DK": "Native tax payer in Denmark",
+        "EE": "Native tax payer in Estonia",
+        "EL": "Native tax payer in Greece",
+        "ES": "Native tax payer in Spain",
+        "FI": "Native tax payer in Finland",
+        "FR": "Native tax payer in France",
+        "HR": "Native tax payer in Croatia",
+        "HU": "Native tax payer in Hungary",
+        "IE": "Native tax payer in Ireland",
+        "IT": "Native tax payer in Italy",
+        "LT": "Native tax payer in Lithuania",
+        "LU": "Native tax payer in Luxembourg",
+        "LV": "Native tax payer in Latvia",
+        "MT": "Native tax payer in Malta",
+        "NL": "Native tax payer in Netherlands",
+        "PL": "Native tax payer in Poland",
+        "PT": "Native tax payer in Portugal",
+        "RO": "Native tax payer in Romania",
+        "SE": "Native tax payer in Sweden",
+        "SI": "Native tax payer in Slovenia",
+        "SK": "Native tax payer in Slovakia"
+      },
+      "ttl": {
+        "86400": "1 Day",
+        "172800": "2 Days",
+        "4600": "1 Hour",
+        "300": "5 mins"
+      },
+      "update_type": {
+        "1": "From Customer",
+        "2": "From Staff",
+        "3": "Staff Note",
+        "0": "Unknown"
+      },
+      "used_as_login": {
+        "0": "Unverified, Not Used for Login",
+        "1": "Unverified, Used for Login",
+        "9": "Reset by EMail",
+        "10": "Reset by EMail & Used for Login",
+        "16": "Reset by EMail",
+        "17": "Reset by EMail & Used for Login"
+      },
+      "website": {
+        "DEFAULT": "Domain Registration Service",
+        "drsadm": "Names.Of.London Admin",
+        "eppd-GBP": "Names.Of.London Domain Registration EPP Service",
+        "londev.jrcs.net": "Names.Of.London Domain Registry",
+        "names.of.london": "Names.Of.London Domain Registry",
+        "whois-nol": "Names.Of.London Whois"
+      },
+      "which_service": {
+        "eppd-GBP": "EPP GBP",
+        "RegGBP": "Registrar Web-UI (GBP)"
+      }
+    }
+  },
+  "account_credits": {
+    "columns": {
+      "account_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "accounts",
+          "column": "account_id"
+        }
+      },
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "attempts": {
+        "size": 11,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "card_cvv": {
+        "size": 5,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_exp": {
+        "size": 5,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_name": {
+        "size": 40,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_number": {
+        "size": 20,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_type": {
+        "size": 20,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "currency": {
+        "size": 3,
+        "type": "char",
+        "null": true,
+        "is_plain_int": false
+      },
+      "total": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      }
+    },
+    "indexes": {
+      "by_account_id": {
+        "columns": [
+          "account_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "account_credits_archive": {
+    "columns": {
+      "account_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "accounts",
+          "column": "account_id"
+        }
+      },
+      "attempts": {
+        "size": 11,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "card_cvv": {
+        "size": 5,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_exp": {
+        "size": 5,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_name": {
+        "size": 40,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_number": {
+        "size": 20,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_type": {
+        "size": 20,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "currency": {
+        "size": 3,
+        "type": "char",
+        "null": true,
+        "is_plain_int": false
+      },
+      "filename": {
+        "size": 1024,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "invoice_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "invoices",
+          "column": "invoice_id"
+        }
+      },
+      "original_amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "original_created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "total": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      }
+    },
+    "indexes": {
+      "by_account_id": {
+        "columns": [
+          "account_id",
+          "invoice_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "accounts": {
+    "columns": {
+      "acc_tr_counter": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 1
+      },
+      "account_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "contact_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "currency": {
+        "size": 3,
+        "type": "char",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "current_balance": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "default_zone": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "zoneadmins",
+          "column": "zone"
+        }
+      },
+      "empty_refuse": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "finance_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "last_reset": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "next_warning_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "on_hold": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "opening_balance": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "overdraw_limit": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "pending_limit": {
+        "size": 11,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "previous_balance": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "reset_period": {
+        "size": 11,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "vat_number": {
+        "size": 50,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      },
+      "volume": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "volume_by": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "warn_low_balance": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "contact_id",
+          "currency"
+        ],
+        "unique": true
+      },
+      "by_id": {
+        "columns": [
+          "account_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "admin_query": {
+    "columns": {
+      "admin_query_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "description": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "publish_to_regs": {
+        "size": 1,
+        "type": "char",
+        "null": false,
+        "is_plain_int": false,
+        "default": "N"
+      },
+      "query": {
+        "size": 5000,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "short_name": {
+        "size": 50,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "admin_query_id"
+        ],
+        "unique": true
+      },
+      "by_short": {
+        "columns": [
+          "short_name"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "affiliates": {
+    "columns": {
+      "account_pay_only": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "auto_enable_new": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "auto_enable_renew": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "auto_enable_transfer": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "commission": {
+        "size": 11,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "contact_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "default_account_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "accounts",
+          "column": "account_id"
+        }
+      },
+      "enabled": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "newsletter": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "on_hold": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "paypal_account": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "price_in_default_only": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "price_list_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "price_lists",
+          "column": "price_list_id"
+        }
+      },
+      "referred_by_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "referred_price_list_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "price_lists",
+          "column": "price_list_id"
+        }
+      },
+      "reporting": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "web_code": {
+        "size": 10,
+        "type": "char",
+        "null": false,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "contact_id"
+        ],
+        "unique": true
+      },
+      "by_web_code": {
+        "columns": [
+          "web_code"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "backorders": {
+    "columns": {
+      "affiliate_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "domains",
+          "column": "domain_id"
+        }
+      },
+      "epp_owner_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "epp_password": {
+        "size": 128,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "expiry_dt": {
+        "type": "datetime",
+        "null": false,
+        "is_plain_int": false
+      },
+      "owner_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "retain_create_dt": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": true,
+        "is_plain_int": true
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "domain_id"
+        ],
+        "unique": true
+      },
+      "by_owner": {
+        "columns": [
+          "owner_id"
+        ],
+        "unique": false
+      }
+    }
+  },
+  "backorders_archive": {
+    "columns": {
+      "affiliate_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "backorder_amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "backorder_created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "domains",
+          "column": "domain_id"
+        }
+      },
+      "epp_owner_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "expiry_dt": {
+        "type": "datetime",
+        "null": false,
+        "is_plain_int": false
+      },
+      "owner_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "retain_create_dt": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": true,
+        "is_plain_int": true
+      },
+      "succeeded": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      }
+    },
+    "indexes": {
+      "by_domain_id": {
+        "columns": [
+          "domain_id"
+        ],
+        "unique": false
+      }
+    }
+  },
+  "card_black_list": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_black_list_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "card_number": {
+        "size": 30,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "decline_count": {
+        "size": 11,
+        "type": "int",
+        "null": true,
+        "is_plain_int": true
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "card_number"
+        ],
+        "unique": true
+      },
+      "by_id": {
+        "columns": [
+          "card_black_list_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "card_log": {
+    "columns": {
+      "auth_code": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_cvv": {
+        "size": 10,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_expiry": {
+        "size": 10,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_log_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "card_number": {
+        "size": 30,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_type": {
+        "size": 20,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "currency": {
+        "size": 3,
+        "type": "char",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_fqdn": {
+        "size": 255,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "domains",
+          "column": "domain_id"
+        }
+      },
+      "ekey_code": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "eslt_code": {
+        "size": 10,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "esta_code": {
+        "size": 10,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "message": {
+        "size": 255,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "return_code": {
+        "size": 10,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "session_code": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "total": {
+        "size": 20,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "trans_type": {
+        "size": 10,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "card_log_id"
+        ],
+        "unique": true
+      },
+      "by_domain": {
+        "columns": [
+          "domain_id",
+          "created_dt"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "client_zone": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "client_zone_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "domains",
+          "column": "domain_id"
+        }
+      },
+      "hostname": {
+        "size": 260,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "rr_data": {
+        "size": 4000,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      },
+      "rr_type": {
+        "size": 25,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": "A"
+      },
+      "ttl": {
+        "size": 11,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 86400
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "client_zone_id"
+        ],
+        "unique": true
+      },
+      "by_dom": {
+        "columns": [
+          "domain_id"
+        ],
+        "unique": false
+      }
+    }
+  },
+  "contacts": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": false,
+        "is_plain_int": false
+      },
+      "city": {
+        "size": 200,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "contact_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "country": {
+        "size": 200,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": false,
+        "is_plain_int": false
+      },
+      "disclose_flags": {
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "email": {
+        "size": 100,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "epp_last_update_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "epp_owner_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "epp_tag": {
+        "size": 50,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "fax": {
+        "size": 200,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "language": {
+        "size": 3,
+        "type": "char",
+        "null": true,
+        "is_plain_int": false
+      },
+      "last_used_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "name": {
+        "size": 250,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "org_name": {
+        "size": 250,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "password": {
+        "size": 100,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "phone": {
+        "size": 200,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "postcode": {
+        "size": 200,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "state": {
+        "size": 200,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "street": {
+        "size": 350,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "used_as_login": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": true,
+        "is_plain_int": true
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "contact_id"
+        ],
+        "unique": true
+      },
+      "by_epp": {
+        "columns": [
+          "epp_owner_id",
+          "epp_tag"
+        ],
+        "unique": true
+      },
+      "by_email": {
+        "columns": [
+          "email"
+        ],
+        "unique": false
+      }
+    }
+  },
+  "currencies": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "currency": {
+        "size": 3,
+        "type": "char",
+        "null": false,
+        "is_plain_int": false
+      },
+      "decimal_places": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": true,
+        "is_plain_int": true
+      },
+      "description": {
+        "size": 40,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "exchange_rate": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "exchange_value": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 10000
+      },
+      "html_symbol": {
+        "size": 15,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "seperator": {
+        "size": 2,
+        "type": "char",
+        "null": true,
+        "is_plain_int": false
+      },
+      "symbol": {
+        "size": 10,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "valid_as_account": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 1
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "currency"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "deleted_domains": {
+    "columns": {
+      "admin_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "affiliate_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "billing_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "dns_1": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_10": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_11": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_12": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_13": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_2": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_3": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_4": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_5": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_6": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_7": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_8": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_9": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "domain_amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "domains",
+          "column": "domain_id"
+        }
+      },
+      "ds_1": {
+        "size": 200,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "ds_2": {
+        "size": 200,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "ds_3": {
+        "size": 200,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "ds_4": {
+        "size": 200,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "ds_5": {
+        "size": 200,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "ds_6": {
+        "size": 200,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "epp_owner_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "epp_password": {
+        "size": 128,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "expiry_dt": {
+        "type": "datetime",
+        "null": false,
+        "is_plain_int": false
+      },
+      "forwarding_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "forwarding",
+          "column": "forwarding_id"
+        }
+      },
+      "name": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "owner_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "private_whois": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": true,
+        "is_plain_int": true
+      },
+      "renew_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "renew",
+          "column": "renew_id"
+        }
+      },
+      "status_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "status",
+          "column": "status_id"
+        }
+      },
+      "tech_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "www_fwd": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "zone": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "zones",
+          "column": "zone"
+        }
+      }
+    },
+    "indexes": {
+      "by_id": {
+        "columns": [
+          "domain_id"
+        ],
+        "unique": true
+      },
+      "by_name": {
+        "columns": [
+          "name",
+          "zone"
+        ],
+        "unique": false
+      }
+    }
+  },
+  "domain_actions": {
+    "columns": {
+      "domain_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "domains",
+          "column": "domain_id"
+        }
+      },
+      "email_file": {
+        "size": 75,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "new_renew_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": true,
+        "is_plain_int": true,
+        "join": {
+          "table": "renew",
+          "column": "renew_id"
+        }
+      },
+      "new_status_id": {
+        "size": 11,
+        "type": "int",
+        "null": true,
+        "is_plain_int": true,
+        "join": {
+          "table": "status",
+          "column": "status_id"
+        }
+      },
+      "when_dt": {
+        "type": "datetime",
+        "null": false,
+        "is_plain_int": false,
+        "default": "0000-00-00 00:00:00"
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "domain_id",
+          "when_dt"
+        ],
+        "unique": true
+      },
+      "by_date": {
+        "columns": [
+          "when_dt"
+        ],
+        "unique": false
+      }
+    }
+  },
+  "domains": {
+    "columns": {
+      "admin_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "affiliate_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": true,
+        "is_plain_int": true,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "billing_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "dns_1": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_10": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_11": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_12": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_13": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_2": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_3": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_4": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_5": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_6": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_7": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_8": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "dns_9": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "hosts",
+          "column": "hostname"
+        }
+      },
+      "domain_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "ds_1": {
+        "size": 200,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "ds_2": {
+        "size": 200,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "ds_3": {
+        "size": 200,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "ds_4": {
+        "size": 200,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "ds_5": {
+        "size": 200,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "ds_6": {
+        "size": 200,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "epp_owner_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "epp_password": {
+        "size": 128,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "expiry_dt": {
+        "type": "datetime",
+        "null": false,
+        "is_plain_int": false
+      },
+      "forwarding_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "forwarding",
+          "column": "forwarding_id"
+        }
+      },
+      "name": {
+        "size": 260,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "owner_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "private_whois": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "renew_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "renew",
+          "column": "renew_id"
+        }
+      },
+      "shortener_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "status_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "status",
+          "column": "status_id"
+        }
+      },
+      "tech_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "www_fwd": {
+        "size": 2000,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "zone": {
+        "size": 260,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": "",
+        "join": {
+          "table": "zones",
+          "column": "zone"
+        }
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "zone",
+          "name"
+        ],
+        "unique": true
+      },
+      "by_id": {
+        "columns": [
+          "domain_id"
+        ],
+        "unique": true
+      },
+      "by_expdt": {
+        "columns": [
+          "expiry_dt"
+        ],
+        "unique": false
+      },
+      "by_owner": {
+        "columns": [
+          "owner_id"
+        ],
+        "unique": false
+      },
+      "by_admin": {
+        "columns": [
+          "admin_id"
+        ],
+        "unique": false
+      },
+      "by_tech": {
+        "columns": [
+          "tech_id"
+        ],
+        "unique": false
+      },
+      "by_billing": {
+        "columns": [
+          "billing_id"
+        ],
+        "unique": false
+      },
+      "by_epp_owner": {
+        "columns": [
+          "epp_owner_id"
+        ],
+        "unique": false
+      },
+      "by_affiliate": {
+        "columns": [
+          "affiliate_id"
+        ],
+        "unique": false
+      }
+    }
+  },
+  "email_fwd": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "domains",
+          "column": "domain_id"
+        }
+      },
+      "email_from": {
+        "size": 100,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      },
+      "email_to": {
+        "size": 100,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      "domain_from": {
+        "columns": [
+          "domain_id",
+          "email_from"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "epp_logins": {
+    "columns": {
+      "account_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "accounts",
+          "column": "account_id"
+        }
+      },
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "auto_delete": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "contact_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "create_contacts": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "create_domains": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "create_hosts": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "def_admin_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "def_billing_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "def_dns_1": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "def_dns_2": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "def_dns_3": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "def_dns_4": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "def_dns_5": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "def_dns_6": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "def_private_whois": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": true,
+        "is_plain_int": true
+      },
+      "def_tech_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "delete_contacts": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "delete_domains": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "delete_hosts": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "epp_login_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "hosts_fake_add": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": true,
+        "is_plain_int": true
+      },
+      "login": {
+        "size": 25,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "password": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "queries_per_min": {
+        "size": 11,
+        "type": "int",
+        "null": true,
+        "is_plain_int": true
+      },
+      "renew_domains": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "simultaneous_sessions": {
+        "size": 11,
+        "type": "int",
+        "null": true,
+        "is_plain_int": true
+      },
+      "source_ip_range": {
+        "size": 2048,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "transfer_domains": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "epp_login_id"
+        ],
+        "unique": true
+      },
+      "by_login": {
+        "columns": [
+          "login"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "epp_messages": {
+    "columns": {
+      "contact_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "epp_message_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "message": {
+        "size": 255,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "when_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "xml": {
+        "size": 4096,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "epp_message_id"
+        ],
+        "unique": true
+      },
+      "by_contact": {
+        "columns": [
+          "contact_id"
+        ],
+        "unique": false
+      }
+    }
+  },
+  "event_types": {
+    "columns": {
+      "description": {
+        "size": 255,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "event_type_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "language": {
+        "size": 3,
+        "type": "char",
+        "null": true,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      "by_id": {
+        "columns": [
+          "event_type_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "events": {
+    "columns": {
+      "contact_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "domain_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "domains",
+          "column": "domain_id"
+        }
+      },
+      "event_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "event_type_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "event_types",
+          "column": "event_type_id"
+        }
+      },
+      "filename": {
+        "size": 1024,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "from_where": {
+        "size": 50,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "function": {
+        "size": 50,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "line_num": {
+        "size": 11,
+        "type": "int",
+        "null": true,
+        "is_plain_int": true
+      },
+      "notes": {
+        "size": 1024,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "program": {
+        "size": 50,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "when_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "who_did_it": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "event_id"
+        ],
+        "unique": true
+      },
+      "by_domain": {
+        "columns": [
+          "domain_id"
+        ],
+        "unique": false
+      },
+      "by_contact": {
+        "columns": [
+          "contact_id"
+        ],
+        "unique": false
+      }
+    }
+  },
+  "exchange_archive": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": false,
+        "is_plain_int": false,
+        "default": "0000-00-00 00:00:00"
+      },
+      "currency": {
+        "size": 3,
+        "type": "char",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "exchange_value": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 10000
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "currency",
+          "amended_dt"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "forwarding": {
+    "columns": {
+      "description": {
+        "size": 128,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "forwarding_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      }
+    },
+    "indexes": {
+      "by_id": {
+        "columns": [
+          "forwarding_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "hosts": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "domains",
+          "column": "domain_id"
+        }
+      },
+      "epp_creator_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "epp_last_update_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "epp_owner_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "host_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "hostname": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "ipv4": {
+        "size": 300,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "ipv6": {
+        "size": 500,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "host_id"
+        ],
+        "unique": true
+      },
+      "by_hostname": {
+        "columns": [
+          "hostname"
+        ],
+        "unique": true
+      },
+      "by_domain_id": {
+        "columns": [
+          "domain_id"
+        ],
+        "unique": false
+      }
+    }
+  },
+  "invoices": {
+    "columns": {
+      "account_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "accounts",
+          "column": "account_id"
+        }
+      },
+      "action": {
+        "size": 75,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "affiliate_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": true,
+        "is_plain_int": true,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "amount": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "been_refunded": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "billing_city": {
+        "size": 200,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "billing_country": {
+        "size": 200,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "billing_email": {
+        "size": 100,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "billing_fax": {
+        "size": 200,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "billing_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "billing_language": {
+        "size": 3,
+        "type": "char",
+        "null": true,
+        "is_plain_int": false
+      },
+      "billing_name": {
+        "size": 250,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "billing_org_name": {
+        "size": 250,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "billing_phone": {
+        "size": 200,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "billing_postcode": {
+        "size": 200,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "billing_state": {
+        "size": 200,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "billing_street": {
+        "size": 350,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "card_log_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "card_log",
+          "column": "card_log_id"
+        }
+      },
+      "commission_on_invoice_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": true,
+        "is_plain_int": true,
+        "join": {
+          "table": "invoices",
+          "column": "invoice_id"
+        }
+      },
+      "contact_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "credit_against_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": true,
+        "is_plain_int": true,
+        "join": {
+          "table": "invoices",
+          "column": "invoice_id"
+        }
+      },
+      "currency": {
+        "size": 3,
+        "type": "char",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_expiry_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "domains",
+          "column": "domain_id"
+        }
+      },
+      "domain_name": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_zone": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "filename": {
+        "size": 1024,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "invoice_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "invoice_type_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "num_years": {
+        "size": 11,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "product": {
+        "size": 50,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "join": {
+          "table": "products",
+          "column": "product"
+        }
+      },
+      "reg_source": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "tax": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "total": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "vat_number": {
+        "size": 50,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "invoice_id"
+        ],
+        "unique": true
+      },
+      "by_credit_id": {
+        "columns": [
+          "credit_against_id"
+        ],
+        "unique": true
+      },
+      "by_domain": {
+        "columns": [
+          "domain_id"
+        ],
+        "unique": false
+      },
+      "by_contact": {
+        "columns": [
+          "contact_id"
+        ],
+        "unique": false
+      },
+      "by_created_dt": {
+        "columns": [
+          "created_dt"
+        ],
+        "unique": false
+      }
+    }
+  },
+  "iso_countries": {
+    "columns": {
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "long_name": {
+        "size": 100,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "short_name": {
+        "size": 2,
+        "type": "char",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "short_name"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "languages": {
+    "columns": {
+      "iso_tag": {
+        "size": 3,
+        "type": "char",
+        "null": true,
+        "is_plain_int": false
+      },
+      "name": {
+        "size": 40,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      "by_id": {
+        "columns": [
+          "iso_tag"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "memos": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "memo": {
+        "size": 8192,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "reference": {
+        "size": 10,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      "by_ref": {
+        "columns": [
+          "reference"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "password_reset": {
+    "columns": {
+      "contact_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "domain_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "domains",
+          "column": "domain_id"
+        }
+      },
+      "enc_code": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "when_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      "by_id": {
+        "columns": [
+          "contact_id"
+        ],
+        "unique": true
+      },
+      "by_enc": {
+        "columns": [
+          "enc_code"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "payments": {
+    "columns": {
+      "account_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "accounts",
+          "column": "account_id"
+        }
+      },
+      "amended_dt": {
+        "type": "datetime",
+        "null": false,
+        "is_plain_int": false,
+        "default": "0000-00-00 00:00:00"
+      },
+      "amount": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "attempts": {
+        "size": 11,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "auto_process": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "card_cvv": {
+        "size": 5,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_exp": {
+        "size": 5,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_log_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "card_log",
+          "column": "card_log_id"
+        }
+      },
+      "card_name": {
+        "size": 40,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_number": {
+        "size": 20,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_type": {
+        "size": 20,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "category_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "contact_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "currency": {
+        "size": 3,
+        "type": "char",
+        "null": true,
+        "is_plain_int": false
+      },
+      "description": {
+        "size": 255,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "domains",
+          "column": "domain_id"
+        }
+      },
+      "epp_trid": {
+        "size": 200,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "finance_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "from_where": {
+        "size": 50,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "num_years": {
+        "size": 11,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "paytype_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "price_list_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "price_lists",
+          "column": "price_list_id"
+        }
+      },
+      "product": {
+        "size": 50,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "join": {
+          "table": "products",
+          "column": "product"
+        }
+      },
+      "refund_invoice_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "reg_source": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "tax": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "total": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "vat_number": {
+        "size": 50,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "amended_dt",
+          "auto_process",
+          "domain_id",
+          "category_id"
+        ],
+        "unique": true
+      },
+      "by_dom_cat": {
+        "columns": [
+          "domain_id",
+          "category_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "payments_archive": {
+    "columns": {
+      "account_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "accounts",
+          "column": "account_id"
+        }
+      },
+      "amount": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "attempts": {
+        "size": 11,
+        "type": "int",
+        "null": true,
+        "is_plain_int": true
+      },
+      "auto_process": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": true,
+        "is_plain_int": true
+      },
+      "card_cvv": {
+        "size": 5,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_exp": {
+        "size": 5,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_log_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "card_log",
+          "column": "card_log_id"
+        }
+      },
+      "card_name": {
+        "size": 40,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_number": {
+        "size": 20,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "card_type": {
+        "size": 20,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "category_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "contact_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "currency": {
+        "size": 3,
+        "type": "char",
+        "null": true,
+        "is_plain_int": false
+      },
+      "description": {
+        "size": 255,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_expiry_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "domains",
+          "column": "domain_id"
+        }
+      },
+      "epp_trid": {
+        "size": 200,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "finance_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "from_where": {
+        "size": 50,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "invoice_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": true,
+        "is_plain_int": true,
+        "join": {
+          "table": "invoices",
+          "column": "invoice_id"
+        }
+      },
+      "num_years": {
+        "size": 11,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "payment_amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "payment_created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "payments_archive_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "paytype_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "price_list_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "price_lists",
+          "column": "price_list_id"
+        }
+      },
+      "product": {
+        "size": 50,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "join": {
+          "table": "products",
+          "column": "product"
+        }
+      },
+      "reg_source": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "tax": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "total": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "vat_number": {
+        "size": 50,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "payments_archive_id"
+        ],
+        "unique": true
+      },
+      "by_dom_inv": {
+        "columns": [
+          "domain_id",
+          "invoice_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "paypal": {
+    "columns": {
+      "category_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "contact_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "currency": {
+        "size": 3,
+        "type": "char",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_fqdn": {
+        "size": 255,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "domains",
+          "column": "domain_id"
+        }
+      },
+      "paid_from": {
+        "size": 25,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "paypal_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "total": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "paypal_id"
+        ],
+        "unique": true
+      },
+      "by_domain_id": {
+        "columns": [
+          "domain_id"
+        ],
+        "unique": false
+      }
+    }
+  },
+  "paytype": {
+    "columns": {
+      "description": {
+        "size": 128,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "paytype_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      }
+    },
+    "indexes": {
+      "by_id": {
+        "columns": [
+          "paytype_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "phrases": {
+    "columns": {
+      "iso_tag": {
+        "size": 3,
+        "type": "char",
+        "null": false,
+        "is_plain_int": false
+      },
+      "phrase": {
+        "size": 255,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "phrase_name": {
+        "size": 40,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      },
+      "website": {
+        "size": 260,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "iso_tag",
+          "website",
+          "phrase_name"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "policy": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "name": {
+        "size": 50,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      },
+      "value": {
+        "size": 200,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "name"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "price_lists": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "auto_tax": {
+        "size": 11,
+        "type": "int",
+        "null": true,
+        "is_plain_int": true
+      },
+      "currency": {
+        "size": 3,
+        "type": "char",
+        "null": true,
+        "is_plain_int": false
+      },
+      "description": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "discount": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "parent_price_list_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "price_list_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "price_list_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "prices": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "amount": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "currency": {
+        "size": 3,
+        "type": "char",
+        "null": false,
+        "is_plain_int": false
+      },
+      "price_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "price_list_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "price_lists",
+          "column": "price_list_id"
+        }
+      },
+      "product": {
+        "size": 50,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "join": {
+          "table": "products",
+          "column": "product"
+        }
+      },
+      "tax": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "total": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "price_list_id",
+          "currency",
+          "product"
+        ],
+        "unique": true
+      },
+      "price_id": {
+        "columns": [
+          "price_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "products": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "new_renew": {
+        "size": 1,
+        "type": "char",
+        "null": true,
+        "is_plain_int": false
+      },
+      "num_years": {
+        "size": 11,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "product": {
+        "size": 50,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      },
+      "product_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "rating": {
+        "size": 11,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "reg_source": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "zone": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "zones",
+          "column": "zone"
+        }
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "product_id"
+        ],
+        "unique": true
+      },
+      "by_type": {
+        "columns": [
+          "rating",
+          "new_renew",
+          "reg_source",
+          "num_years",
+          "zone"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "pushlog": {
+    "columns": {
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "data_rec": {
+        "size": 4000,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "data_src": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "pushlog_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "pushlog_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "rating_names": {
+    "columns": {
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "description": {
+        "size": 100,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "rating": {
+        "size": 11,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "rating"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "ratings": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "name": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "rating": {
+        "size": 11,
+        "type": "int",
+        "null": true,
+        "is_plain_int": true
+      },
+      "zone": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "zones",
+          "column": "zone"
+        }
+      }
+    },
+    "indexes": {
+      "by_dom": {
+        "columns": [
+          "name",
+          "zone"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "regexp_ratings": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "description": {
+        "size": 100,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "name_regexp": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "rating": {
+        "size": 11,
+        "type": "int",
+        "null": true,
+        "is_plain_int": true
+      },
+      "regexp_rating_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "zone": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "zones",
+          "column": "zone"
+        }
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "regexp_rating_id"
+        ],
+        "unique": true
+      },
+      "by_zone": {
+        "columns": [
+          "zone"
+        ],
+        "unique": false
+      }
+    }
+  },
+  "registrars": {
+    "columns": {
+      "allow_web_edit": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "auto_enable_new": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "auto_enable_renew": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "auto_enable_transfer": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "contact_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "default_finance_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "default_zone": {
+        "size": 260,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": "",
+        "join": {
+          "table": "zoneadmins",
+          "column": "zone"
+        }
+      },
+      "deferred_settlement": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "max_rating": {
+        "size": 11,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "on_hold": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "price_list_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "price_lists",
+          "column": "price_list_id"
+        }
+      },
+      "send_statement": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "vat_number": {
+        "size": 50,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "contact_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "renew": {
+    "columns": {
+      "description": {
+        "size": 128,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "renew_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      }
+    },
+    "indexes": {
+      "by_id": {
+        "columns": [
+          "renew_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "session_codes": {
+    "columns": {
+      "contact_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "epp_login_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "epp_logins",
+          "column": "epp_login_id"
+        }
+      },
+      "last_used_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "session_code": {
+        "size": 100,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": ""
+      },
+      "session_code_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "source_ip": {
+        "size": 50,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "session_code"
+        ],
+        "unique": true
+      },
+      "by_id": {
+        "columns": [
+          "session_code_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "shorteners": {
+    "columns": {
+      "cname": {
+        "size": 128,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "description": {
+        "size": 128,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "shortener_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "shortener_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "staff": {
+    "columns": {
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "email": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "name": {
+        "size": 150,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "staff_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "staff_id"
+        ],
+        "unique": true
+      },
+      "by_name": {
+        "columns": [
+          "name"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "status": {
+    "columns": {
+      "allow_backorder": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "allow_delete": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "allow_renew": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "allow_trans": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "allow_update": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "description": {
+        "size": 128,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "epp_desc": {
+        "size": 128,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "expire_delete": {
+        "size": 11,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "in_retail_list": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "in_zone": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "status_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      }
+    },
+    "indexes": {
+      "by_id": {
+        "columns": [
+          "status_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "subject_lines": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "context": {
+        "size": 25,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "subject_line_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "tag": {
+        "size": 25,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "text": {
+        "size": 255,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "subject_line_id"
+        ],
+        "unique": true
+      },
+      "by_context": {
+        "columns": [
+          "context",
+          "tag"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "sysadmins": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "htpasswd": {
+        "size": 100,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      },
+      "ip_addrs": {
+        "size": 2000,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      },
+      "login": {
+        "size": 50,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "login"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "ticket_updates": {
+    "columns": {
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "filename": {
+        "size": 1024,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "have_attachment": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "message": {
+        "size": 20000,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "message_id": {
+        "size": 75,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "ticket_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "ticket_update_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "update_type": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "who_from": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "ticket_update_id"
+        ],
+        "unique": true
+      },
+      "by_ticket_id": {
+        "columns": [
+          "ticket_id"
+        ],
+        "unique": false
+      }
+    }
+  },
+  "tickets": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "contact_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "customer_email": {
+        "size": 100,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      },
+      "domain_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "domains",
+          "column": "domain_id"
+        }
+      },
+      "email_reference": {
+        "size": 75,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      },
+      "epp_owner_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "identifier": {
+        "size": 20,
+        "type": "char",
+        "null": false,
+        "is_plain_int": false
+      },
+      "last_update_type": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "last_updated_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "priority": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "staff_email": {
+        "size": 100,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      },
+      "status": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "subject": {
+        "size": 250,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "ticket_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "ticket_id"
+        ],
+        "unique": true
+      },
+      "by_ident": {
+        "columns": [
+          "identifier"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "tickets_archive": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "contact_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "customer_email": {
+        "size": 100,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      },
+      "deleted_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "domains",
+          "column": "domain_id"
+        }
+      },
+      "email_reference": {
+        "size": 75,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      },
+      "epp_owner_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "identifier": {
+        "size": 20,
+        "type": "char",
+        "null": false,
+        "is_plain_int": false
+      },
+      "last_update_type": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "last_updated_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "priority": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "staff_email": {
+        "size": 100,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      },
+      "status": {
+        "unsigned": true,
+        "size": 3,
+        "type": "tinyint",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "subject": {
+        "size": 250,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "ticket_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "ticket_id"
+        ],
+        "unique": true
+      },
+      "by_ident": {
+        "columns": [
+          "identifier"
+        ],
+        "unique": false
+      }
+    }
+  },
+  "transactions": {
+    "columns": {
+      "acc_tr_num": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "account_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "accounts",
+          "column": "account_id"
+        }
+      },
+      "amount": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "contact_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "contacts",
+          "column": "contact_id"
+        }
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "currency": {
+        "size": 3,
+        "type": "char",
+        "null": true,
+        "is_plain_int": false
+      },
+      "description": {
+        "size": 255,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "domain_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "domains",
+          "column": "domain_id"
+        }
+      },
+      "invoice_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": true,
+        "is_plain_int": true,
+        "join": {
+          "table": "invoices",
+          "column": "invoice_id"
+        }
+      },
+      "is_credit": {
+        "type": "boolean",
+        "null": false,
+        "is_plain_int": false,
+        "default": false
+      },
+      "post_balance": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "pre_balance": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "tax": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "total": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "transaction_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "account_id",
+          "acc_tr_num"
+        ],
+        "unique": true
+      },
+      "by_id": {
+        "columns": [
+          "transaction_id"
+        ],
+        "unique": true
+      },
+      "by_invoice": {
+        "columns": [
+          "invoice_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "tweets": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "category": {
+        "size": 40,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "description": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "hashtags": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "last_used_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "md5sum_url": {
+        "size": 40,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "post_domain": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "tweet_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      },
+      "url": {
+        "size": 400,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "tweet_id"
+        ],
+        "unique": true
+      },
+      "by_url": {
+        "columns": [
+          "url"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "vat_rates": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "full_name": {
+        "size": 128,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "notes": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "rate": {
+        "size": 10,
+        "places": 0,
+        "type": "decimal",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "reg_source": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "short_name": {
+        "size": 10,
+        "type": "char",
+        "null": false,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "short_name"
+        ],
+        "unique": true
+      },
+      "by_reg_source": {
+        "columns": [
+          "reg_source"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "websites": {
+    "columns": {
+      "base_dir": {
+        "size": 1024,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      },
+      "currency": {
+        "size": 3,
+        "type": "char",
+        "null": true,
+        "is_plain_int": false
+      },
+      "default_zone": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "zoneadmins",
+          "column": "zone"
+        }
+      },
+      "description": {
+        "size": 200,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "payment_methods": {
+        "size": 1024,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "price_list_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0,
+        "join": {
+          "table": "price_lists",
+          "column": "price_list_id"
+        }
+      },
+      "short_desc": {
+        "size": 50,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "website": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      }
+    },
+    "indexes": {
+      "by_name": {
+        "columns": [
+          "website"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "zone_check": {
+    "columns": {
+      "client_zone_names": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": false,
+        "is_plain_int": false,
+        "default": "0000-00-00 00:00:00"
+      },
+      "deligated_name_servers": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "deligated_names": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "forwarding_names": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "glue_count": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "reserved_names": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "zone": {
+        "size": 260,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false,
+        "default": "",
+        "join": {
+          "table": "zones",
+          "column": "zone"
+        }
+      },
+      "zone_check_id": {
+        "unsigned": true,
+        "size": 10,
+        "type": "int",
+        "serial": true,
+        "null": false,
+        "is_plain_int": true
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "zone",
+          "created_dt"
+        ],
+        "unique": true
+      },
+      "by_id": {
+        "columns": [
+          "zone_check_id"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "zoneadmins": {
+    "columns": {
+      "admin_addr": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "admin_name": {
+        "size": 60,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "billing_addr": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "billing_name": {
+        "size": 60,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "regs_url": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "return_addr": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "ssl_url": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "tech_addr": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "tech_name": {
+        "size": 60,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "url": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "zone": {
+        "size": 260,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false,
+        "join": {
+          "table": "zones",
+          "column": "zone"
+        }
+      }
+    },
+    "indexes": {
+      "by_name": {
+        "columns": [
+          "zone"
+        ],
+        "unique": true
+      }
+    }
+  },
+  "zones": {
+    "columns": {
+      "amended_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "created_dt": {
+        "type": "datetime",
+        "null": true,
+        "is_plain_int": false
+      },
+      "renew_limit": {
+        "size": 11,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "sort_order": {
+        "size": 11,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      },
+      "zone": {
+        "size": 260,
+        "type": "varchar",
+        "null": false,
+        "is_plain_int": false
+      },
+      "zone_group": {
+        "size": 100,
+        "type": "varchar",
+        "null": true,
+        "is_plain_int": false
+      },
+      "zone_len": {
+        "size": 11,
+        "type": "int",
+        "null": false,
+        "is_plain_int": true,
+        "default": 0
+      }
+    },
+    "indexes": {
+      ":primary:": {
+        "columns": [
+          "zone"
+        ],
+        "unique": true
+      }
+    }
+  }
+}
