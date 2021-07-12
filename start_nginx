@@ -40,6 +40,8 @@ echo "
         listen 443 ssl;
         server_name localhost;
 
+        root /opt/htdocs;
+
         ssl_certificate      certkey.pem;
         ssl_certificate_key  certkey.pem;
 
