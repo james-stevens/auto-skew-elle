@@ -3,4 +3,4 @@
 # Alternative license arrangements are possible, contact me for more information
 
 cd /usr/local/bin
-exec gunicorn --bind unix:/ram/auto_sql_$1.sock wsgi
+exec gunicorn --bind unix:/ram/auto_sql_$1.sock wsgi 2>&1 | exec logger -t auto-skew-elle

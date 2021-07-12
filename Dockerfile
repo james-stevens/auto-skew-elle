@@ -15,7 +15,9 @@ RUN ln -s /dev/shm /var/lib/nginx/tmp
 RUN ln -s /dev/shm /var/log/nginx
 RUN ln -s /dev/shm /run/nginx
 
-COPY certkey.pem /etc/nginx/
+RUN mkdir /opt/certs
+COPY certkey.pem /opt/certs
+
 RUN rm -f /etc/inittab
 RUN ln -s /ram/inittab /etc/inittab
 RUN ln -s /ram/nginx_ssl.conf /etc/nginx/nginx_ssl.conf
@@ -25,6 +27,6 @@ COPY index.html /opt/htdocs
 
 COPY *.py /usr/local/bin/
 RUN python3 -m compileall /usr/local/bin/
-COPY start start_wsgi start_nginx /usr/local/bin/
+COPY start start_wsgi start_nginx start_syslogd /usr/local/bin/
 
 CMD [ "/usr/local/bin/start" ]

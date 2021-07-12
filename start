@@ -3,7 +3,7 @@
 # Alternative license arrangements possible, contact me for more information
 
 {
-echo "::respawn:/sbin/syslogd -n -O -"
+echo "::respawn:/usr/local/bin/start_syslogd"
 
 sessions=5
 if test "${AUTO_SQL_SESSIONS}"; then sessions="${AUTO_SQL_SESSIONS}"; fi
