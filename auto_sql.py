@@ -374,7 +374,8 @@ schema = mysql_schema.load_db_schema(cnx)
 application = flask.Flask("MySQL-Rest/API")
 
 
-@application.route("/")
+@application.route("/v1")
+@application.route("/v1/")
 def hello():
     """ respond with a `hello` to confirm working """
     db = os.environ["MYSQL_DATABASE"]
@@ -382,6 +383,7 @@ def hello():
 
 
 @application.route("/v1/meta/reload")
+@application.route("/v1/meta/reload/")
 def reload_schema():
     """ reload the schema """
     global schema
@@ -390,12 +392,14 @@ def reload_schema():
 
 
 @application.route("/v1/meta/schema")
+@application.route("/v1/meta/schema/")
 def give_schema():
     """ respond with full schema """
     return json.dumps(schema), 200
 
 
 @application.route("/v1/meta/schema/<table>")
+@application.route("/v1/meta/schema/<table>/")
 def give_table_schema(table):
     """ respond with schema for one <table> """
     if table not in schema:
@@ -465,6 +469,7 @@ def get_idx_cols(table, sent):
     return idx_cols
 
 
+@application.route("/v1/data/<table>/", methods=['GET'])
 @application.route("/v1/data/<table>", methods=['GET'])
 def get_table_row(table):
     """ run select queries """

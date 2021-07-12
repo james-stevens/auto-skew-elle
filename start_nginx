@@ -50,9 +50,7 @@ echo "
         ssl_prefer_server_ciphers  on;
 
 
-        location / {
-            proxy_pass http://auto_sql_servers;
-        }
+        location /v1/ { proxy_pass http://auto_sql_servers/v1/; }
     }
 }"
 
