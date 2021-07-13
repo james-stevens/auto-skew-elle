@@ -469,8 +469,8 @@ def get_idx_cols(table, sent):
     return idx_cols
 
 
-@application.route("/v1/data/<table>/", methods=['GET'])
-@application.route("/v1/data/<table>", methods=['GET'])
+@application.route("/v1/data/<table>/", methods=['GET','POST'])
+@application.route("/v1/data/<table>", methods=['GET','POST'])
 def get_table_row(table):
     """ run select queries """
     if table not in schema:
