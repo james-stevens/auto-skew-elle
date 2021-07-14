@@ -55,8 +55,8 @@ if test "${SYSLOG_SERVER}"
 echo "
         root /opt/htdocs;
 
-        ssl_certificate      /opt/certs/certkey.pem;
-        ssl_certificate_key  /opt/certs/certkey.pem;
+        ssl_certificate      /opt/pems/certkey.pem;
+        ssl_certificate_key  /opt/pems/certkey.pem;
 
         ssl_session_cache    shared:SSL:1m;
         ssl_session_timeout  5m;

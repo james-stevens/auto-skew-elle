@@ -17,8 +17,8 @@ RUN ln -s /dev/shm /run/nginx
 
 RUN mkdir -p /etc/inittab.d /etc/start.d/
 
-RUN mkdir /opt/certs
-COPY certkey.pem /opt/certs
+RUN mkdir /opt/pems
+COPY certkey.pem /opt/pems
 
 RUN rm -f /etc/inittab
 RUN ln -s /ram/inittab /etc/inittab
