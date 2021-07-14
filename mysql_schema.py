@@ -130,6 +130,7 @@ def get_db_schema(cnx, new_schema):
     res = cnx.store_result()
     ret = res.fetch_row(maxrows=0, how=1)
 
+    print(">> Loading schema:",os.environ["MYSQL_DATABASE"])
     tbl_title = "Tables_in_" + os.environ["MYSQL_DATABASE"]
     for table in ret:
         new_schema[table[tbl_title]] = {}
