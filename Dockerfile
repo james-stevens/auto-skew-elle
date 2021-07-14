@@ -15,6 +15,8 @@ RUN ln -s /dev/shm /var/lib/nginx/tmp
 RUN ln -s /dev/shm /var/log/nginx
 RUN ln -s /dev/shm /run/nginx
 
+RUN mkdir -p /etc/inittab.d /etc/start.d/
+
 RUN mkdir /opt/certs
 COPY certkey.pem /opt/certs
 
