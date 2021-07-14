@@ -21,7 +21,7 @@ while test ${x} -lt ${sessions}
 
 echo "::respawn:/usr/local/bin/start_nginx"
 
-cat /etc/inittad.d/* 2>/dev/null
+cat /etc/inittab.d/* 2>/dev/null
 
 } > /ram/inittab
 
