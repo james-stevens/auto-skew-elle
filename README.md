@@ -44,7 +44,7 @@ In both cases it will read its connection to MySQL from the environment variable
 - MYSQL_USERNAME
 - MYSQL_PASSWORD
 
-`MYSQL_CONNECT` can be a unix socket name, or IP Address & port, in the format `[address]:[port]`.
+`MYSQL_CONNECT` will usually be an IP Address & port, in the format `[address]:[port]`.
 
 The `dkrun` script uses `--env-file /usr/local/etc/autosql.env`, so expects you you have these environment variables in a file at `/usr/local/etc/autosql.env`
 
@@ -57,7 +57,7 @@ To check the API is working, simply ask for the ROOT page and you should get som
 
 e.g. (for test mode)
 
-	curl http://127.0.0.1:5000/
+	curl http://127.0.0.1:5000/v1/
 
 where `<database>` is the name of the database you have asked it to connect to
 
