@@ -2,6 +2,11 @@
 # (c) Copyright 2019-2020, James Stevens ... see LICENSE for details
 # Alternative license arrangements possible, contact me for more information
 
+for file in $(find /etc/start.d/ -type f)
+do
+	. ${file}
+done
+
 {
 echo "::respawn:/usr/local/bin/start_syslogd"
 
@@ -16,7 +21,8 @@ while test ${x} -lt ${sessions}
 
 echo "::respawn:/usr/local/bin/start_nginx"
 
-} > /ram/inittab
+cat /etc/inittab.d/* 2>/dev/null
 
+} > /ram/inittab
 
 exec /sbin/init

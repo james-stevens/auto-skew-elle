@@ -15,14 +15,16 @@ RUN ln -s /dev/shm /var/lib/nginx/tmp
 RUN ln -s /dev/shm /var/log/nginx
 RUN ln -s /dev/shm /run/nginx
 
-RUN mkdir /opt/certs
-COPY certkey.pem /opt/certs
+RUN mkdir -p /etc/inittab.d /etc/start.d/
+
+RUN mkdir /opt/pems
+COPY certkey.pem /opt/pems
 
 RUN rm -f /etc/inittab
 RUN ln -s /ram/inittab /etc/inittab
 RUN ln -s /ram/nginx_ssl.conf /etc/nginx/nginx_ssl.conf
 
-RUN mkdir /opt/htdocs
+RUN mkdir -p /opt/htdocs /usr/local/etc
 COPY index.html /opt/htdocs
 
 COPY *.py /usr/local/bin/
