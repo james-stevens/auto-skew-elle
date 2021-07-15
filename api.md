@@ -84,10 +84,9 @@ The `:more:` property contains the exact contents of the YAML file, but in JSON 
 
 
 
-## /v1/meta/schema/<table> - Get the schema for a single table
+## /v1/meta/schema/[table] - Get the schema for a single table
 
 This returns the schema in exactly the same format as above, but for just the one table.
-.
 
 
 # `/v1/meta/reload` - Reload the schema
@@ -98,7 +97,7 @@ Therefore it would probably be better to just restart the container.
 
 
 
-# `GET/POST /v1/data/<table>` - Query the Table
+# `GET/POST /v1/data/[table]` - Query the Table
 
 When you query a table it will return an object which has a property by the name of the table you have queried. Within that
 there will be one property for each row returned and within that will be an object which contained each row.
