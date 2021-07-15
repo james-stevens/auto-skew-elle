@@ -61,7 +61,7 @@ e.g. (for test mode)
 
 where `<database>` is the name of the database you have asked it to connect to
 
-The documentation for the API itself is sufficiently complex, I have put it in a separate MD file.
+The documentation for the API itself is sufficiently complex, I have put it in a (separate MD file)[api.md].
 
 # Other ENV options
 
