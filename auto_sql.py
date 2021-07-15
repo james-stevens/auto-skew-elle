@@ -15,7 +15,7 @@ import mysql_schema
 MYSQL_ENV = [
     "MYSQL_USERNAME", "MYSQL_PASSWORD", "MYSQL_CONNECT", "MYSQL_DATABASE"
 ]
-ASKS = ["=", "!=", "<>", "<", ">", ">=", "<=", "like"]
+ASKS = ["=", "!=", "<>", "<", ">", ">=", "<=", "like", "regexp"]
 
 schema = {}
 
