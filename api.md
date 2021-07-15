@@ -208,6 +208,7 @@ Here's two exmaples
 
     { "by": "ticker" }
 
+.
 
     { "by": ":rowid:" }
 
