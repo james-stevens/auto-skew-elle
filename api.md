@@ -398,6 +398,11 @@ So the same output would look like this with the addition of `"join-simple": tru
     }
 
 
+You can see this has reduced the amount of data that the server needs to return although, in this exmaple, not by a lot.
+
+If you have restricted the number of rows to be returned using `limit` then only the rows that match ones that are actually returned
+will be added on.
+
 NOTE: to show the data is joined data, not original table data, the object name is the column that was joined to.
 
 You will need to either look at the schema for the `trades` table, or simply hard code the relationship in order to match the rows.
