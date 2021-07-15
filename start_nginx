@@ -45,9 +45,10 @@ echo "
         listen 443 ssl;
         server_name localhost;
 "
+
 if test "${SYSLOG_SERVER}"
 	then
-		echo $'\t\taccess_log syslog:server=${SYSLOG_SERVER},facility=local0,tag=nginx,severity=info;'
+		echo "		access_log syslog:server=${SYSLOG_SERVER},facility=local0,tag=nginx,severity=info;"
 	fi
 
 if test -f /etc/nginx/htpasswd
