@@ -6,6 +6,15 @@ This project reads a MySQL database schema and automatically provide a Rest/API 
 without the need to actually write any code.
 
 
+This container also provides a platform for deploying your JS Webapp. You just need to create a container based on this
+container, then add all your images, HTML, CSS & JS files into `/opt/htdocs`
+
+If you want to have `Basic` HTTP authentication, then add a file called `/etc/nginx/htpasswd` in standard `htpasswd` format.
+NOTE: `nginx` only supports `CRYPT` & APR1 password encryption, so I recommend you use `apr1`, e.g.
+
+	openssl passwd -apr1 myPassword
+
+
 # Work-in-Progress
 
 Currently this is still in development
