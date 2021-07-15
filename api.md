@@ -12,7 +12,7 @@ This will return a banner, plus the name of the database, for exmaple
 
 ## /v1/meta/schema - Get a copy of the full database schema
 
-This will include soem additional information that was provided in the YML file
+This will include some additional information that was provided in the YML file
 
 The returned JSON contains one object for each table, within that object there is a `columns` and `indexes` property.
 
