@@ -300,9 +300,9 @@ And now adding `"join":"ticker"` -> `{ "join":"ticker", "where":{"=":{"ticker":"
         "15": {
           "trade_id": 15,
           "ticker": {
-          "ticker": "AAPL",
-          "google": "AAPL:NASDAQ",
-          ":join:": "tickers.ticker"
+            "ticker": "AAPL",
+            "google": "AAPL:NASDAQ",
+            ":join:": "tickers.ticker"
           },
           "when_dt": "2021-01-04 14:33:00",
           "quantity": 50.0,
@@ -319,9 +319,9 @@ And now adding `"join":"ticker"` -> `{ "join":"ticker", "where":{"=":{"ticker":"
         "20": {
           "trade_id": 20,
           "ticker": {
-          "ticker": "AAPL",
-          "google": "AAPL:NASDAQ",
-          ":join:": "tickers.ticker"
+            "ticker": "AAPL",
+            "google": "AAPL:NASDAQ",
+            ":join:": "tickers.ticker"
           },
           "when_dt": "2020-12-21 17:22:00",
           "quantity": 52.0,
@@ -338,3 +338,67 @@ And now adding `"join":"ticker"` -> `{ "join":"ticker", "where":{"=":{"ticker":"
       }
     }
 
+Now the `ticker` column has been replaced by the corresponding object from the `tickers` table. The pseudo column `:join:`,
+in the joined data, tells you which column in the foreign table had been used to make the join.
+
+NOTE: this now means that the value of the `ticker` must be addressed as `data.trades[i].ticker.ticker`, instead of just
+`data.trades[i].ticker` had there been no join.
+
+
+The pseudo column name `:all:` can be used in the `join` clause to mean do all joins that are possible.  i.e. `{ "join": ":all:" }`
+
+
+In the JSON you send, if you set the boolean property `join-basic` to `true`, then the joined data will be attached as separate table objects and you will
+have to match them up in your code. This can be useful where a lot of rows join to a few rows that contain a lot of data.
+
+In this case the `tickers` table has only a small amount of data, so repeating the rows for `AAPL` each time does not represent a large
+overhead, but if the rows in `tickers` had been much bigger, it might have.
+
+So the same output would look like this with the addition of `"join-simple": true`
+
+  {
+    "trades": {
+      "15": {
+        "trade_id": 15,
+        "ticker": "AAPL",
+        "when_dt": "2021-01-04 14:33:00",
+        "quantity": 50,
+        "currency": "USD",
+        "price": 132.82382,
+        "exchange_rate": 1.36258,
+        "total_cost_gbp": 4931.66,
+        "account_held": "HL Shares",
+        "spot_value_id": 25417059,
+        "eod_spot_value_id": 25014831,
+        "eow_spot_value_id": 23864478,
+        ":rowid:": 1
+      },
+      "20": {
+        "trade_id": 20,
+        "ticker": "AAPL",
+        "when_dt": "2020-12-21 17:22:00",
+        "quantity": 52,
+        "currency": "USD",
+        "price": 125.46501,
+        "exchange_rate": 1.33547,
+        "total_cost_gbp": 4946.11,
+        "account_held": "HL Shares",
+        "spot_value_id": 25417064,
+        "eod_spot_value_id": 25014836,
+        "eow_spot_value_id": 23864483,
+        ":rowid:": 2
+      }
+    },
+    "tickers.ticker": {
+      "AAPL": {
+        "ticker": "AAPL",
+        "google": "AAPL:NASDAQ"
+      }
+    }
+  }
+
+
+NOTE: to show the data is joined data, not original table data, the object name is the column that was joined to.
+
+You will need to either look at the schema for the `trades` table, or simply hard code the relationship in order to match the rows.
+The object name for the joined data will always be the same as the column it was joined on.
