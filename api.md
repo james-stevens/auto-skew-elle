@@ -204,13 +204,7 @@ The `by` property can be either a list type or a string type, where a string is 
 
 The pseudo type `:rowid:` can be used
 
-Here's two exmaples
-
-    { "by": "ticker" }
-
-.
-
-    { "by": ":rowid:" }
+Here's two exmaples `{ "by": "ticker" }` & `{ "by": ":rowid:" }`
 
 
 Here's an exmaple, where `{ "by": ":rowid:" }` was specified
