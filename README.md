@@ -62,3 +62,21 @@ e.g. (for test mode)
 where `<database>` is the name of the database you have asked it to connect to
 
 The documentation for the API itself is sufficiently complex, I have put it in a separate MD file.
+
+# Other ENV options
+
+There are two other environment options you can use
+
+## AUTO_SQL_SESSIONS
+
+Is a positive integer and specifies the number of python threads to start, which `nginx` will automatically load balance your queries over.
+
+NOTE: There is no guarantee that subusquent queries will go to the same thread, so if you SQL relies on creating MySQL local variables,
+it will probably not work.
+
+
+## SYSLOG_SERVER
+
+This optionally takes an IP Address. If you set this value, then all syslogging will be sent to this IP Address.
+If it is not set, then all syslog will go to `stdout`.
+
