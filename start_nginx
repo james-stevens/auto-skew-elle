@@ -16,15 +16,13 @@ events {
 
 if test "${SYSLOG_SERVER}"
 	then
-		echo "error_log syslog:server=${SYSLOG_SERVER},facility=local0,tag=nginx,severity=error;"
+		echo "error_log syslog:server=${SYSLOG_SERVER},facility=local0,tag=nginx error;"
 	fi
 
 echo "
 user daemon;
 
 http {
-    access_log      off;
-    error_log       stderr error;
     include         mime.types;
     default_type    application/octet-stream;
     sendfile        on;
@@ -49,8 +47,15 @@ echo "
 "
 if test "${SYSLOG_SERVER}"
 	then
-		echo "        access_log syslog:server=${SYSLOG_SERVER},facility=local0,tag=nginx,severity=info;"
+		echo $'\t\taccess_log syslog:server=${SYSLOG_SERVER},facility=local0,tag=nginx,severity=info;'
 	fi
+
+if test -f /etc/nginx/htpasswd
+	then
+		echo $'\t\tauth_basic "Auto-Skew-Elle";'
+		echo $'\t\tauth_basic_user_file  /etc/nginx/htpasswd;'
+	fi
+
 
 echo "
         root /opt/htdocs;
