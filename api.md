@@ -201,8 +201,7 @@ The default will be the simplest unique key, preferably the primary key. If ther
 using the `:rowid:`.
 
 The `by` property can be either a list type or a string type, where a string is a comma separated list of column names to use.
-
-The pseudo type `:rowid:` can be used
+The pseudo type `:rowid:` can also be used
 
 Here's two exmaples `{ "by": "ticker" }` & `{ "by": ":rowid:" }`
 
