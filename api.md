@@ -58,21 +58,21 @@ If there are no indexes the `indexes` object will be present, but empty. This is
 
 Here's an example
 
-		"indexes": {
-		  ":primary:": {
-			"columns": [
-			  "ticker",
-			  "batch"
-			],
-			"unique": true
-		  },
-		  "spot_price_id": {
-			"columns": [
-			  "spot_price_id"
-			],
-			"unique": true
-		  }
-		}
+    "indexes": {
+      ":primary:": {
+      "columns": [
+        "ticker",
+        "batch"
+      ],
+      "unique": true
+      },
+      "spot_price_id": {
+      "columns": [
+        "spot_price_id"
+      ],
+      "unique": true
+      }
+    }
 
 
 ## The `:more:` Property
@@ -110,20 +110,20 @@ this will give you a row position that is consistant across the different batche
 
 Here's an example
 
-	  {
-		"tickers": {
-		  "AAPL": {
-			"ticker": "AAPL",
-			"google": "AAPL:NASDAQ",
-			":rowid:": 1
-		  },
-		  "AMZN": {
-			"ticker": "AMZN",
-			"google": "AMZN:NASDAQ",
-			":rowid:": 2
-		  },
-		}
-	  }
+    {
+    "tickers": {
+      "AAPL": {
+      "ticker": "AAPL",
+      "google": "AAPL:NASDAQ",
+      ":rowid:": 1
+      },
+      "AMZN": {
+      "ticker": "AMZN",
+      "google": "AMZN:NASDAQ",
+      ":rowid:": 2
+      },
+    }
+    }
 
 In this exmaple, the table `tickers` has two real columns called `ticker` and `google`.
 
@@ -137,25 +137,25 @@ properties you can have a column name as a property and a value to compare it wi
 
 For exmaple
 
-	  {
-	  "where" : {
-		"=": {
-		  "ticker":"AAPL"
-		  }
-		}
-	  }
+    {
+    "where" : {
+    "=": {
+      "ticker":"AAPL"
+      }
+    }
+    }
 
 This translates into the SQL `where` clause of `where ticker = "AAPL"`. If the `=` property had multiple sub-properties, they would
 be `AND`'ed together
 
-	  {
-	  "where" : {
-		"=": {
-		  "ticker":"AAPL",
-		  "value":5
-		  }
-		}
-	  }
+    {
+    "where" : {
+    "=": {
+      "ticker":"AAPL",
+      "value":5
+      }
+    }
+    }
 
 So, this would translate to `where ticker = "AAPL" and value = 5`.
 
@@ -163,25 +163,25 @@ If you provide multiple compairsons in the same where object, they are also `AND
 
 However, the where clause can be given a list of objects, if this is the last, each item in the list is `OR`ed. For exmaple
 
-	  {
-	  "where" : [
-		{ "=":  { "ticker": "AAPL" } },
-		{ ">=": { "value": 5 } }
-		]
-	  }
+    {
+    "where" : [
+    { "=":  { "ticker": "AAPL" } },
+    { ">=": { "value": 5 } }
+    ]
+    }
 
 will translate to `where (ticker = "AAPL") or (value >= 5)`.
 
 In a comparison you can provide a list type, in which case a match again any item in the list will be a match, i.e. an `OR` match.
 For the `=` comparison this is equivilent to the SQL `in (...)` operator, however, this list format can be used for all operator types.
 
-	  {
-	  "where" : {
-		"=": {
-		  "ticker": ["AAPL","AMZN"]
-		  }
-		}
-	  }
+    {
+    "where" : {
+    "=": {
+      "ticker": ["AAPL","AMZN"]
+      }
+    }
+    }
 
 will translate to `where ticker in ("AAPL","AMZN")`
 
@@ -206,27 +206,27 @@ The pseudo type `:rowid:` can be used
 
 Here's two exmaples
 
-	  { "by": "ticker" }
+    { "by": "ticker" }
 
-	  { "by": ":rowid:" }
+    { "by": ":rowid:" }
 
 
 Here's an exmaple, where `{ "by": ":rowid:" }` was specified
 
-	  {
-		"tickers": {
-		  "1": {
-			"ticker": "AAPL",
-			"google": "AAPL:NASDAQ",
-			":rowid:": 1
-		  },
-		  "2": {
-			"ticker": "AMZN",
-			"google": "AMZN:NASDAQ",
-			":rowid:": 2
-		  }
-		}
-	  }
+    {
+    "tickers": {
+      "1": {
+      "ticker": "AAPL",
+      "google": "AAPL:NASDAQ",
+      ":rowid:": 1
+      },
+      "2": {
+      "ticker": "AMZN",
+      "google": "AMZN:NASDAQ",
+      ":rowid:": 2
+      }
+    }
+    }
 
 If more than one column is specified, their values are concatinated with a pipe (`|`) separator.
 
@@ -263,83 +263,83 @@ retrieved and the foreign object will be used as the value of that column, inste
 
 Example, with no `join` -> `{"where":{"=":{"ticker":"AAPL"}}}`
 
-	  {
-		"trades": {
-		  "15": {
-			"trade_id": 15,
-			"ticker": "AAPL",
-			"when_dt": "2021-01-04 14:33:00",
-			"quantity": 50.0,
-			"currency": "USD",
-			"price": 132.82382,
-			"exchange_rate": 1.36258,
-			"total_cost_gbp": 4931.66,
-			"account_held": "HL Shares",
-			"spot_value_id": 25416678,
-			"eod_spot_value_id": 25014831,
-			"eow_spot_value_id": 23864478,
-			":rowid:": 1
-		  },
-		  "20": {
-			"trade_id": 20,
-			"ticker": "AAPL",
-			"when_dt": "2020-12-21 17:22:00",
-			"quantity": 52.0,
-			"currency": "USD",
-			"price": 125.46501,
-			"exchange_rate": 1.33547,
-			"total_cost_gbp": 4946.11,
-			"account_held": "HL Shares",
-			"spot_value_id": 25416683,
-			"eod_spot_value_id": 25014836,
-			"eow_spot_value_id": 23864483,
-			":rowid:": 2
-		  }
-		}
-	  }
+    {
+    "trades": {
+      "15": {
+      "trade_id": 15,
+      "ticker": "AAPL",
+      "when_dt": "2021-01-04 14:33:00",
+      "quantity": 50.0,
+      "currency": "USD",
+      "price": 132.82382,
+      "exchange_rate": 1.36258,
+      "total_cost_gbp": 4931.66,
+      "account_held": "HL Shares",
+      "spot_value_id": 25416678,
+      "eod_spot_value_id": 25014831,
+      "eow_spot_value_id": 23864478,
+      ":rowid:": 1
+      },
+      "20": {
+      "trade_id": 20,
+      "ticker": "AAPL",
+      "when_dt": "2020-12-21 17:22:00",
+      "quantity": 52.0,
+      "currency": "USD",
+      "price": 125.46501,
+      "exchange_rate": 1.33547,
+      "total_cost_gbp": 4946.11,
+      "account_held": "HL Shares",
+      "spot_value_id": 25416683,
+      "eod_spot_value_id": 25014836,
+      "eow_spot_value_id": 23864483,
+      ":rowid:": 2
+      }
+    }
+    }
 
 And now adding `"join":"ticker"` -> `{ "join":"ticker", "where":{"=":{"ticker":"AAPL"}}}`
 
-	  {
-		"trades": {
-		  "15": {
-			"trade_id": 15,
-			"ticker": {
-			  "ticker": "AAPL",
-			  "google": "AAPL:NASDAQ",
-			  ":join:": "tickers.ticker"
-			},
-			"when_dt": "2021-01-04 14:33:00",
-			"quantity": 50.0,
-			"currency": "USD",
-			"price": 132.82382,
-			"exchange_rate": 1.36258,
-			"total_cost_gbp": 4931.66,
-			"account_held": "HL Shares",
-			"spot_value_id": 25416805,
-			"eod_spot_value_id": 25014831,
-			"eow_spot_value_id": 23864478,
-			":rowid:": 1
-		  },
-		  "20": {
-			"trade_id": 20,
-			"ticker": {
-			  "ticker": "AAPL",
-			  "google": "AAPL:NASDAQ",
-			  ":join:": "tickers.ticker"
-			},
-			"when_dt": "2020-12-21 17:22:00",
-			"quantity": 52.0,
-			"currency": "USD",
-			"price": 125.46501,
-			"exchange_rate": 1.33547,
-			"total_cost_gbp": 4946.11,
-			"account_held": "HL Shares",
-			"spot_value_id": 25416810,
-			"eod_spot_value_id": 25014836,
-			"eow_spot_value_id": 23864483,
-			":rowid:": 2
-		  }
-		}
-	  }
+    {
+    "trades": {
+      "15": {
+      "trade_id": 15,
+      "ticker": {
+        "ticker": "AAPL",
+        "google": "AAPL:NASDAQ",
+        ":join:": "tickers.ticker"
+      },
+      "when_dt": "2021-01-04 14:33:00",
+      "quantity": 50.0,
+      "currency": "USD",
+      "price": 132.82382,
+      "exchange_rate": 1.36258,
+      "total_cost_gbp": 4931.66,
+      "account_held": "HL Shares",
+      "spot_value_id": 25416805,
+      "eod_spot_value_id": 25014831,
+      "eow_spot_value_id": 23864478,
+      ":rowid:": 1
+      },
+      "20": {
+      "trade_id": 20,
+      "ticker": {
+        "ticker": "AAPL",
+        "google": "AAPL:NASDAQ",
+        ":join:": "tickers.ticker"
+      },
+      "when_dt": "2020-12-21 17:22:00",
+      "quantity": 52.0,
+      "currency": "USD",
+      "price": 125.46501,
+      "exchange_rate": 1.33547,
+      "total_cost_gbp": 4946.11,
+      "account_held": "HL Shares",
+      "spot_value_id": 25416810,
+      "eod_spot_value_id": 25014836,
+      "eow_spot_value_id": 23864483,
+      ":rowid:": 2
+      }
+    }
+    }
 
