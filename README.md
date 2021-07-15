@@ -57,7 +57,7 @@ To check the API is working, simply ask for the ROOT page and you should get som
 
 e.g. (for test mode)
 
-	curl http://127.0.0.1:5000/v1/
+	curl http://127.0.0.1:5000/v1
 
 where `<database>` is the name of the database you have asked it to connect to
 
@@ -71,7 +71,7 @@ There are two other environment options you can use
 
 Is a positive integer and specifies the number of python threads to start, which `nginx` will automatically load balance your queries over.
 
-NOTE: There is no guarantee that subusquent queries will go to the same thread, so if you SQL relies on creating MySQL local variables,
+NOTE: There is no guarantee that subusquent queries will go to the same thread, so if your SQL relies on creating MySQL local variables,
 it will probably not work.
 
 
