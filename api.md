@@ -84,7 +84,7 @@ The `:more:` property contains the exact contents of the YAML file, but in JSON 
 
 
 
-# /v1/meta/schema/[table] - Get the schema for a single table
+# `/v1/meta/schema/[table]` - Get the schema for a single table
 
 This returns the schema in exactly the same format as above, but for just the one table.
 
