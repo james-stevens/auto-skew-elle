@@ -12,7 +12,7 @@ This will return a banner, plus the name of the database, for exmaple
 
 ## /v1/meta/schema - Get a copy of the full database schema
 
-This will include some additional information that was provided in the YML file
+This not only gives you the schema that was read from MySQL, but will also include some additional information that was provided in the YML file
 
 The returned JSON contains one object for each table, within that object there is a `columns` and `indexes` property.
 
@@ -30,7 +30,7 @@ can have
 - `join` - Object, Has the properties `table` and `column` and specified the column in another table this column can be joined to
 - `serial` - Boolean, True if this field is of MySQL type `AUTO_INCREMENT`
 
-`size` is present for most types, but not all. For exmaple, it is not present for type `datetime`.
+`size` is present for most types, but not all. For example, it is not present for type `datetime`.
 
 Here's an example
 
