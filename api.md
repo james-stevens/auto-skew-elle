@@ -197,8 +197,8 @@ If the `where` clause is a `string` type instead of a list or object type, then 
 ## The `by` Property
 
 The `by` property allows you to overide the automatic selection of property to be used as the object identified for each row.
-
-The default will be the simplest unique key, preferably the primary key.
+The default will be the simplest unique key, preferably the primary key. If there are no unique keys, it will fall back to 
+using the `:rowid:`.
 
 The `by` property can be either a list type or a string type, where a string is a comma separated list of column names to use.
 

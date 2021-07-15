@@ -456,7 +456,7 @@ def get_idx_cols(table, sent):
                 if not (idx == ":rowid:" or idx in schema[table]["columns"]):
                     flask.abort(400,
                                 {"error": "Bad column name in `by` clause"})
-    if idx_cols is None:
+    if idx_cols is None and len(this_idxs) > 0:
         idx_cols = this_idxs[find_best_index(this_idxs)]["columns"]
 
     if idx_cols is None:
