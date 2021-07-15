@@ -356,46 +356,46 @@ overhead, but if the rows in `tickers` had been much bigger, it might have.
 
 So the same output would look like this with the addition of `"join-simple": true`
 
-  {
-    "trades": {
-      "15": {
-        "trade_id": 15,
-        "ticker": "AAPL",
-        "when_dt": "2021-01-04 14:33:00",
-        "quantity": 50,
-        "currency": "USD",
-        "price": 132.82382,
-        "exchange_rate": 1.36258,
-        "total_cost_gbp": 4931.66,
-        "account_held": "HL Shares",
-        "spot_value_id": 25417059,
-        "eod_spot_value_id": 25014831,
-        "eow_spot_value_id": 23864478,
-        ":rowid:": 1
+    {
+      "trades": {
+        "15": {
+          "trade_id": 15,
+          "ticker": "AAPL",
+          "when_dt": "2021-01-04 14:33:00",
+          "quantity": 50,
+          "currency": "USD",
+          "price": 132.82382,
+          "exchange_rate": 1.36258,
+          "total_cost_gbp": 4931.66,
+          "account_held": "HL Shares",
+          "spot_value_id": 25417059,
+          "eod_spot_value_id": 25014831,
+          "eow_spot_value_id": 23864478,
+          ":rowid:": 1
+        },
+        "20": {
+          "trade_id": 20,
+          "ticker": "AAPL",
+          "when_dt": "2020-12-21 17:22:00",
+          "quantity": 52,
+          "currency": "USD",
+          "price": 125.46501,
+          "exchange_rate": 1.33547,
+          "total_cost_gbp": 4946.11,
+          "account_held": "HL Shares",
+          "spot_value_id": 25417064,
+          "eod_spot_value_id": 25014836,
+          "eow_spot_value_id": 23864483,
+          ":rowid:": 2
+        }
       },
-      "20": {
-        "trade_id": 20,
-        "ticker": "AAPL",
-        "when_dt": "2020-12-21 17:22:00",
-        "quantity": 52,
-        "currency": "USD",
-        "price": 125.46501,
-        "exchange_rate": 1.33547,
-        "total_cost_gbp": 4946.11,
-        "account_held": "HL Shares",
-        "spot_value_id": 25417064,
-        "eod_spot_value_id": 25014836,
-        "eow_spot_value_id": 23864483,
-        ":rowid:": 2
-      }
-    },
-    "tickers.ticker": {
-      "AAPL": {
-        "ticker": "AAPL",
-        "google": "AAPL:NASDAQ"
+      "tickers.ticker": {
+        "AAPL": {
+          "ticker": "AAPL",
+          "google": "AAPL:NASDAQ"
+        }
       }
     }
-  }
 
 
 NOTE: to show the data is joined data, not original table data, the object name is the column that was joined to.
