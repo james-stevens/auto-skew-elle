@@ -2,6 +2,6 @@
 
 docker run --read-only -it \
 	-v /opt/github/auto-skew-elle/etc:/usr/local/etc \
-	-v /usr/local/htdocs:/opt/htdocs \
-	-v /usr/local/pems:/opt/pems \
+	-v /opt/github/diamond-hands/htdocs:/opt/htdocs \
+	-v /opt/pems:/opt/pems \
 	--env-file /usr/local/etc/autosql.env -p 800:443 auto-skew-elle
