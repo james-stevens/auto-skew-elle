@@ -27,7 +27,7 @@ RUN ln -s /ram/nginx_ssl.conf /etc/nginx/nginx_ssl.conf
 RUN mkdir -p /opt/htdocs /usr/local/etc
 COPY index.html /opt/htdocs
 
-COPY *.py /usr/local/bin/
+COPY pylogger *.py /usr/local/bin/
 RUN python3 -m compileall /usr/local/bin/
 COPY start start_wsgi start_nginx start_syslogd /usr/local/bin/
 

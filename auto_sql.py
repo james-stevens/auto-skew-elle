@@ -19,6 +19,8 @@ ASKS = ["=", "!=", "<>", "<", ">", ">=", "<=", "like", "regexp"]
 
 schema = {}
 
+tried_reconnet = False
+
 
 def convert_string(data):
     """ Convery MySQL string to JSON """
@@ -271,6 +273,18 @@ def include_for_join(data):
     return True
 
 
+def run_query(sql):
+    try:
+        cnx.query(sql)
+    except Exception as e:
+        cnx.close()
+        make_connection()
+        try:
+            cnx.query(sql)
+        except Exception as e:
+            sys.exit(1)
+
+
 def load_all_joins(need):
     """ Load all db data for joins {need}ed """
     join_data = {}
@@ -286,8 +300,8 @@ def load_all_joins(need):
             continue
 
         sql = sql + ",".join(clauses) + ")"
+        run_query(sql)
 
-        cnx.query(sql)
         res = cnx.store_result()
         ret = res.fetch_row(maxrows=0, how=1)
         prepare_row_data(ret, src[0])
@@ -365,14 +379,18 @@ def unique_id(best_idx, row):
     return "|".join([plain_value(row[idx]) for idx in best_idx])
 
 
-cnx = connect_to_mysql()
-if cnx is None:
-    print("ERROR: Failed to connect to MySQL")
-    sys.exit(1)
+def make_connection():
+    global schema
+    global cnx
+    cnx = connect_to_mysql()
+    if cnx is None:
+        print("ERROR: Failed to connect to MySQL")
+        sys.exit(1)
 
-schema = mysql_schema.load_db_schema(cnx)
+    schema = mysql_schema.load_db_schema(cnx)
+
+
 application = flask.Flask("MySQL-Rest/API")
-
 
 @application.route("/v1")
 def hello():
@@ -427,7 +445,7 @@ def build_sql(table, sent):
 
 def get_sql_rows(sql, start):
     """ run the {sql} and return the rows """
-    cnx.query(sql)
+    run_query(sql)
     res = cnx.store_result()
     rows = [r for r in res.fetch_row(maxrows=0, how=1)]
     if len(rows) <= 0:
@@ -495,5 +513,6 @@ def get_table_row(table):
 
 
 if __name__ == "__main__":
+    make_connection()
     application.run()
     cnx.close()
