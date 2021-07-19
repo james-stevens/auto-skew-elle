@@ -390,7 +390,9 @@ def make_connection():
     schema = mysql_schema.load_db_schema(cnx)
 
 
+make_connection()
 application = flask.Flask("MySQL-Rest/API")
+
 
 @application.route("/v1")
 def hello():
@@ -513,6 +515,5 @@ def get_table_row(table):
 
 
 if __name__ == "__main__":
-    make_connection()
     application.run()
     cnx.close()
