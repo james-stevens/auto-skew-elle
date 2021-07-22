@@ -330,16 +330,21 @@ def join_this_column(table, col, which):
     return None
 
 
-def handle_joins(data, which, basic_format):
-    """ retrive foreign rows & merge into return {data} """
+def handle_joins(rows, which, basic_format):
+    """ retrive foreign rows & merge into return {rows} """
     if ":more:" not in schema or "joins" not in schema[":more:"]:
         return
 
     need = {}
-    for table in data:
-        for row in data[table]:
-            for col in data[table][row]:
-                if not include_for_join(data[table][row][col]):
+    for table in rows:
+        for row in rows[table]:
+            if isinstance(rows[table],list):
+                cols = row
+            else:
+                cols = rows[table][row]
+
+            for col in cols:
+                if not include_for_join(cols[col]):
                     continue
                 target = join_this_column(table, col, which)
                 if target is None:
@@ -348,30 +353,34 @@ def handle_joins(data, which, basic_format):
                 if target not in need:
                     need[target] = []
 
-                if data[table][row][col] not in need[target]:
-                    need[target].append(data[table][row][col])
+                if cols[col] not in need[target]:
+                    need[target].append(cols[col])
 
     if len(need) <= 0:
         return
 
     join_data = load_all_joins(need)
     if basic_format:
-        data.update(join_data)
+        rows.update(join_data)
     else:
-        add_join_data(data, join_data, which)
+        add_join_data(rows, join_data, which)
 
 
-def add_join_data(data, join_data, which):
+def add_join_data(rows, join_data, which):
     """ replace a columns data with retrived foreign record """
-    for table in data:
-        for row in [r for r in data[table]]:
-            for col in [c for c in data[table][row]]:
+    for table in rows:
+        for row in [r for r in rows[table]]:
+            if isinstance(rows[table],list):
+                cols = row
+            else:
+                cols = rows[table][row]
+
+            for col in [c for c in cols]:
                 target = join_this_column(table, col, which)
                 if target is not None and target in join_data:
-                    if data[table][row][col] in join_data[target]:
-                        data[table][row][col] = join_data[target][data[table]
-                                                                  [row][col]]
-                        data[table][row][col][":join:"] = target
+                    if cols[col] in join_data[target]:
+                        cols[col] = join_data[target][cols[col]]
+                        cols[col][":join:"] = target
 
 
 def unique_id(best_idx, row):
@@ -494,24 +503,27 @@ def get_table_row(table):
     sent = flask.request.json if flask.request.json is not None else {}
 
     start, sql = build_sql(table, sent)
-    rows = get_sql_rows(sql, start)
-    prepare_row_data(rows, table)
+    sql_rows = get_sql_rows(sql, start)
+    prepare_row_data(sql_rows, table)
 
-    rows = {
-        table:
-        {unique_id(get_idx_cols(table, sent), tmp): tmp
-         for tmp in rows}
-    }
+    if "by" in sent:
+        ret_rows = {
+            table:
+            {unique_id(get_idx_cols(table, sent), tmp): tmp
+             for tmp in sql_rows}
+        }
+    else:
+        ret_rows = { table: sql_rows }
 
     if "join" in sent:
         join = sent["join"]
         if isinstance(join, bool):
             join = [":all:"] if join else None
         if join is not None:
-            handle_joins(rows, clean_list_string(join),
+            handle_joins(ret_rows, clean_list_string(join),
                          ("join-basic" in sent and sent["join-basic"]))
 
-    return json.dumps(rows), 200
+    return json.dumps(ret_rows), 200
 
 
 if __name__ == "__main__":
