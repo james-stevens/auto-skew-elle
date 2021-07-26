@@ -215,14 +215,24 @@ def each_where_obj(sql_joins, table, ask_item, where_obj):
                     f"Column `{col}` is not in table `{table}`"
                 })
 
-        clause = []
-        for itm in clean_list_string(where_obj[where_itm]):
-            c = col if col.find(".") < 0 else col.split(".")[1]
-            clause.append(
-                col + ask_item +
-                add_data(itm, schema[tbl]["columns"][c]))
+        if ask_item == "=" and isinstance(where_obj[where_itm],list):
+            if (tbl not in schema) or (col not in schema[tbl]["columns"]):
+                flask.abort(
+                    400, {
+                        "error":
+                        f"Column `{col}` is not in table `{table}`"
+                    })
+            this_col = schema[tbl]["columns"][col]
+            where.append("(" + where_itm + " in (" + ",".join([add_data(d,this_col) for d in where_obj[where_itm]]) + ") )")
+        else:
+            clause = []
+            for itm in clean_list_string(where_obj[where_itm]):
+                c = col if col.find(".") < 0 else col.split(".")[1]
+                clause.append(
+                    col + ask_item +
+                    add_data(itm, schema[tbl]["columns"][c]))
 
-        where.append("(" + " or ".join(clause) + ")")
+            where.append("(" + " or ".join(clause) + ")")
 
     return " and ".join(where) if len(where) > 0 else ""
 
@@ -276,6 +286,10 @@ def include_for_join(data):
 def run_query(sql):
     try:
         cnx.query(sql)
+
+    except MySQLdb.ProgrammingError as e:
+        flask.abort( 400, { "error": str(e) })
+
     except Exception as e:
         cnx.close()
         make_connection()
@@ -399,8 +413,8 @@ def make_connection():
     schema = mysql_schema.load_db_schema(cnx)
 
 
-make_connection()
 application = flask.Flask("MySQL-Rest/API")
+make_connection()
 
 
 @application.route("/v1")
@@ -432,10 +446,9 @@ def give_table_schema(table):
     return json.dumps(schema[table]), 200
 
 
-def build_sql(table, sent):
+def build_sql(table, sent, start_sql):
     """ build the SQL needed to run the users query on {table} """
-    sql = f"select {table}.* from {table} "
-    sql = sql + where_clause(table, sent)
+    sql = start_sql + where_clause(table, sent)
     if "order" in sent:
         sql = sql + " order by " + ",".join(clean_list_string(sent["order"]))
 
@@ -494,6 +507,22 @@ def get_idx_cols(table, sent):
     return idx_cols
 
 
+@application.route("/v1/data/<table>", methods=['DELETE'])
+def delete_table_row(table):
+    if table not in schema:
+        flask.abort(404, {"error": "Table not found"})
+
+    if (flask.request.json is None) or ("where" not in flask.request.json):
+        flask.abort(400, {"error": "Delete is missing a `where` clause"})
+
+    start, sql = build_sql(table, flask.request.json, f"delete from {table} ")
+
+    cnx.query(sql)
+    cnx.store_result()
+    ret = cnx.affected_rows()
+    return json.dumps({"affected rows":ret}),200
+
+
 @application.route("/v1/data/<table>", methods=['GET','POST'])
 def get_table_row(table):
     """ run select queries """
@@ -502,8 +531,12 @@ def get_table_row(table):
 
     sent = flask.request.json if flask.request.json is not None else {}
 
-    start, sql = build_sql(table, sent)
+    start, sql = build_sql(table, sent, f"select {table}.* from {table} ")
     sql_rows = get_sql_rows(sql, start)
+
+    if not isinstance(sql_rows,list):
+        return sql_rows
+
     prepare_row_data(sql_rows, table)
 
     if "by" in sent:
