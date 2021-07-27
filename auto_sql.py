@@ -396,7 +396,6 @@ def add_join_data(rows, join_data, which):
                         cols[col] = join_data[target][cols[col]]
                         cols[col][":join:"] = target
 
-
 def unique_id(best_idx, row):
     """ format the index item for {row} """
     return "|".join([plain_value(row[idx]) for idx in best_idx])
@@ -413,18 +412,24 @@ def make_connection():
     schema = mysql_schema.load_db_schema(cnx)
 
 
+def check_supplied_properties(sent,allowed):
+    for s in sent:
+        if s not in allowed:
+            flask.abort(406, {"error": f"The modifier '${s}' is not supported in this request"})
+
+
 application = flask.Flask("MySQL-Rest/API")
 make_connection()
 
 
-@application.route("/v1")
+@application.route("/v1",methods=['GET'])
 def hello():
     """ respond with a `hello` to confirm working """
     db = os.environ["MYSQL_DATABASE"]
     return f"MySql-Auto-Rest/API: {db}\n\n"
 
 
-@application.route("/v1/meta/reload")
+@application.route("/v1/meta/reload",methods=['GET'])
 def reload_schema():
     """ reload the schema """
     global schema
@@ -432,17 +437,17 @@ def reload_schema():
     return json.dumps(schema), 200
 
 
-@application.route("/v1/meta/schema")
+@application.route("/v1/meta/schema",methods=['GET'])
 def give_schema():
     """ respond with full schema """
     return json.dumps(schema), 200
 
 
-@application.route("/v1/meta/schema/<table>")
+@application.route("/v1/meta/schema/<table>",methods=['GET'])
 def give_table_schema(table):
     """ respond with schema for one <table> """
     if table not in schema:
-        flask.abort(404, {"error": "Table not found"})
+        flask.abort(404, {"error": f"Table '${table}' does not exist"})
     return json.dumps(schema[table]), 200
 
 
@@ -510,10 +515,12 @@ def get_idx_cols(table, sent):
 @application.route("/v1/data/<table>", methods=['DELETE'])
 def delete_table_row(table):
     if table not in schema:
-        flask.abort(404, {"error": "Table not found"})
+        flask.abort(404, {"error": f"Table '${table}' does not exist"})
 
     if (flask.request.json is None) or ("where" not in flask.request.json):
-        flask.abort(400, {"error": "Delete is missing a `where` clause"})
+        flask.abort(400, {"error": "A `where` clause is mandatory for a DELETE"})
+
+    check_supplied_properties(flask.request.json,["where","limit"])
 
     start, sql = build_sql(table, flask.request.json, f"delete from {table} ")
 
@@ -527,9 +534,10 @@ def delete_table_row(table):
 def get_table_row(table):
     """ run select queries """
     if table not in schema:
-        flask.abort(404, {"error": "Table not found"})
+        flask.abort(404, {"error": f"Table '${table}' does not exist"})
 
     sent = flask.request.json if flask.request.json is not None else {}
+    check_supplied_properties(sent,["where","limit","skip","by","order","join","join-basic"])
 
     start, sql = build_sql(table, sent, f"select {table}.* from {table} ")
     sql_rows = get_sql_rows(sql, start)
