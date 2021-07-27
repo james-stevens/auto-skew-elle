@@ -18,8 +18,7 @@ MYSQL_ENV = [
 ASKS = ["=", "!=", "<>", "<", ">", ">=", "<=", "like", "regexp"]
 
 schema = {}
-
-tried_reconnet = False
+cnx = None
 
 
 def convert_string(data):
@@ -41,7 +40,7 @@ def connect_to_mysql():
     my_conv[FIELD_TYPE.CHAR] = convert_string
     my_conv[FIELD_TYPE.STRING] = convert_string
     my_conv[FIELD_TYPE.VAR_STRING] = convert_string
-    sock="/tmp/mysql.sock"
+    sock = "/tmp/mysql.sock"
     host = None
     port = None
     if "MYSQL_CONNECT" in os.environ:
@@ -56,16 +55,30 @@ def connect_to_mysql():
                 host = svr[0]
                 port = int(svr[1])
 
-
     return _mysql.connect(
         user=os.environ["MYSQL_USERNAME"],
         passwd=os.environ["MYSQL_PASSWORD"],
         unix_socket=sock,
-        host = host, port = port,
+        host=host,
+        port=port,
         db=os.environ["MYSQL_DATABASE"],
         conv=my_conv,
-        charset='utf8mb4', init_command='SET NAMES UTF8',
-        )
+        charset='utf8mb4',
+        init_command='SET NAMES UTF8',
+    )
+
+
+def json_abort(status_code, message):
+    """ abort with {code} returning json {message} """
+    data = {'error': {'code': status_code}}
+    if isinstance(message, dict):
+        data.update(message)
+    else:
+        data["message"] = message
+
+    response = flask.jsonify(data)
+    response.status_code = status_code
+    flask.abort(response)
 
 
 def find_best_index(idxes):
@@ -124,23 +137,21 @@ def clean_col_data(data, table, column):
     if data is None or column[0] == ":":
         return data
 
+    ret = data
     this_col = schema[table]["columns"][column]
+    
     if this_col["type"] == "boolean":
-        return int(data) != 0
+        ret = int(data) != 0
+    elif this_col["type"] == "decimal":
+        ret = float(data)
+    elif this_col["is_plain_int"]:
+        ret = int(data)
+    elif isinstance(data, datetime):
+        ret = data.strftime('%Y-%m-%d %H:%M:%S')
+    elif not isinstance(data, str):
+        ret = str(data)
 
-    if this_col["type"] == "decimal":
-        return float(data)
-
-    if this_col["is_plain_int"]:
-        return int(data)
-
-    if isinstance(data, datetime):
-        return data.strftime('%Y-%m-%d %H:%M:%S')
-
-    if not isinstance(data, str):
-        return str(data)
-
-    return data
+    return ret
 
 
 def find_join_column(src_table, dst_table):
@@ -158,8 +169,7 @@ def find_foreign_column(sql_joins, src_table, dstcol):
     fmt = "join {dsttbl} {alias} on({srctbl}.{srccol}={alias}.{dstcol})"
 
     if len(dst) != 2:
-        flask.abort(
-            400, {"error": f"Invalid column name `{dstcol}`"})
+        json_abort(400, {"error": f"Invalid column name `{dstcol}`"})
 
     if dst[0] in schema[src_table]["columns"] and "join" in schema[src_table][
             "columns"][dst[0]]:
@@ -178,11 +188,10 @@ def find_foreign_column(sql_joins, src_table, dstcol):
 
     col_name = find_join_column(src_table, dst[0])
     if col_name is None:
-        flask.abort(
-            400, {
-                "error":
-                f"Could not find a join for `{dstcol}` to `{src_table}`"
-            })
+        json_abort(400, {
+            "error":
+            f"Could not find a join for `{dstcol}` to `{src_table}`"
+        })
 
     alias = "__zz__" + col_name
     dstcol = alias + "." + dst[1]
@@ -209,28 +218,25 @@ def each_where_obj(sql_joins, table, ask_item, where_obj):
         if where_itm.find(".") >= 0:
             col, tbl = find_foreign_column(sql_joins, table, col)
         elif col not in schema[table]["columns"]:
-            flask.abort(
-                400, {
-                    "error":
-                    f"Column `{col}` is not in table `{table}`"
-                })
+            json_abort(400,
+                       {"error": f"Column `{col}` is not in table `{table}`"})
 
-        if ask_item == "=" and isinstance(where_obj[where_itm],list):
+        if ask_item == "=" and isinstance(where_obj[where_itm], list):
             if (tbl not in schema) or (col not in schema[tbl]["columns"]):
-                flask.abort(
-                    400, {
-                        "error":
-                        f"Column `{col}` is not in table `{table}`"
-                    })
+                json_abort(
+                    400,
+                    {"error": f"Column `{col}` is not in table `{table}`"})
             this_col = schema[tbl]["columns"][col]
-            where.append("(" + where_itm + " in (" + ",".join([add_data(d,this_col) for d in where_obj[where_itm]]) + ") )")
+            where.append(
+                "(" + where_itm + " in (" +
+                ",".join([add_data(d, this_col)
+                          for d in where_obj[where_itm]]) + ") )")
         else:
             clause = []
             for itm in clean_list_string(where_obj[where_itm]):
-                c = col if col.find(".") < 0 else col.split(".")[1]
-                clause.append(
-                    col + ask_item +
-                    add_data(itm, schema[tbl]["columns"][c]))
+                only_col = col if col.find(".") < 0 else col.split(".")[1]
+                clause.append(col + ask_item +
+                              add_data(itm, schema[tbl]["columns"][only_col]))
 
             where.append("(" + " or ".join(clause) + ")")
 
@@ -250,11 +256,8 @@ def where_clause(table, sent):
     if isinstance(sent["where"], object):
         for ask_item in sent["where"]:
             if ask_item not in ASKS:
-                flask.abort(
-                    400, {
-                        "error":
-                        f"Comparison `{ask_item}` not supported"
-                    })
+                json_abort(400,
+                           {"error": f"Comparison `{ask_item}` not supported"})
             where = each_where_obj(sql_joins, table, ask_item,
                                    sent["where"][ask_item])
 
@@ -284,19 +287,44 @@ def include_for_join(data):
 
 
 def run_query(sql):
+    """ run the {sql}, reconnecting to MySQL, if necessary """
+    global cnx
+    print(">>>>>>", sql)
     try:
         cnx.query(sql)
 
-    except MySQLdb.ProgrammingError as e:
-        flask.abort( 400, { "error": str(e) })
-
-    except Exception as e:
+    except MySQLdb.OperationalError as exc:
         cnx.close()
         make_connection()
         try:
             cnx.query(sql)
-        except Exception as e:
-            sys.exit(1)
+        except MySQLdb.OperationalError as exc:
+            json_abort(400, {
+                "mysql": {
+                    "code": exc.args[0],
+                    "message": exc.args[1],
+                    "state": "A"
+                }
+            })
+            cnx.close()
+            cnx = None
+        except MySQLdb.Error as exc:
+            json_abort(400, {
+                "mysql": {
+                    "code": exc.args[0],
+                    "message": exc.args[1],
+                    "state": "B"
+                }
+            })
+
+    except MySQLdb.Error as exc:
+        json_abort(
+            400,
+            {"mysql": {
+                "code": exc.args[0],
+                "message": exc.args[1],
+                "state": "C"
+            }})
 
 
 def load_all_joins(need):
@@ -352,7 +380,7 @@ def handle_joins(rows, which, basic_format):
     need = {}
     for table in rows:
         for row in rows[table]:
-            if isinstance(rows[table],list):
+            if isinstance(rows[table], list):
                 cols = row
             else:
                 cols = rows[table][row]
@@ -384,7 +412,7 @@ def add_join_data(rows, join_data, which):
     """ replace a columns data with retrived foreign record """
     for table in rows:
         for row in [r for r in rows[table]]:
-            if isinstance(rows[table],list):
+            if isinstance(rows[table], list):
                 cols = row
             else:
                 cols = rows[table][row]
@@ -396,12 +424,47 @@ def add_join_data(rows, join_data, which):
                         cols[col] = join_data[target][cols[col]]
                         cols[col][":join:"] = target
 
+
+def make_insert_from_list(set_list, table):
+    """ make multiline sql insert to {table} from {set_list} """
+    cols = schema[table]["columns"]
+    have_cols = []
+    for this_set in set_list:
+        for col in this_set:
+            if col not in cols:
+                json_abort(404,
+                           {"error": f"Column {col} is not in table {table}"})
+
+            if col not in have_cols:
+                have_cols.append(col)
+
+    sep = " "
+    sql = f"insert into {table}(" + ",".join(have_cols) + ") values"
+    for this_set in set_list:
+        vals = []
+        for col in have_cols:
+            if col in this_set:
+                vals.append(add_data(this_set[col], cols[col]))
+            else:
+                vals.append("NULL")
+        sql = sql + sep + "(" + ",".join(vals) + ")"
+        sep = ","
+
+    return sql
+
+
+def retmsg(val, reason):
+    """ return object {reason} with code {val} """
+    return json.dumps(reason), val
+
+
 def unique_id(best_idx, row):
     """ format the index item for {row} """
     return "|".join([plain_value(row[idx]) for idx in best_idx])
 
 
 def make_connection():
+    """ re/connect to MySQL """
     global schema
     global cnx
     cnx = connect_to_mysql()
@@ -412,43 +475,47 @@ def make_connection():
     schema = mysql_schema.load_db_schema(cnx)
 
 
-def check_supplied_modifiers(sent,allowed):
-    for s in sent:
-        if s not in allowed:
-            flask.abort(406, {"error": f"The modifier '${s}' is not supported in this request"})
+def check_supplied_modifiers(sent, allowed):
+    """ check the {sent} modifiers are in the {allowed} list """
+    for modifier in sent:
+        if modifier not in allowed:
+            json_abort(406, {
+                "error":
+                f"The modifier '{modifier}' is not supported in this request"
+            })
 
 
 application = flask.Flask("MySQL-Rest/API")
 make_connection()
 
 
-@application.route("/v1",methods=['GET'])
+@application.route("/v1", methods=['GET'])
 def hello():
     """ respond with a `hello` to confirm working """
-    db = os.environ["MYSQL_DATABASE"]
-    return f"MySql-Auto-Rest/API: {db}\n\n"
+    mysql_db = os.environ["MYSQL_DATABASE"]
+    return f"MySql-Auto-Rest/API: {mysql_db}\n\n"
 
 
-@application.route("/v1/meta/reload",methods=['GET'])
+@application.route("/v1/meta/reload", methods=['GET'])
 def reload_schema():
     """ reload the schema """
     global schema
     schema = mysql_schema.load_db_schema(cnx)
-    return json.dumps(schema), 200
+    return retmsg(200, schema)
 
 
-@application.route("/v1/meta/schema",methods=['GET'])
+@application.route("/v1/meta/schema", methods=['GET'])
 def give_schema():
     """ respond with full schema """
-    return json.dumps(schema), 200
+    return retmsg(200, schema)
 
 
-@application.route("/v1/meta/schema/<table>",methods=['GET'])
+@application.route("/v1/meta/schema/<table>", methods=['GET'])
 def give_table_schema(table):
     """ respond with schema for one <table> """
     if table not in schema:
-        flask.abort(404, {"error": f"Table '${table}' does not exist"})
-    return json.dumps(schema[table]), 200
+        json_abort(404, {"error": f"Table '{table}' does not exist"})
+    return retmsg(200, schema[table])
 
 
 def build_sql(table, sent, start_sql):
@@ -465,10 +532,8 @@ def build_sql(table, sent, start_sql):
             sql = sql + " offset " + str(start)
     else:
         if "skip" in sent:
-            flask.abort(406,
-                        {"error": "`skip` without `limit` is not allowed"})
+            json_abort(406, {"error": "`skip` without `limit` is not allowed"})
 
-    print(">>>>", sql)
     return start, sql
 
 
@@ -488,15 +553,15 @@ def get_sql_rows(sql, start):
     return rows
 
 
-def process_one_set(set_clasue,table):
+def process_one_set(set_clause, table):
+    """ turn {set_clause} object into a sql insert statement """
     ret = []
-    this_tbl = schema[table]
-    cols = this_tbl["columns"]
-    for s in set_clasue:
-        if s not in cols:
-            flask.abort(404,{"error":"Column ${s} not in table ${table}"})
+    cols = schema[table]["columns"]
+    for col in set_clause:
+        if col not in cols:
+            json_abort(404, {"error": "Column {col} not in table {table}"})
 
-        ret.append(s + "=" + add_data(set_clasue[s],cols[s]))
+        ret.append(col + "=" + add_data(set_clause[col], cols[col]))
     return ret
 
 
@@ -513,8 +578,8 @@ def get_idx_cols(table, sent):
             idx_cols = clean_list_string(snt_by)
             for idx in idx_cols:
                 if not (idx == ":rowid:" or idx in schema[table]["columns"]):
-                    flask.abort(400,
-                                {"error": "Bad column name in `by` clause"})
+                    json_abort(400,
+                               {"error": "Bad column name in `by` clause"})
     if idx_cols is None and len(this_idxs) > 0:
         idx_cols = this_idxs[find_best_index(this_idxs)]["columns"]
 
@@ -524,73 +589,112 @@ def get_idx_cols(table, sent):
     return idx_cols
 
 
-@application.route("/v1/data/<table>", methods=['PATCH'])
-def update_table_row(table):
+@application.route("/v1/data/<table>", methods=['PUT'])
+def insert_table_row(table):
+    """ do an sql insert on {table} """
     if table not in schema:
-        flask.abort(404, {"error": f"Table '${table}' does not exist"})
+        json_abort(404, f"Table '{table}' does not exist")
 
     if (flask.request.json is None) or ("set" not in flask.request.json):
-        flask.abort(400, {"error": "A `set` clause is mandatory for an UPDATE"})
+        json_abort(400, "A `set` clause is mandatory for an INSERT")
 
     sent = flask.request.json
-    check_supplied_modifiers(sent,["where","limit","set"])
+    check_supplied_modifiers(sent, ["set"])
 
-    if not isinstance(sent["set"],dict):
-        flask.abort(400, {"error": "In an UPDATE, the `set` clause must be an object type"})
+    if not isinstance(sent["set"], (dict,list)):
+        json_abort(
+            400,
+            "In an INSERT, the `set` clause must be an object or list type")
 
-    set_list = process_one_set(sent["set"],table)
-    sql = f"update {table} set " + ",".join(set_list)
-    start, sql = build_sql(table, sent, sql)
+    if isinstance(sent["set"], dict):
+        set_list = process_one_set(sent["set"], table)
+        sql = f"insert into {table} set " + ",".join(set_list)
+    else:
+        sql = make_insert_from_list(sent["set"], table)
 
-    cnx.query(sql)
+    run_query(sql)
     cnx.store_result()
     ret = cnx.affected_rows()
-    return json.dumps({"affected_rows":ret}),200
+    return retmsg(200, {"affected_rows": ret})
+
+
+@application.route("/v1/data/<table>", methods=['PATCH'])
+def update_table_row(table):
+    """ do an sql update on {table} """
+    if table not in schema:
+        return json_abort(404, f"Table '{table}' does not exist")
+
+    if (flask.request.json is None) or ("set" not in flask.request.json):
+        return json_abort(400,
+                      "A `set` clause is mandatory for an UPDATE")
+
+    sent = flask.request.json
+    check_supplied_modifiers(sent, ["where", "limit", "set"])
+
+    if not isinstance(sent["set"], dict):
+        return json_abort(
+            400,
+            "In an UPDATE, the `set` clause must be an object type")
+
+    set_list = process_one_set(sent["set"], table)
+    sql = f"update {table} set " + ",".join(set_list)
+    sql = build_sql(table, sent, sql)[1]
+
+    run_query(sql)
+    cnx.store_result()
+    ret = cnx.affected_rows()
+
+    return retmsg(200, {"affected_rows": ret})
 
 
 @application.route("/v1/data/<table>", methods=['DELETE'])
 def delete_table_row(table):
+    """ do an sql delete on {table} """
     if table not in schema:
-        flask.abort(404, {"error": f"Table '${table}' does not exist"})
+        json_abort(404, {"error": f"Table '{table}' does not exist"})
 
     if (flask.request.json is None) or ("where" not in flask.request.json):
-        flask.abort(400, {"error": "A `where` clause is mandatory for a DELETE"})
+        json_abort(400,
+                   {"error": "A `where` clause is mandatory for a DELETE"})
 
-    check_supplied_modifiers(flask.request.json,["where","limit"])
+    check_supplied_modifiers(flask.request.json, ["where", "limit"])
 
-    start, sql = build_sql(table, flask.request.json, f"delete from {table} ")
+    sql = build_sql(table, flask.request.json, f"delete from {table} ")[1]
 
-    cnx.query(sql)
+    run_query(sql)
     cnx.store_result()
     ret = cnx.affected_rows()
-    return json.dumps({"affected_rows":ret}),200
+
+    return retmsg(200, {"affected_rows": ret})
 
 
-@application.route("/v1/data/<table>", methods=['GET','POST'])
+@application.route("/v1/data/<table>", methods=['GET', 'POST'])
 def get_table_row(table):
     """ run select queries """
     if table not in schema:
-        flask.abort(404, {"error": f"Table '${table}' does not exist"})
+        json_abort(404, f"Table '{table}' does not exist")
 
     sent = flask.request.json if flask.request.json is not None else {}
-    check_supplied_modifiers(sent,["where","limit","skip","by","order","join","join-basic"])
+    check_supplied_modifiers(
+        sent, ["where", "limit", "skip", "by", "order", "join", "join-basic"])
 
     start, sql = build_sql(table, sent, f"select {table}.* from {table} ")
     sql_rows = get_sql_rows(sql, start)
 
-    if not isinstance(sql_rows,list):
+    if not isinstance(sql_rows, list):
         return sql_rows
 
     prepare_row_data(sql_rows, table)
 
     if "by" in sent:
         ret_rows = {
-            table:
-            {unique_id(get_idx_cols(table, sent), tmp): tmp
-             for tmp in sql_rows}
+            table: {
+                unique_id(get_idx_cols(table, sent), tmp): tmp
+                for tmp in sql_rows
+            }
         }
     else:
-        ret_rows = { table: sql_rows }
+        ret_rows = {table: sql_rows}
 
     if "join" in sent:
         join = sent["join"]
@@ -600,7 +704,7 @@ def get_table_row(table):
             handle_joins(ret_rows, clean_list_string(join),
                          ("join-basic" in sent and sent["join-basic"]))
 
-    return json.dumps(ret_rows), 200
+    return retmsg(200, ret_rows)
 
 
 if __name__ == "__main__":

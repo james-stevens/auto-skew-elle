@@ -1,14 +1,21 @@
 #! /usr/bin/python3
+""" python replacement for cmdline `logger` with more options """
 
 import sys
 import syslog
 import argparse
 
 parser = argparse.ArgumentParser(description='Log to syslog with options')
-parser.add_argument("-t", '--tag', help='process name',required=True)
+parser.add_argument("-t", '--tag', help='process name', required=True)
 parser.add_argument("-i", '--ident', help='Include PID', action="store_true")
-parser.add_argument("-s", '--severity', help='Severity to log as, default=error', default="info")
-parser.add_argument("-f", '--facility', help='Logging Facility', default="uucp")
+parser.add_argument("-s",
+                    '--severity',
+                    help='Severity to log as, default=error',
+                    default="info")
+parser.add_argument("-f",
+                    '--facility',
+                    help='Logging Facility',
+                    default="uucp")
 parser.add_argument('rest', nargs=argparse.REMAINDER)
 args = parser.parse_args()
 
@@ -58,14 +65,9 @@ if args.facility not in facility_options:
     print(f"ERROR: Severity {args.facility} not supported: {facility_options}")
     sys.exit(0)
 
-
-logoption = 0
-if args.ident:
-    logoption = logoption + syslog.LOG_PID
-
-syslog.openlog(args.tag,logoption,facility_options[args.facility])
+syslog.openlog(args.tag, syslog.LOG_PID if args.ident else 0, facility_options[args.facility])
 if len(args.rest) > 0:
-    syslog.syslog(severity_options[args.severity]," ".join(args.rest))
+    syslog.syslog(severity_options[args.severity], " ".join(args.rest))
 else:
     for line in sys.stdin:
-        syslog.syslog(severity_options[args.severity],line)
+        syslog.syslog(severity_options[args.severity], line)
