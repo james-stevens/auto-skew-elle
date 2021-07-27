@@ -412,7 +412,7 @@ def make_connection():
     schema = mysql_schema.load_db_schema(cnx)
 
 
-def check_supplied_properties(sent,allowed):
+def check_supplied_modifiers(sent,allowed):
     for s in sent:
         if s not in allowed:
             flask.abort(406, {"error": f"The modifier '${s}' is not supported in this request"})
@@ -488,6 +488,18 @@ def get_sql_rows(sql, start):
     return rows
 
 
+def process_one_set(set_clasue,table):
+    ret = []
+    this_tbl = schema[table]
+    cols = this_tbl["columns"]
+    for s in set_clasue:
+        if s not in cols:
+            flask.abort(404,{"error":"Column ${s} not in table ${table}"})
+
+        ret.append(s + "=" + add_data(set_clasue[s],cols[s]))
+    return ret
+
+
 def get_idx_cols(table, sent):
     """ get suitable list of index columns for {table} """
     idx_cols = None
@@ -512,6 +524,30 @@ def get_idx_cols(table, sent):
     return idx_cols
 
 
+@application.route("/v1/data/<table>", methods=['PATCH'])
+def update_table_row(table):
+    if table not in schema:
+        flask.abort(404, {"error": f"Table '${table}' does not exist"})
+
+    if (flask.request.json is None) or ("set" not in flask.request.json):
+        flask.abort(400, {"error": "A `set` clause is mandatory for an UPDATE"})
+
+    sent = flask.request.json
+    check_supplied_modifiers(sent,["where","limit","set"])
+
+    if not isinstance(sent["set"],dict):
+        flask.abort(400, {"error": "In an UPDATE, the `set` clause must be an object type"})
+
+    set_list = process_one_set(sent["set"],table)
+    sql = f"update {table} set " + ",".join(set_list)
+    start, sql = build_sql(table, sent, sql)
+
+    cnx.query(sql)
+    cnx.store_result()
+    ret = cnx.affected_rows()
+    return json.dumps({"affected_rows":ret}),200
+
+
 @application.route("/v1/data/<table>", methods=['DELETE'])
 def delete_table_row(table):
     if table not in schema:
@@ -520,14 +556,14 @@ def delete_table_row(table):
     if (flask.request.json is None) or ("where" not in flask.request.json):
         flask.abort(400, {"error": "A `where` clause is mandatory for a DELETE"})
 
-    check_supplied_properties(flask.request.json,["where","limit"])
+    check_supplied_modifiers(flask.request.json,["where","limit"])
 
     start, sql = build_sql(table, flask.request.json, f"delete from {table} ")
 
     cnx.query(sql)
     cnx.store_result()
     ret = cnx.affected_rows()
-    return json.dumps({"affected rows":ret}),200
+    return json.dumps({"affected_rows":ret}),200
 
 
 @application.route("/v1/data/<table>", methods=['GET','POST'])
@@ -537,7 +573,7 @@ def get_table_row(table):
         flask.abort(404, {"error": f"Table '${table}' does not exist"})
 
     sent = flask.request.json if flask.request.json is not None else {}
-    check_supplied_properties(sent,["where","limit","skip","by","order","join","join-basic"])
+    check_supplied_modifiers(sent,["where","limit","skip","by","order","join","join-basic"])
 
     start, sql = build_sql(table, sent, f"select {table}.* from {table} ")
     sql_rows = get_sql_rows(sql, start)
