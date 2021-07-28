@@ -2,6 +2,8 @@
 
 NOTE: A trailing `/` is not supported, so don't use it, please.
 
+When you submit a request, you can submit JSON to modify / control that request. The properties within the JSON you submit will be referred to as "modifiers".
+
 
 ## `/v1` - Checking it works
 
@@ -99,13 +101,10 @@ Therefore it would probably be better to just restart the container.
 
 # `GET/POST /v1/data/[table]` - Query the Table
 
-When you query a table it will return an object which has a property by the name of the table you have queried. Within that
-there will be one property for each row returned and within that will be an object which contained each row.
+When you query a table it can either return a list of objects or series of objects with a key of your choice.
+If you want it to return a series of objects, you need to specify what key you want using the `by` modifier (see below).
 
-The API will automatically look at the unique index of the table to pick a name to act as the owner for each row, but you
-can override this.
-
-It will also include the pseudo column `:rowid:` which is a positive integer and acts as a row counter. If you query the rows in batches
+In each object, it will include the pseudo column `:rowid:` which is a positive integer and acts as a row counter. If you query the rows in batches
 this will give you a row position that is consistant across the different batches.
 
 Here's an example
@@ -125,13 +124,14 @@ Here's an example
       }
     }
 
-In this exmaple, the table `tickers` has two real columns called `ticker` and `google`.
+In this exmaple, the table `tickers` has two real columns called `ticker` and `google`, and the request would have include the modified `"by": "ticker"`
+to make the rows returned as a series of objects keyed on the property `ticker`, instead of a list of objects.
 
-When you make the request, you can post semo JSON to modify the query.
+When you make the request, you can post JSON to modify the query.
 
-## The `where` Property
+## The `where` Modifier
 
-The `where` clause is translated into a `where` clause in the `select` query. A `where` can have any of the following sub-properties
+The `where` modifier is translated into a `where` clause in the `select` query. A `where` can have any of the following sub-properties
 `=`, `!=`, `<>`, `<`, `>`, `>=`, `<=`, `like`, `regexp` which specify the comparison you want to do, then within each of those
 properties you can have a column name as a property and a value to compare it with.
 
@@ -145,7 +145,7 @@ For exmaple
       }
     }
 
-This translates into the SQL `where` clause of `where ticker = "AAPL"`. If the `=` property had multiple sub-properties, they would
+This translates into the SQL `where` clause of `where ticker = "AAPL"`. If the `=` property has multiple sub-properties, they would
 be `AND`'ed together
 
     {
@@ -161,17 +161,6 @@ So, this would translate to `where ticker = "AAPL" and value = 5`.
 
 If you provide multiple compairsons in the same where object, they are also `AND`'ed together.
 
-However, the where clause can be given a list of objects, if this is the last, each item in the list is `OR`ed. For exmaple
-
-    {
-      "where" : [
-        { "=":  { "ticker": "AAPL" } },
-        { ">=": { "value": 5 } }
-      ]
-    }
-
-will translate to `where (ticker = "AAPL") or (value >= 5)`.
-
 In a comparison you can provide a list type, in which case a match again any item in the list will be a match, i.e. an `OR` match.
 For the `=` comparison this is equivilent to the SQL `in (...)` operator, however, this list format can be used for all operator types.
 
@@ -183,28 +172,66 @@ For the `=` comparison this is equivilent to the SQL `in (...)` operator, howeve
       }
     }
 
-will translate to `where ticker in ("AAPL","AMZN")`
+will translate to `where ticker in ("AAPL","AMZN")`. The SQl `in` operator is effectively an `OR`, so if the comparson you are doing is (say) `regexp`
+and the value is a list, this will be split into separate comparsons that are `OR`ed with each other.
 
-If a table has a column that links to another table, you can make comparisons with values in the row it links to by specifying 
+for exmaple
+
+	{
+      "where" : {
+        "like" { "ticker": ["A%","B%"]
+        }
+        "=": { "value": 5 }
+      }
+    }
+
+this will be translated into `where ((ticker like "A%") or (ticker like "B%")) and (value = 5)`
+
+However, the `where` modifier can also be given a list of objects, if this is the case, each item in the list is `OR`ed. For exmaple
+
+    {
+      "where" : [
+        { "=":  { "ticker": ["TSLA", "AAPL" ] } },
+        { ">=": { "value": 5 } }
+      ]
+    }
+
+will translate to `where (ticker in ("AAPL","TSLA")) or (value >= 5)`.
+
+
+If a table has a column that links to another table (as specified in the YAML file), you can make comparisons with values in the row it links to by specifying 
 `[remote-table].[remote-column-name]` instead of `[local-column-name]`.
 
-NOTE: `:rowid:` can not be used in a `where` clause.
+
+So lets say the `ticker` table can join to the `prices` table (using a join specified in the YAML file), then we could have a a query like this
+
+    {
+      "where" : {
+        ">=": {
+          "prices.current_price": 100.00 
+        }
+      }
+    }
+
+This would produce the SQL `join prices using(column-from-yaml-file) where prices.current_price >= 100.00`
+
+
+NOTE: `:rowid:` is a virtual column can not be used in a `where` clause, but can be controlled using the `limit` and `skip` modifiers.
 
 If the `where` clause is a `string` type instead of a list or object type, then the contents will be given directly to SQL.
 
 
 
-## The `by` Property
+## The `by` Modifier
 
-The `by` property allows you to overide the automatic selection of property to be used as the object identified for each row.
-The default will be the simplest unique key, preferably the primary key. If there are no unique keys, it will fall back to 
-using the `:rowid:`.
+The `by` property lets you specify that you wish to receive the rows returned as an object of objects instead of a list of objects.
+If you wish to access the data by a keyed index, then this may be better. However, if you specifically want the sort order to be preserved
+you should have the rows returned as a list.
 
 The `by` property can be either a list type or a string type, where a string is a comma separated list of column names to use.
 The pseudo type `:rowid:` can also be used
 
 Here's two exmaples `{ "by": "ticker" }` & `{ "by": ":rowid:" }`
-
 
 Here's an exmaple, where `{ "by": ":rowid:" }` was specified
 
@@ -223,19 +250,35 @@ Here's an exmaple, where `{ "by": ":rowid:" }` was specified
       }
     }
 
+And this is how the exact same query would get returned if no `by` modifier has been used.
+
+    {
+      "tickers": [
+        {
+          "ticker": "AAPL",
+          "google": "AAPL:NASDAQ",
+          ":rowid:": 1
+        },
+        {
+          "ticker": "AMZN",
+          "google": "AMZN:NASDAQ",
+          ":rowid:": 2
+        }
+      ]
+    }
+
 If more than one column is specified, their values are concatinated with a pipe (`|`) separator.
 
-As each row is a property of the `by` name, the sort order of the rows is irrelevant unless you are using the `:rowid:` as
-the identifier.
 
-
-## The `order` Property
+## The `order` Modifier
 
 The `order` property specifies a list of columns to sort by. This can either be a list type or a comma separated string.
- Current only decending sorts are supported.
+
+Unless you are splitting up a long list of items, using `limit` & `skip`, using both the `by` and `order` modifiers
+does not make sense as keyed objects do not retain a sort order.
 
 
-## The `limit` and `skip` Properties
+## The `limit` and `skip` Modifiers
 
 If you are retrieving a lot of rows, it can be useful to retrieve them in batches of (say) 100 rows at a time.
 
@@ -243,24 +286,26 @@ If you are retrieving a lot of rows, it can be useful to retrieve them in batche
 
 You can use `limit` without `skip`, but you can not use `skip` without `limit`.
 
-To ensure you do not get duplicate rows, you *must* also specifiy a sort `order`.
+To ensure you do not get duplicate rows, if you are using `limit` & `skip` to pull the data in as batches, you *must* also specifiy a sort `order`.
 
 When using `limit` and `skip` to retrieve in batches, the `:rowid:` will tell you where the row belongs in the entire list, not just
 its position in any one batch.
+
+When using `limit` & `skip` also using `by` and `order` can still be useful.
 
 
 ## The `join` Property
 
 The `join` relies on the YAML file to know which columns in which tables can join to other tables.
 
-If a column can join to another table, you name that column in the `join` clause and the row from the foreign table will
-retrieved and the foreign object will be used as the value of that column, instead of the column's value.
+If a column can join to another table, you name the source column in the `join` clause and the row from the foreign table will
+retrieved and the foreign object will be used as the property of that column, instead of the column's raw value.
 
 Example, with no `join` -> `{"where":{"=":{"ticker":"AAPL"}}}`
 
     {
-      "trades": {
-        "15": {
+      "trades": [
+        {
           "trade_id": 15,
           "ticker": "AAPL",
           "when_dt": "2021-01-04 14:33:00",
@@ -275,7 +320,7 @@ Example, with no `join` -> `{"where":{"=":{"ticker":"AAPL"}}}`
           "eow_spot_value_id": 23864478,
           ":rowid:": 1
         },
-        "20": {
+        {
           "trade_id": 20,
           "ticker": "AAPL",
           "when_dt": "2020-12-21 17:22:00",
@@ -290,14 +335,14 @@ Example, with no `join` -> `{"where":{"=":{"ticker":"AAPL"}}}`
           "eow_spot_value_id": 23864483,
           ":rowid:": 2
         }
-      }
+      ]
     }
 
 And now adding `"join":"ticker"` -> `{ "join":"ticker", "where":{"=":{"ticker":"AAPL"}}}`
 
     {
-      "trades": {
-        "15": {
+      "trades": [
+        {
           "trade_id": 15,
           "ticker": {
             "ticker": "AAPL",
@@ -316,7 +361,7 @@ And now adding `"join":"ticker"` -> `{ "join":"ticker", "where":{"=":{"ticker":"
           "eow_spot_value_id": 23864478,
           ":rowid:": 1
         },
-        "20": {
+        {
           "trade_id": 20,
           "ticker": {
             "ticker": "AAPL",
@@ -335,13 +380,13 @@ And now adding `"join":"ticker"` -> `{ "join":"ticker", "where":{"=":{"ticker":"
           "eow_spot_value_id": 23864483,
           ":rowid:": 2
         }
-      }
+      ]
     }
 
 Now the `ticker` column has been replaced by the corresponding object from the `tickers` table. The pseudo column `:join:`,
-in the joined data, tells you which column in the foreign table had been used to make the join.
+in the atached object, tells you which column in the foreign table had been used to make the join.
 
-NOTE: this now means that the value of the `ticker` must be addressed as `data.trades[i].ticker.ticker`, instead of just
+NOTE: this now means to get the value of the `ticker`, you must be addresses it as `data.trades[i].ticker.ticker`, instead of just
 `data.trades[i].ticker` had there been no join.
 
 
@@ -349,16 +394,17 @@ The pseudo column name `:all:` can be used in the `join` clause to mean do all j
 
 
 In the JSON you send, if you set the boolean property `join-basic` to `true`, then the joined data will be attached as separate table objects and you will
-have to match them up in your code. This can be useful where a lot of rows join to a few rows that contain a lot of data.
+have to match them up in your code. This can be useful where a lot of rows join to a few rows that contain a lot of data. For exmaple, if the currency joined
+to a table containing the exchange rate, it might be better to have this included once for each currency, instead of including it in every record.
 
 In this case the `tickers` table has only a small amount of data, so repeating the rows for `AAPL` each time does not represent a large
 overhead, but if the rows in `tickers` had been much bigger, it might have.
 
-So the same output would look like this with the addition of `"join-simple": true`
+So the same output would look like this with the addition of `"join-basic": true`
 
     {
-      "trades": {
-        "15": {
+      "trades": [
+        {
           "trade_id": 15,
           "ticker": "AAPL",
           "when_dt": "2021-01-04 14:33:00",
@@ -373,7 +419,7 @@ So the same output would look like this with the addition of `"join-simple": tru
           "eow_spot_value_id": 23864478,
           ":rowid:": 1
         },
-        "20": {
+        {
           "trade_id": 20,
           "ticker": "AAPL",
           "when_dt": "2020-12-21 17:22:00",
@@ -388,7 +434,7 @@ So the same output would look like this with the addition of `"join-simple": tru
           "eow_spot_value_id": 23864483,
           ":rowid:": 2
         }
-      },
+      ],
       "tickers.ticker": {
         "AAPL": {
           "ticker": "AAPL",
@@ -400,10 +446,22 @@ So the same output would look like this with the addition of `"join-simple": tru
 
 You can see this has reduced the amount of data that the server needs to return although, in this exmaple, not by a lot.
 
+NOTE: the joined data will always be retuned as keyed objects, keyed on the column that was used in the join.
+
 If you have restricted the number of rows to be returned using `limit` then only the rows that match ones that are actually returned
-will be added on.
+will be added on, but `limit` & `skip` will not directly affect the joined data.
 
-NOTE: to show the data is joined data, not original table data, the object name is the column that was joined to.
+NOTE: to show the data is joined data, not original table data, the table object name is the column that was joined to.
 
-You will need to either look at the schema for the `trades` table, or simply hard code the relationship in order to match the rows.
+You will need to either look at the schema for the `trades` table, or simply hard code the relationship in order to match up the rows with the join data.
 The object name for the joined data will always be the same as the column it was joined on.
+
+
+# `DELETE /v1/data/[table]` - Delete Rows
+
+The `delete` method supports adding the modifiers `where` and `limit`, which both take the exact same syntax as the `GET`/`POST` above.
+
+
+# `PUT /v1/data/[table]` - Insert Rows
+
+The `put` method only supports the `set` modifier. For a `put` the type of the `set` data can either be an object, of a list of objects.

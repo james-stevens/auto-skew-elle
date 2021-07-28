@@ -430,10 +430,11 @@ def make_insert_from_list(set_list, table):
     cols = schema[table]["columns"]
     have_cols = []
     for this_set in set_list:
+        if not isinstance(this_set,dict):
+            json_abort(400,"All items in a `set` modifier list must be objects")
         for col in this_set:
             if col not in cols:
-                json_abort(404,
-                           {"error": f"Column {col} is not in table {table}"})
+                json_abort(404,f"Column {col} is not in table {table}")
 
             if col not in have_cols:
                 have_cols.append(col)
