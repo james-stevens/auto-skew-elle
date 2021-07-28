@@ -179,7 +179,7 @@ So, this would translate to `where ticker = "AAPL" and value = 5`.
 If you provide multiple compairsons in the same where object, they are also `AND`'ed together.
 
 In a comparison you can provide a list type, in which case any item in the list will be a match against, i.e. an `OR` match.
-For the `=` comparison this is equivilent to the SQL `in (...)` operator, however, this list format can be used for all operator types.
+For the `=` comparison this is equivilent to the SQL `column in (value1, value2 ...)` operator, however, this list format can be used for all operator types.
 
     {
       "where" : {
