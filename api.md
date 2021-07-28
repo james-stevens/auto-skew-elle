@@ -224,12 +224,14 @@ If the `where` clause is a `string` type instead of a list or object type, then 
 
 ## The `by` Modifier
 
-The `by` property lets you specify that you wish to receive the rows returned as an object of objects instead of a list of objects.
+The `by` property lets you specify that you wish to receive the rows returned as a keyed set of objects instead of a list of objects.
+
 If you wish to access the data by a keyed index, then this may be better. However, if you specifically want the sort order to be preserved
 you should have the rows returned as a list.
 
-The `by` property can be either a list type or a string type, where a string is a comma separated list of column names to use.
-The pseudo type `:rowid:` can also be used
+The `by` property can be either a list type or a string type, where a string is a comma separated list of one or more column names to use.
+Or the `by` value can be a single string which specifies the name of a unique index of that table to use as the key.
+The pseudo type `:rowid:` can also be used.
 
 Here's two exmaples `{ "by": "ticker" }` & `{ "by": ":rowid:" }`
 
