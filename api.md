@@ -101,8 +101,8 @@ Therefore it would probably be better to just restart the container.
 
 # `GET/POST /v1/data/[table]` - Query the Table
 
-When you query a table it can either return a list of objects or series of objects with a key of your choice.
-If you want it to return a series of objects, you need to specify what key you want using the `by` modifier (see below).
+When you query a table it can either return a list of objects or set of objects with a key of your choice.
+If you want it to return a set of objects, you need to specify what key you want using the `by` modifier (see below).
 
 In each object, it will include the pseudo column `:rowid:` which is a positive integer and acts as a row counter. If you query the rows in batches
 this will give you a row position that is consistant across the different batches.
@@ -125,7 +125,7 @@ Here's an example
     }
 
 In this exmaple, the table `tickers` has two real columns called `ticker` and `google`, and the request would have include the modified `"by": "ticker"`
-to make the rows returned as a series of objects keyed on the property `ticker`, instead of a list of objects.
+to make the rows returned as a set of objects keyed on the property `ticker`, instead of a list of objects.
 
 When you make the request, you can post JSON to modify the query.
 
