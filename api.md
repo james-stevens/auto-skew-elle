@@ -411,18 +411,18 @@ And now adding `"join":"ticker"` -> `{ "join":"ticker", "where":{"=":{"ticker":"
     }
 
 Now the `ticker` column has been replaced by the corresponding object from the `tickers` table. The pseudo column `:join:`,
-in the atached object, tells you which column in the foreign table had been used to make the join.
+in the attached object, tells you which column in the foreign table had been used to make the join.
 
-NOTE: this now means to get the value of the `ticker`, you must be addresses it as `data.trades[i].ticker.ticker`, instead of just
+NOTE: this now means to get the value of the `ticker`, it must be addresses as `data.trades[i].ticker.ticker`, instead of just
 `data.trades[i].ticker` had there been no join.
 
 
-The pseudo column name `:all:` can be used in the `join` clause to mean do all joins that are possible.  i.e. `{ "join": ":all:" }`
+The pseudo column name `:all:` can be used in the `join` clause to mean to do all joins that are possible, i.e. `{ "join": ":all:" }`
 
 
 In the JSON you send, if you set the boolean property `join-basic` to `true`, then the joined data will be attached as separate table objects and you will
-have to match them up in your code. This can be useful where a lot of rows join to a few rows that contain a lot of data. For exmaple, if the currency joined
-to a table containing the exchange rate, it might be better to have this included once for each currency, instead of including it in every record.
+have to match them up in your code. This can be useful where a lot of rows join to a few rows that contain a lot of data. For exmaple, if the `currency` joined
+to a table containing the exchange rate, it might be better to have this included once for each currency, instead of including it in every `trades` record.
 
 In this case the `tickers` table has only a small amount of data, so repeating the rows for `AAPL` each time does not represent a large
 overhead, but if the rows in `tickers` had been much bigger, it might have.
