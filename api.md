@@ -534,10 +534,10 @@ this example will translate into
 	insert into table-name(account_held,from_trade_id,currency)
 	values
 		("Mine-2",555,NULL),
-		("Mine-3",NULL,"BGP")`
+		("Mine-3",NULL,"BGP")
 
 
-If `NULL` is not allowed in any of the missing columns, then the entire `insert` will fail & no rows will be added to the database.
+If `NULL` is not allowed, in any a column that has no value, then the entire `insert` will fail & no rows will be added to the database.
 
 `put` also only returns the `affected_rows` property.
 
