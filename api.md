@@ -215,7 +215,7 @@ However, the `where` modifier can also be given a list of objects, if this is th
 will translate to `where (ticker in ("AAPL","TSLA")) or (value >= 5)`.
 
 
-If a table has a column that links to another table (as specified in the YAML file), you can make comparisons with values in the row it links to by specifying 
+If a table has a column that links to another table (as specified in the YAML file), you can make comparisons with values in the column it links to by specifying 
 `[remote-table].[remote-column-name]` instead of `[local-column-name]`.
 
 
@@ -232,20 +232,21 @@ So lets say the `ticker` table can join to the `prices` table (using a join spec
 This would produce the SQL `join prices using(column-from-yaml-file) where prices.current_price >= 100.00`
 
 
-NOTE: `:rowid:` is a virtual column can not be used in a `where` clause, but can be controlled using the `limit` and `skip` modifiers.
+NOTE: `:rowid:` is a virtual column and can not be used in a `where` clause, but can be controlled using the `limit` and `skip` modifiers.
 
-If the `where` clause is a `string` type instead of a list or object type, then the contents will be given directly to SQL.
+If the `where` clause is a `string` type instead of a list or object type, then the contents will be given directly to SQL
+after the prefeix `select table.* from table`.
 
 
 
 ## The `by` Modifier
 
-The `by` property lets you specify that you wish to receive the rows returned as a keyed set of objects instead of a list of objects.
+The `by` modifier lets you specify that you wish to receive the rows returned as a keyed set of objects instead of a list of objects.
 
 If you wish to access the data by a keyed index, then this may be better. However, if you specifically want the sort order to be preserved
-you should have the rows returned as a list.
+you should have the rows returned as a list of objects.
 
-The `by` property can be either a list type or a string type, where a string is a comma separated list of one or more column names to use.
+The `by` value is a list of one of more columns to use as the key, specified either as a list of column names or a comma separated series of column names.
 Or the `by` value can be a single string which specifies the name of a unique index of that table to use as the key.
 The pseudo type `:rowid:` can also be used.
 
@@ -285,21 +286,20 @@ And this is how the exact same query would get returned if no `by` modifier has 
       ]
     }
 
-If more than one column is specified, their values are concatinated with a pipe (`|`) separator.
+If more than one column is specified, the key will always be a string type and the values are concatinated with a pipe (`|`) separator.
 
 
 ## The `order` Modifier
 
-The `order` property specifies a list of columns to sort by. This can either be a list type or a comma separated string.
+The `order` property specifies a list of columns to sort by. This can either be a list of column names type or a comma separated string of column names.
 
 Unless you are splitting up a long list of items, using `limit` & `skip`, using both the `by` and `order` modifiers
-does not make sense as keyed objects do not retain a sort order.
+does not make sense as a set of keyed objects do not retain any sort order.
 
 
 ## The `limit` and `skip` Modifiers
 
-If you are retrieving a lot of rows, it can be useful to retrieve them in batches of (say) 100 rows at a time.
-
+If you are retrieving a lot of rows, it can be useful to retrieve them in batches of (say) 100 rows at a time.  
 `limit` says how many rows to return in each batch and `skip` specifies how many rows you have already retrieved, so can skip over.
 
 You can use `limit` without `skip`, but you can not use `skip` without `limit`.
@@ -310,6 +310,15 @@ When using `limit` and `skip` to retrieve in batches, the `:rowid:` will tell yo
 its position in any one batch.
 
 When using `limit` & `skip` also using `by` and `order` can still be useful.
+
+Here's a series of `limit` & `skip` values to get a data set in batches of 100 rows at a time
+```
+	{ "limit": 100, "skip": 0 }
+	{ "limit": 100, "skip": 100 }
+	{ "limit": 100, "skip": 200 }
+	{ "limit": 100, "skip": 300 }
+```
+In this exmaple, you would continue adding `100` to the `skip` value each time until less than 100 rows are returned.
 
 
 ## The `join` Property
