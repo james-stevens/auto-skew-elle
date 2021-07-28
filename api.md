@@ -475,7 +475,7 @@ You can see this has reduced the amount of data that the server needs to return 
 
 NOTE: the joined data will always be retuned as keyed objects, keyed on the column that was used in the join.
 
-If you have restricted the number of rows to be returned using `limit` then only the rows that match ones that are actually returned
+If you have restricted the number of rows to be returned using `limit` then only join rows that match parent rows that are actually returned
 will be added on, but `limit` & `skip` will not directly affect the joined data.
 
 NOTE: to show the data is joined data, not original table data, the table object name is the column that was joined to.
