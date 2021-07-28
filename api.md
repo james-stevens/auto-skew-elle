@@ -107,7 +107,7 @@ If you want it to return a keyed set of objects, you need to specify what key yo
 In each object, it will include the pseudo column `:rowid:` which is a positive integer and acts as a row counter. If you query the rows in batches
 this will give you a row position that is consistant across the different batches.
 
-Here's an example
+Here's an example of some returned rows
 
     {
       "tickers": {
