@@ -481,14 +481,14 @@ will be added on. `limit` & `skip` do not directly affect the joined data as suc
 NOTE: to show the data is joined data, not original table data, the table object name is the column that was joined to.
 
 You will need to either look at the schema for the `trades` table, or simply hard code the relationship in order to match up the rows with the join data.
-The object name for the joined data will always be the same as the column it was joined on.
+The object name for the joined data will always be the foreign table column it was joined on.
 
 
 # `DELETE /v1/data/[table]` - Delete Rows
 
 The `delete` method is for deleteing rows in the database and supports adding the modifiers `where` and `limit`, which both take the exact same syntax as the `GET`/`POST` above.
 
-If you only want to delete a single rows, it is highly recommended that you include the modifier `"limit": 1`.
+If you only want to delete a single rows, it is *highly* recommended that you include the modifier `"limit": 1`.
 
 
 The `delete` method will not return any rows, but return the single property `affected_rows` which will be a positive integer that
