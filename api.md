@@ -491,7 +491,7 @@ The `delete` method is for deleteing rows in the database and supports adding th
 If you only want to delete a single rows, it is **highly** recommended that you include the modifier `"limit": 1`.
 
 
-The `delete` method will not return any rows, but return the single property `affected_rows` which will be a positive integer that
+The `delete` method will not return any rows, but returns the single property `affected_rows` which will be a positive integer that
 tells you how many rows were deleted.
 
 
@@ -526,9 +526,9 @@ This will translate into a single line insert like this - `insert into table-nam
     }
 
 This second example will translate into a multiline `insert`, this means either all the rows will get inserted into the database, or none
-or the rows will.
+of the rows will.
 
-Where a column exists in on list object, but not in others, the database value `NULL` will be used in rows where it does not exist. So
+Where a column exists in one list object, but not in others, the SQL value `NULL` will be used in rows where it does not exist. So
 this example will translate into `insert into table-name(account_held,from_trade_id,currency) values ("Mine-2",555,NULL),("Mine-3",NULL,"BGP")`
 
 If `NULL` is not allowed in any of the missing columns, then the entire `insert` will fail & no rows will be added to the database.
