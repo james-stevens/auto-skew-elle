@@ -124,8 +124,25 @@ Here's an example of some returned rows
       }
     }
 
-In this exmaple, the table `tickers` has two real columns called `ticker` and `google`, and the request would have include the modified `"by": "ticker"`
+In this exmaple, the table `tickers` has two real columns called `ticker` and `google`, and the request would have included the modified `"by": "ticker"`
 to make the rows returned as a keyed set of objects keyed on the property `ticker`, instead of a list of objects.
+
+The same rows, without the `by` modifier would look like this
+
+    {
+      "tickers": [
+        {
+          "ticker": "AAPL",
+          "google": "AAPL:NASDAQ",
+          ":rowid:": 1
+        },
+        {
+          "ticker": "AMZN",
+          "google": "AMZN:NASDAQ",
+          ":rowid:": 2
+        },
+      ]
+    }
 
 When you make the request, you can post JSON to modify the query.
 
