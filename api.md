@@ -529,7 +529,13 @@ This second example will translate into a multiline `insert`, this means either 
 of the rows will.
 
 Where a column exists in one list object, but not in others, the SQL value `NULL` will be used in rows where it does not exist. So
-this example will translate into `insert into table-name(account_held,from_trade_id,currency) values ("Mine-2",555,NULL),("Mine-3",NULL,"BGP")`
+this example will translate into 
+
+	insert into table-name(account_held,from_trade_id,currency)
+	values
+		("Mine-2",555,NULL),
+		("Mine-3",NULL,"BGP")`
+
 
 If `NULL` is not allowed in any of the missing columns, then the entire `insert` will fail & no rows will be added to the database.
 
