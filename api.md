@@ -196,8 +196,7 @@ for exmaple
 
 	{
       "where" : {
-        "like" { "ticker": ["A%","B%"]
-        }
+        "like" { "ticker": ["A%","B%"] },
         "=": { "value": 5 }
       }
     }
