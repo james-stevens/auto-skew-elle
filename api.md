@@ -459,9 +459,63 @@ The object name for the joined data will always be the same as the column it was
 
 # `DELETE /v1/data/[table]` - Delete Rows
 
-The `delete` method supports adding the modifiers `where` and `limit`, which both take the exact same syntax as the `GET`/`POST` above.
+The `delete` method is for deleteing rows in the database and supports adding the modifiers `where` and `limit`, which both take the exact same syntax as the `GET`/`POST` above.
+
+If you only want to delete a single rows, it is highly recommended that you include the modifier `"limit": 1`.
+
+
+The `delete` method will not return any rows, but return the single property `affected_rows` which will be a positive integer that
+tells you how many rows were deleted.
 
 
 # `PUT /v1/data/[table]` - Insert Rows
 
-The `put` method only supports the `set` modifier. For a `put` the type of the `set` data can either be an object, of a list of objects.
+The `put` method is for inserting rows in the database and only supports the `set` modifier. For a `put` the type of the `set` data can either be an object, of a list of objects.
+
+In either case the objects will be a series of column names & values. In either case, the data is always inserted into the database as a single `insert`,
+either using a single line `insert` or a multi-line `insert`
+
+    {
+      "set": {
+        "account_held": "Mine-2",
+        "from_trade_id": 555,
+        "currency": "XYZ"
+      }
+    }
+
+This will translate into a single line insert like this - `insert into table-name set account_held="Mine-2",from_trade_id=555,currency="XYZ"`
+
+    {
+      "set": [
+        {
+          "account_held": "Mine-2",
+          "from_trade_id": 555,
+        },
+        {
+          "account_held": "Mine-3",
+          "currency": "BGP"
+        }
+      ]
+    }
+
+This second example will translate into a multiline `insert`, this means either all the rows will get inserted into the database, or none
+or the rows will.
+
+Where a column exists in on list object, but not in others, the database value `NULL` will be used in rows where it does not exist. So
+this example will translate into `insert into table-name(account_held,from_trade_id,currency) values ("Mine-2",555,NULL),("Mine-3",NULL,"BGP")`
+
+If `NULL` is not allowed in any of the missing columns, then the entire `insert` will fail & no rows will be added to the database.
+
+`put` also only returns the `affected_rows` property.
+
+
+# `PATCH /v1/data/[table]` - Update Rows
+
+The `patch` method is used for updating existing rows in the database and supports the `where`, `set` and `limit` modifiers.
+
+Unlike the `patch` method, for the `put` method the `set` modifier can only be an object type and not a list of objects.
+
+The `where` & `limit` syntax is exactly the same as for the `get`/`post` methods. Again, as per the `delete` method, if you are trying to only
+update one row, you should include the modifier `"limit": 1`.
+
+`patch` also only returns the `affected_rows` property.
