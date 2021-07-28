@@ -488,7 +488,7 @@ The object name for the joined data will always be the foreign table column it w
 
 The `delete` method is for deleteing rows in the database and supports adding the modifiers `where` and `limit`, which both take the exact same syntax as the `GET`/`POST` above.
 
-If you only want to delete a single rows, it is *highly* recommended that you include the modifier `"limit": 1`.
+If you only want to delete a single rows, it is **highly** recommended that you include the modifier `"limit": 1`.
 
 
 The `delete` method will not return any rows, but return the single property `affected_rows` which will be a positive integer that
