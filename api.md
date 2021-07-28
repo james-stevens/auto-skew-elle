@@ -189,7 +189,7 @@ For the `=` comparison this is equivilent to the SQL `column in (value1, value2 
       }
     }
 
-will translate to `where ticker in ("AAPL","AMZN")`. The SQl `in` operator is effectively an `OR`, so if the comparson you are doing is (say) `regexp`
+will translate to `where ticker in ("AAPL","AMZN")`. The SQL `in` operator is effectively an `OR`, so if the comparson you are doing is (say) `regexp`
 and the value is a list, this will be split into separate comparsons that are `OR`ed with each other.
 
 for exmaple
