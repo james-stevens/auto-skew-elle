@@ -1,0 +1,74 @@
+#! /usr/bin/python3
+""" python replacement for cmdline `logger` with more options """
+
+import sys
+import syslog
+import argparse
+
+parser = argparse.ArgumentParser(description='Log to syslog with options')
+parser.add_argument("-t", '--tag', help='process name', required=True)
+parser.add_argument("-i", '--ident', help='Include PID', action="store_true")
+parser.add_argument("-s",
+                    '--severity',
+                    help='Severity to log as, default=error',
+                    default="info")
+parser.add_argument("-f",
+                    '--facility',
+                    help='Logging Facility',
+                    default="uucp")
+parser.add_argument('rest', nargs=argparse.REMAINDER)
+args = parser.parse_args()
+
+facility_options = {
+    "kern": syslog.LOG_KERN,
+    "kernel": syslog.LOG_KERN,
+    "user": syslog.LOG_USER,
+    "mail": syslog.LOG_MAIL,
+    "daemon": syslog.LOG_DAEMON,
+    "auth": syslog.LOG_AUTH,
+    "syslog": syslog.LOG_SYSLOG,
+    "lpr": syslog.LOG_LPR,
+    "news": syslog.LOG_NEWS,
+    "uucp": syslog.LOG_UUCP,
+    "cron": syslog.LOG_CRON,
+    "authpriv": syslog.LOG_AUTHPRIV,
+    "local0": syslog.LOG_LOCAL0,
+    "local1": syslog.LOG_LOCAL1,
+    "local2": syslog.LOG_LOCAL2,
+    "local3": syslog.LOG_LOCAL3,
+    "local4": syslog.LOG_LOCAL4,
+    "local5": syslog.LOG_LOCAL5,
+    "local6": syslog.LOG_LOCAL6,
+    "local7": syslog.LOG_LOCAL7
+}
+
+severity_options = {
+    "emerg": syslog.LOG_EMERG,
+    "emergency": syslog.LOG_EMERG,
+    "alert": syslog.LOG_ALERT,
+    "crit": syslog.LOG_CRIT,
+    "critical": syslog.LOG_CRIT,
+    "err": syslog.LOG_ERR,
+    "error": syslog.LOG_ERR,
+    "warning": syslog.LOG_WARNING,
+    "notice": syslog.LOG_NOTICE,
+    "info": syslog.LOG_INFO,
+    "information": syslog.LOG_INFO,
+    "debug": syslog.LOG_DEBUG
+}
+
+if args.severity not in severity_options:
+    print(f"ERROR: Severity {args.severity} not supported: {severity_options}")
+    sys.exit(0)
+
+if args.facility not in facility_options:
+    print(f"ERROR: Severity {args.facility} not supported: {facility_options}")
+    sys.exit(0)
+
+syslog.openlog(args.tag, syslog.LOG_PID if args.ident else 0,
+               facility_options[args.facility])
+if len(args.rest) > 0:
+    syslog.syslog(severity_options[args.severity], " ".join(args.rest))
+else:
+    for line in sys.stdin:
+        syslog.syslog(severity_options[args.severity], line)
