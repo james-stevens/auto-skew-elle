@@ -1,0 +1,11 @@
+#! /bin/sh
+
+id=$(docker image ls | awk '{ if($1=="auto-skew-elle") print $3 }')
+
+docker tag ${id} jamesstevens/auto-skew-elle
+docker push jamesstevens/auto-skew-elle
+if test "$1"
+	then
+		docker tag ${id} jamesstevens/auto-skew-elle:${1}
+		docker push jamesstevens/auto-skew-elle:${1}
+	fi
