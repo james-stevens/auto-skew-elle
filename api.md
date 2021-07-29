@@ -291,22 +291,38 @@ If more than one column is specified, the key will always be a string type and t
 
 ## The `order` Modifier
 
-The `order` property specifies a list of columns to sort by. This can either be a list of column names type or a comma separated string of column names.
+The `order` modifier specifies a list of columns to sort by. This can either be a list of column names or a comma separated string of column names.
+
+The SQL modifiers `asc` and `desc` can also be applied to each column name given. The default is `asc` (ascending order).
+
+For exmaple, these two `order` modifiers have the same effect
+
+	{ "order": "currency, trade_id desc" }
+
+or
+
+	{ "order": [ "currency", "trade_id desc" ] }
 
 Unless you are splitting up a long list of items, using `limit` & `skip`, using both the `by` and `order` modifiers
 does not make sense as a set of keyed objects do not retain any sort order.
 
+However, if you are using `limit` & `skip` to split up a large number of rows into smaller batches, you really must
+use an `order` modifier, otherwise you may get duplicate rows.
+
+
 
 ## The `limit` and `skip` Modifiers
 
+The `limit` & `skip` modifiers control which & how many rows, from those that match your query, are actually returned.
+
 If you are retrieving a lot of rows, it can be useful to retrieve them in batches of (say) 100 rows at a time.  
-`limit` says how many rows to return in each batch and `skip` specifies how many rows you have already retrieved, so can skip over.
+`limit` says how many rows to return in each batch and `skip` specifies how many rows you have already retrieved, so can be skipped over.
 
 You can use `limit` without `skip`, but you can not use `skip` without `limit`.
 
-To ensure you do not get duplicate rows, if you are using `limit` & `skip` to pull the data in as batches, you *must* also specifiy a sort `order`.
+To ensure you do not get duplicate rows, if you are using `limit` & `skip` to pull the data in as batches, you should also specifiy a sort `order`.
 
-When using `limit` and `skip` to retrieve in batches, the `:rowid:` will tell you where the row belongs in the entire list, not just
+When using `limit` and `skip` to retrieve in batches, the `:rowid:` will tell you where the row belongs in the entire list, not 
 its position in any one batch.
 
 When using `limit` & `skip` also using `by` and `order` can still be useful.
@@ -318,7 +334,7 @@ Here's a series of `limit` & `skip` values to get a data set in batches of 100 r
 	{ "limit": 100, "skip": 200 }
 	{ "limit": 100, "skip": 300 }
 ```
-In this exmaple, you would continue adding `100` to the `skip` value each time until less than 100 rows are returned.
+In this exmaple, you would continue running the same query, adding `100` to the `skip` value each time, until less than 100 rows are returned.
 
 
 ## The `join` Property
@@ -539,7 +555,8 @@ this example will translate into
 
 If `NULL` is not allowed, in any a column that has no value, then the entire `insert` will fail & no rows will be added to the database.
 
-`put` also only returns the `affected_rows` property.
+`put` will also return the `affected_rows` property. However, if the table has a column with the `auto_increment` modifier and the
+insert only inserts a single row, then the value applied in the `auto_increment` column will also be returned as the property `row_id`.
 
 
 # `PATCH /v1/data/[table]` - Update Rows
