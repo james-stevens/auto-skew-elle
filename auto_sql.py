@@ -74,7 +74,7 @@ def json_abort(status_code, message):
     if isinstance(message, dict):
         data.update(message)
     else:
-        data["message"] = message
+        data["error"]["message"] = message
 
     response = flask.jsonify(data)
     response.status_code = status_code
@@ -111,7 +111,7 @@ def clean_list_string(data):
     if isinstance(data, list):
         return data
     if isinstance(data, str) and data.find(","):
-        return data.split(",")
+        return [r.strip() for r in data.split(",")]
     return [data]
 
 
@@ -139,7 +139,7 @@ def clean_col_data(data, table, column):
 
     ret = data
     this_col = schema[table]["columns"][column]
-    
+
     if this_col["type"] == "boolean":
         ret = int(data) != 0
     elif this_col["type"] == "decimal":
@@ -169,7 +169,7 @@ def find_foreign_column(sql_joins, src_table, dstcol):
     fmt = "join {dsttbl} {alias} on({srctbl}.{srccol}={alias}.{dstcol})"
 
     if len(dst) != 2:
-        json_abort(400, {"error": f"Invalid column name `{dstcol}`"})
+        json_abort(400, f"Invalid column name `{dstcol}`")
 
     if dst[0] in schema[src_table]["columns"] and "join" in schema[src_table][
             "columns"][dst[0]]:
@@ -188,10 +188,8 @@ def find_foreign_column(sql_joins, src_table, dstcol):
 
     col_name = find_join_column(src_table, dst[0])
     if col_name is None:
-        json_abort(400, {
-            "error":
-            f"Could not find a join for `{dstcol}` to `{src_table}`"
-        })
+        json_abort(400,
+                   f"Could not find a join for `{dstcol}` to `{src_table}`")
 
     alias = "__zz__" + col_name
     dstcol = alias + "." + dst[1]
@@ -218,14 +216,11 @@ def each_where_obj(sql_joins, table, ask_item, where_obj):
         if where_itm.find(".") >= 0:
             col, tbl = find_foreign_column(sql_joins, table, col)
         elif col not in schema[table]["columns"]:
-            json_abort(400,
-                       {"error": f"Column `{col}` is not in table `{table}`"})
+            json_abort(400, f"Column `{col}` is not in table `{table}`")
 
         if ask_item == "=" and isinstance(where_obj[where_itm], list):
             if (tbl not in schema) or (col not in schema[tbl]["columns"]):
-                json_abort(
-                    400,
-                    {"error": f"Column `{col}` is not in table `{table}`"})
+                json_abort(400, f"Column `{col}` is not in table `{table}`")
             this_col = schema[tbl]["columns"][col]
             where.append(
                 "(" + where_itm + " in (" +
@@ -256,8 +251,7 @@ def where_clause(table, sent):
     if isinstance(sent["where"], object):
         for ask_item in sent["where"]:
             if ask_item not in ASKS:
-                json_abort(400,
-                           {"error": f"Comparison `{ask_item}` not supported"})
+                json_abort(400, f"Comparison `{ask_item}` not supported")
             where = each_where_obj(sql_joins, table, ask_item,
                                    sent["where"][ask_item])
 
@@ -286,6 +280,17 @@ def include_for_join(data):
     return True
 
 
+def mysql_abort(exc, state):
+    """ abort on MySQL exception {exc} at {state} """
+    json_abort(400, {
+        "mysql": {
+            "code": exc.args[0],
+            "message": exc.args[1],
+            "state": state
+        }
+    })
+
+
 def run_query(sql):
     """ run the {sql}, reconnecting to MySQL, if necessary """
     global cnx
@@ -299,32 +304,14 @@ def run_query(sql):
         try:
             cnx.query(sql)
         except MySQLdb.OperationalError as exc:
-            json_abort(400, {
-                "mysql": {
-                    "code": exc.args[0],
-                    "message": exc.args[1],
-                    "state": "A"
-                }
-            })
+            mysql_abort(exc, "A")
             cnx.close()
             cnx = None
         except MySQLdb.Error as exc:
-            json_abort(400, {
-                "mysql": {
-                    "code": exc.args[0],
-                    "message": exc.args[1],
-                    "state": "B"
-                }
-            })
+            mysql_abort(exc, "B")
 
     except MySQLdb.Error as exc:
-        json_abort(
-            400,
-            {"mysql": {
-                "code": exc.args[0],
-                "message": exc.args[1],
-                "state": "C"
-            }})
+        mysql_abort(exc, "B")
 
 
 def load_all_joins(need):
@@ -430,11 +417,12 @@ def make_insert_from_list(set_list, table):
     cols = schema[table]["columns"]
     have_cols = []
     for this_set in set_list:
-        if not isinstance(this_set,dict):
-            json_abort(400,"All items in a `set` modifier list must be objects")
+        if not isinstance(this_set, dict):
+            json_abort(400,
+                       "All items in a `set` modifier list must be objects")
         for col in this_set:
             if col not in cols:
-                json_abort(404,f"Column {col} is not in table {table}")
+                json_abort(404, f"Column {col} is not in table {table}")
 
             if col not in have_cols:
                 have_cols.append(col)
@@ -480,10 +468,9 @@ def check_supplied_modifiers(sent, allowed):
     """ check the {sent} modifiers are in the {allowed} list """
     for modifier in sent:
         if modifier not in allowed:
-            json_abort(406, {
-                "error":
-                f"The modifier '{modifier}' is not supported in this request"
-            })
+            json_abort(
+                406,
+                f"The modifier '{modifier}' is not supported in this request")
 
 
 application = flask.Flask("MySQL-Rest/API")
@@ -515,15 +502,36 @@ def give_schema():
 def give_table_schema(table):
     """ respond with schema for one <table> """
     if table not in schema:
-        json_abort(404, {"error": f"Table '{table}' does not exist"})
+        json_abort(404, f"Table '{table}' does not exist")
     return retmsg(200, schema[table])
+
+
+def make_order_clause(sent, table):
+    """ build the `order by` clause, where present """
+    this_cols = schema[table]["columns"]
+    order_list = clean_list_string(sent["order"])
+
+    for order in order_list:
+        tst_order = order
+        if order.find(" ") >= 0:
+            tst = order.split(" ")
+            tst_order = tst[0]
+            if tst[1] not in ("asc", "desc"):
+                json_abort(
+                    400,
+                    f"Only 'asc'/'desc' are allowed as 'order' modifiers, not '{tst[1]}'"
+                )
+
+        if tst_order not in this_cols:
+            json_abort(404, f"Column '{order}' not in table '{table}'")
+
+    return " order by " + ",".join(order_list)
 
 
 def build_sql(table, sent, start_sql):
     """ build the SQL needed to run the users query on {table} """
-    sql = start_sql + where_clause(table, sent)
-    if "order" in sent:
-        sql = sql + " order by " + ",".join(clean_list_string(sent["order"]))
+    sql = (start_sql + where_clause(table, sent) +
+           (make_order_clause(sent, table) if "order" in sent else ""))
 
     start = 0
     if "limit" in sent:
@@ -533,7 +541,7 @@ def build_sql(table, sent, start_sql):
             sql = sql + " offset " + str(start)
     else:
         if "skip" in sent:
-            json_abort(406, {"error": "`skip` without `limit` is not allowed"})
+            json_abort(406, "`skip` without `limit` is not allowed")
 
     return start, sql
 
@@ -560,7 +568,7 @@ def process_one_set(set_clause, table):
     cols = schema[table]["columns"]
     for col in set_clause:
         if col not in cols:
-            json_abort(404, {"error": "Column {col} not in table {table}"})
+            json_abort(404, "Column {col} not in table {table}")
 
         ret.append(col + "=" + add_data(set_clause[col], cols[col]))
     return ret
@@ -579,8 +587,7 @@ def get_idx_cols(table, sent):
             idx_cols = clean_list_string(snt_by)
             for idx in idx_cols:
                 if not (idx == ":rowid:" or idx in schema[table]["columns"]):
-                    json_abort(400,
-                               {"error": "Bad column name in `by` clause"})
+                    json_abort(400, "Bad column name in `by` clause")
     if idx_cols is None and len(this_idxs) > 0:
         idx_cols = this_idxs[find_best_index(this_idxs)]["columns"]
 
@@ -602,7 +609,7 @@ def insert_table_row(table):
     sent = flask.request.json
     check_supplied_modifiers(sent, ["set"])
 
-    if not isinstance(sent["set"], (dict,list)):
+    if not isinstance(sent["set"], (dict, list)):
         json_abort(
             400,
             "In an INSERT, the `set` clause must be an object or list type")
@@ -615,8 +622,14 @@ def insert_table_row(table):
 
     run_query(sql)
     cnx.store_result()
-    ret = cnx.affected_rows()
-    return retmsg(200, {"affected_rows": ret})
+
+    ret = {"affected_rows": cnx.affected_rows()}
+    if ret["affected_rows"] == 1:
+        row_id = cnx.insert_id()
+        if row_id > 0:
+            ret["row_id"] = row_id
+
+    return retmsg(200, ret)
 
 
 @application.route("/v1/data/<table>", methods=['PATCH'])
@@ -626,16 +639,14 @@ def update_table_row(table):
         return json_abort(404, f"Table '{table}' does not exist")
 
     if (flask.request.json is None) or ("set" not in flask.request.json):
-        return json_abort(400,
-                      "A `set` clause is mandatory for an UPDATE")
+        return json_abort(400, "A `set` clause is mandatory for an UPDATE")
 
     sent = flask.request.json
     check_supplied_modifiers(sent, ["where", "limit", "set"])
 
     if not isinstance(sent["set"], dict):
         return json_abort(
-            400,
-            "In an UPDATE, the `set` clause must be an object type")
+            400, "In an UPDATE, the `set` clause must be an object type")
 
     set_list = process_one_set(sent["set"], table)
     sql = f"update {table} set " + ",".join(set_list)
@@ -652,15 +663,15 @@ def update_table_row(table):
 def delete_table_row(table):
     """ do an sql delete on {table} """
     if table not in schema:
-        json_abort(404, {"error": f"Table '{table}' does not exist"})
+        json_abort(404, f"Table '{table}' does not exist")
 
     if (flask.request.json is None) or ("where" not in flask.request.json):
-        json_abort(400,
-                   {"error": "A `where` clause is mandatory for a DELETE"})
+        json_abort(400, "A `where` clause is mandatory for a DELETE")
 
     check_supplied_modifiers(flask.request.json, ["where", "limit"])
 
     sql = build_sql(table, flask.request.json, f"delete from {table} ")[1]
+    print(">>>A>>>", sql)
 
     run_query(sql)
     cnx.store_result()

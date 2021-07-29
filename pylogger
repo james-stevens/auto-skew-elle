@@ -65,7 +65,8 @@ if args.facility not in facility_options:
     print(f"ERROR: Severity {args.facility} not supported: {facility_options}")
     sys.exit(0)
 
-syslog.openlog(args.tag, syslog.LOG_PID if args.ident else 0, facility_options[args.facility])
+syslog.openlog(args.tag, syslog.LOG_PID if args.ident else 0,
+               facility_options[args.facility])
 if len(args.rest) > 0:
     syslog.syslog(severity_options[args.severity], " ".join(args.rest))
 else:
