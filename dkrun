@@ -1,5 +1,9 @@
 #! /bin/sh
 
+echo ""
+echo "https://alpdev.jrcs.net:800/"
+echo ""
+
 docker run --read-only -it \
 	-v /opt/github/auto-skew-elle/etc:/usr/local/etc \
 	-v /opt/github/diamond-hands/htdocs:/opt/htdocs \
