@@ -20,7 +20,6 @@ if test "${SYSLOG_SERVER}"
 	fi
 
 echo "
-user daemon;
 
 http {
     include         mime.types;
