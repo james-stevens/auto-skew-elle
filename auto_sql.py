@@ -294,7 +294,6 @@ def mysql_abort(exc, state):
 def run_query(sql):
     """ run the {sql}, reconnecting to MySQL, if necessary """
     global cnx
-    print(">>>>>>", sql)
     try:
         cnx.query(sql)
 
@@ -671,7 +670,6 @@ def delete_table_row(table):
     check_supplied_modifiers(flask.request.json, ["where", "limit"])
 
     sql = build_sql(table, flask.request.json, f"delete from {table} ")[1]
-    print(">>>A>>>", sql)
 
     run_query(sql)
     cnx.store_result()

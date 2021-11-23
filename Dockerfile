@@ -1,8 +1,9 @@
 FROM alpine:3.13
 
-RUN rmdir /tmp
+RUN rmdir /tmp /run
 RUN ln -s /dev/shm /tmp
 RUN ln -s /dev/shm /ram
+RUN ln -s /dev/shm /run
 
 RUN apk update
 RUN apk upgrade
