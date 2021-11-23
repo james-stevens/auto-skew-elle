@@ -2,10 +2,16 @@
 # (c) Copyright 2019-2020, James Stevens ... see LICENSE for details
 # Alternative license arrangements possible, contact me for more information
 
+
 for file in $(find /etc/start.d/ -type f)
 do
 	. ${file}
 done
+
+
+mkdir /run/nginx
+chown nginx: /run/nginx
+
 
 {
 echo "::respawn:/usr/local/bin/start_syslogd"
