@@ -57,11 +57,11 @@ def connect_to_mysql():
 
     return _mysql.connect(
         user=os.environ["MYSQL_USERNAME"],
-        passwd=os.environ["MYSQL_PASSWORD"],
+        password=os.environ["MYSQL_PASSWORD"],
         unix_socket=sock,
         host=host,
         port=port,
-        db=os.environ["MYSQL_DATABASE"],
+        database=os.environ["MYSQL_DATABASE"],
         conv=my_conv,
         charset='utf8mb4',
         init_command='SET NAMES UTF8',
